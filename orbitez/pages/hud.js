@@ -32,7 +32,7 @@ export default function Hud() {
                         <input id="skin" className="form-control" placeholder="Skin Name">
                         <select id="gamemode" className="form-control" onchange="setserver(this.value)" required>
                            
-                            <option value="localhost:8080" selected>orbi.tez 8080</option>
+                            <option value="ws.orbitez.io" selected>ws.orbitez.io</option>
                         </select>
                     </div>
 
