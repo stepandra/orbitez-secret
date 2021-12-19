@@ -451,7 +451,7 @@ class Server {
     mainLoop() {
         this.stepDateTime = Date.now();
         var tStart = process.hrtime();
-        if (this.ticks > this.config.serverRestart && this.run) this.restart();
+        // if (this.ticks > this.config.serverRestart && this.run) this.restart();
         // Loop main functions
         if (this.run) {
             // Move moving nodes first
