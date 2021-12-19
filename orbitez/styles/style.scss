@@ -149,6 +149,11 @@ select {
 	}
 }
 
+.hud-header {
+	position: absolute;
+	width: 100vw;
+}
+
 .page {
 	display: flex;
 	justify-content: space-between;
@@ -243,6 +248,7 @@ select {
 }
 
 .panel {
+	background-color: transparent;
 	display: flex;
 	justify-content: center;
 	align-items: center;

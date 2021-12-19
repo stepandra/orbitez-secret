@@ -96,7 +96,7 @@ export default function Hud() {
                 <link href='style.css' rel="stylesheet" />
             </Head>
 
-            <header className="header">
+            <header className="header hud-header">
                 <div className="blocksTimer">
                     
                 </div>
