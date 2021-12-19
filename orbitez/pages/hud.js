@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head'
 import { useTezos } from '../hooks/useTezos';
 
-export default function hud() {
+export default function Hud() {
     const { connectWallet, address, Tezos, balance } = useTezos()
     
     // const router = useRouter()
@@ -23,24 +23,24 @@ export default function hud() {
             </div>
             <div id="overlays" style="display: none;">
                 <div id="helloDialog">
-                    <div class="form-group">
+                    <div className="form-group">
                         <h2 id="title">Cigar2</h2>
                     </div>
 
-                    <div class="form-group">
-                        <input id="nick" class="form-control" placeholder="Nickname" maxlength="15">
-                        <input id="skin" class="form-control" placeholder="Skin Name">
-                        <select id="gamemode" class="form-control" onchange="setserver(this.value)" required>
+                    <div className="form-group">
+                        <input id="nick" className="form-control" placeholder="Nickname" maxlength="15">
+                        <input id="skin" className="form-control" placeholder="Skin Name">
+                        <select id="gamemode" className="form-control" onchange="setserver(this.value)" required>
                            
                             <option value="localhost:8080" selected>orbi.tez 8080</option>
                         </select>
                     </div>
 
-                    <button id="play-btn" class="btn btn-play btn-primary btn-needs-server">Play</button>
+                    <button id="play-btn" className="btn btn-play btn-primary btn-needs-server">Play</button>
                     <button id="spectate-btn" onclick="spectate()"
-                        class="btn btn-warning btn-spectate btn-needs-server glyphicon glyphicon-eye-open"></button>
+                        className="btn btn-warning btn-spectate btn-needs-server glyphicon glyphicon-eye-open"></button>
                     <button id="gallery-btn" onclick="openSkinsList()"
-                        class="btn btn-play btn-primary btn-needs-server btn-info">Skins Gallery</button>
+                        className="btn btn-play btn-primary btn-needs-server btn-info">Skins Gallery</button>
 
                     <div id="settings">
                     </div>
@@ -48,7 +48,7 @@ export default function hud() {
                     <div id="instructions">
                         <hr>
                         <center>
-                            <span class="text-muted">
+                            <span className="text-muted">
                                 Move your mouse to control your cell<br>
                                 Press <b>Space</b> to split<br>
                                 Press <b>W</b> to eject some mass<br>
@@ -58,7 +58,7 @@ export default function hud() {
 
                     <hr>
                     <div id="footer">
-                        <span class="text-muted">Have fun!</span>
+                        <span className="text-muted">Have fun!</span>
                     </div>
 
                 </div>
@@ -87,36 +87,36 @@ export default function hud() {
     }
 
     return (
-        <div class="bgImageNone">
+        <div className="bgImageNone">
             <Head>
                 <meta charset="UTF-8" />
-                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>Hud - Orbitez.io</title>
                 <link href='style.css' rel="stylesheet" />
             </Head>
 
-            <header class="header">
-                <div class="blocksTimer">
+            <header className="header">
+                <div className="blocksTimer">
                     
                 </div>
                 
-                <div class="panel">
-                    <div class="panel__icon">
-                        <a class="panel__link" href="">
-                            <img class="panel__img" src="/img/icon-home.png" alt="Home icon" />
+                <div className="panel">
+                    <div className="panel__icon">
+                        <a className="panel__link" href="">
+                            <img className="panel__img" src="/img/icon-home.png" alt="Home icon" />
                         </a>
                     </div>
-                    <div class="panel__info">
-                        <p class="panel__text">SCORE</p>
-                        <p class="panel__num">35000</p>
+                    <div className="panel__info">
+                        <p className="panel__text">SCORE</p>
+                        <p className="panel__num">35000</p>
                     </div>
                 </div>
             </header>
 
             <div dangerouslySetInnerHTML={ createMarkup() } ></div>
             
-            <main class='page container container--big'>
+            <main className='page container container--big'>
                 
             </main>
         </div>

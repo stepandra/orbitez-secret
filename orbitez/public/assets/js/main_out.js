@@ -774,9 +774,9 @@
         const sortedSkins = Array.from(knownSkins.keys()).sort();
         let c = '';
         for (const skin of sortedSkins) {
-            c += `<li class="skin" onclick="changeSkin('${skin}')">`;
-            c += `<img class="circular" src="./skins/${skin}.png">`;
-            c += `<h4 class="skinName">${skin}</h4>`;
+            c += `<li className="skin" onclick="changeSkin('${skin}')">`;
+            c += `<img className="circular" src="./skins/${skin}.png">`;
+            c += `<h4 className="skinName">${skin}</h4>`;
             c += '</li>';
         }
         byId('gallery-body').innerHTML = `<ul id="skinsUL">${c}</ul>`;
