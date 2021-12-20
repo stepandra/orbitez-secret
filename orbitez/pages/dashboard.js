@@ -41,7 +41,9 @@ export default function Dashboard() {
                 <meta name="theme-color" content="#ffffff" />
             </Head>
             <header className="header container">
-                <Link className="header__linkLeft link" href="/leaderboard">LEADERBOARD</Link>
+                <Link href="/leaderboard">
+                    <a className="header__linkLeft link">LEADERBOARD</a>
+                </Link>
                 <h1 className="header__title">Dashboard</h1>
                 <div className="header__panel panel">
                     <div className="panel__icon">

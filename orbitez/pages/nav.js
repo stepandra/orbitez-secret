@@ -36,7 +36,9 @@ export default function Home() {
                 <a onClick={() => disconnectWallet()} className='btn btn--center btn--neon'>DISCONNECT WALLET</a>
                 <a disabled={address == ''} className='btn btn--center btn--neon' onClick={() => enterRoom()}>Enter Room</a>
                 <a disabled={address == ''} className='btn btn--center btn--neon' onClick={() => refund()}>Refund</a>
-                <Link href='/dashboard' className='btn btn--center btn--neon'>DASHBOARD</Link>
+                <Link href='/dashboard'>
+                    <a className='btn btn--center btn--neon'>DASHBOARD</a>
+                </Link>
             </main>
         </div>
     )

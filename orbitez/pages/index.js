@@ -30,7 +30,9 @@ export default function Landing() {
             </Head>
             
             <header className="header container">
-                <Link className="header__linkLeft link" href="/leaderboard">LEADERBOARD</Link>
+                <Link href="/leaderboard">
+                    <a className="header__linkLeft link">LEADERBOARD</a>
+                </Link>
                 {address !== '' && <a className="header__linkRight link" onClick={() => disconnectWallet()}>LOGOUT</a>}
             </header>
             
