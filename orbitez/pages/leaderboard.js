@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head'
+import Link from 'next/link';
 
 
 export default function Leaderboard() {
@@ -7,7 +8,7 @@ export default function Leaderboard() {
     return (
         <div className="background">
             <Head>
-                <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+                <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>Leaderboard - Orbitez.io</title>
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
@@ -19,15 +20,20 @@ export default function Leaderboard() {
                 <meta name="theme-color" content="#ffffff" />
             </Head>
             <header className="header container container--big">
-                <a className="header__logo logo" href='/'>
-                    <img className="header__logoImg" src='/img/logo.png' ></img>
-                </a>
+                <Link href={'/'}>
+                    <a className="header__logo logo">
+                        <img className="header__logoImg" src='/img/logo.png' ></img>
+                    </a>
+                </Link>
                 <h1 className="header__title">Leaderboard</h1>
                 <div className="header__panel panel">
                     <div className="panel__icon">
-                        <a className="panel__link" href="/dashboard">
-                            <img className="panel__img" src="/img/icon-home.png" alt="Home icon" />
-                        </a>
+                        <Link href="/dashboard">
+                            <a className="panel__link" >
+                                <img className="panel__img" src="/img/icon-home.png" alt="Home icon" />
+                            </a>
+                        </Link>
+                        
                     </div>
                     <div className="panel__info">
                         <p className="panel__text">BALANCE</p>
