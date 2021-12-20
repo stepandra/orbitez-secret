@@ -37,7 +37,7 @@ export default function Landing() {
             </header>
             
             <main className='lp container container--small'>
-                <img className="lp__logo" src="/img/logo.png" alt="Logo" />
+                <img className="lp__logo" src="/img/logo-big.png" alt="Logo" />
                 <p className="lp__text">Fight with players from all over the world as you try to become the biggest Planet in a solar system! Control your tiny planet and eat other players to grow larger. Mint your own, unique generative planet as NFT to enter the battlefield!</p>
                 <a className="lp__btn btn btn--center btn--neon" onClick={() => joinGame()}>Join the game</a>
             </main>
