@@ -63,17 +63,20 @@ export default function Dashboard() {
                     <div className="listBlock">
                         <h2 className="listBlock__title">Select Planet</h2>
                         {
-                            planetsAvailable.map(planet => 
-                                <ul className="listBlock__list">
+                            planetsAvailable.length > 0 && 
+                            <ul className="listBlock__list">
+                                {
+                                planetsAvailable.map(planet => 
                                     <li 
                                         key={'planet' + planet}
                                         onClick={() => setPlanetSelected(planet)} 
                                         className={`listBlock__item ${planet === planetSelected ? 'listBlock__item--active' : ''}`}
-                                    >
+                                        >
                                         { planet }
                                     </li> 
-                                </ul>
-                            )
+                                    )
+                                }
+                            </ul>
                         }
                         {
                             !planetsAvailable.length && <p className="listBlock__text">{`Uh oh, Looks like you haven't minted any planet NFTs...`}</p>
