@@ -45,15 +45,15 @@ export default function Dashboard() {
                     <a className="header__linkLeft link">LEADERBOARD</a>
                 </Link>
                 <h1 className="header__title">Dashboard</h1>
-                <div className="header__panel panel">
-                    <div className="panel__icon">
-                        <a className="panel__link" href="">
-                            <img className="panel__img" src="/img/icon-home.png" alt="Home icon" />
+                <div className="header__dashboard dashboard">
+                    <div className="dashboard__icon">
+                        <a className="dashboard__link" href="">
+                            <img className="dashboard__img" src="/img/icon-exite.png" alt="Home icon" />
                         </a>
                     </div>
-                    <div className="panel__info">
-                        <p onClick={() => connectWallet()} className="panel__text">{address == '' ? 'CONNECT WALLET' : 'BALANCE'}</p>
-                        {address != '' && <p className="panel__num">ꜩ{balance.toFixed(3)}</p>}
+                    <div className="dashboard__info">
+                        <p onClick={() => connectWallet()} className="dashboard__text">{address == '' ? 'CONNECT WALLET' : 'BALANCE'}</p>
+                        {address != '' && <p className="dashboard__num">ꜩ{balance.toFixed(3)}</p>}
                     </div>
                 </div>
             </header>
@@ -62,22 +62,25 @@ export default function Dashboard() {
                 <div className="page__left">
                     <div className="listBlock">
                         <h2 className="listBlock__title">Select Planet</h2>
-                        <ul className="listBlock__list">
-                            {
+                        {
+                            planetsAvailable.length > 0 && 
+                            <ul className="listBlock__list">
+                                {
                                 planetsAvailable.map(planet => 
                                     <li 
                                         key={'planet' + planet}
                                         onClick={() => setPlanetSelected(planet)} 
                                         className={`listBlock__item ${planet === planetSelected ? 'listBlock__item--active' : ''}`}
-                                    >
+                                        >
                                         { planet }
                                     </li> 
-                                )
-                            }
-                            {
-                                !planetsAvailable.length && <p className="panel__text">{`Uh oh, Looks like you haven't minted any planet NFTs...`}</p>
-                            }
-                        </ul>
+                                    )
+                                }
+                            </ul>
+                        }
+                        {
+                            !planetsAvailable.length && <p className="listBlock__text">{`Uh oh, Looks like you haven't minted any planet NFTs...`}</p>
+                        }
                     </div>
                     { address !== '' && <a className="btn btn--wide" onClick={() => mintNft()}>MINT NEW NFT</a>}
 
@@ -94,6 +97,7 @@ export default function Dashboard() {
                 <div className="page__center">
                     <div className="planet planet--bgCircle">
                         <img className="planet__img" src="/img/planet.png" alt="planet background" />
+                        {/* <iframe _ngcontent-hob-c70="" allow="accelerometer; camera; gyroscope; microphone; xr-spatial-tracking;" className="fs" sandbox="allow-scripts allow-same-origin" scrolling="" src="https://ipfs.io/ipfs/QmVnK79nz8TEPX7R26n7LdozNLU5dgUn5X1aBhV4fXtHnP?objkt=192102&amp;creator=tz1iJJPGh7arygfq5EC2sBaAF23T8iUYTpEH&amp;viewer=null"></iframe> */}
                         <a onClick={() => { 
                             address == '' ? connectWallet() : enterRoom() 
                         }} className="planet__btn btn btn--center btn--neon" >

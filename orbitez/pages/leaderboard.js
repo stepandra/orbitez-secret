@@ -22,22 +22,22 @@ export default function Leaderboard() {
             <header className="header container container--big">
                 <Link href={'/'}>
                     <a className="header__logo logo">
-                        <img className="header__logoImg" src='/img/logo.png' ></img>
+                        <img className="header__logoImg" src='/img/logo-2x.png' ></img>
                     </a>
                 </Link>
                 <h1 className="header__title">Leaderboard</h1>
-                <div className="header__panel panel">
-                    <div className="panel__icon">
+                <div className="header__dashboard dashboard">
+                    <div className="dashboard__icon">
                         <Link href="/dashboard">
-                            <a className="panel__link" >
-                                <img className="panel__img" src="/img/icon-home.png" alt="Home icon" />
+                            <a className="dashboard__link" >
+                                <img className="dashboard__img" src="/img/icon-home.png" alt="Home icon" />
                             </a>
                         </Link>
                         
                     </div>
-                    <div className="panel__info">
-                        <p className="panel__text">BALANCE</p>
-                        <p className="panel__num"> ꜩ25000</p>
+                    <div className="dashboard__info">
+                        <p className="dashboard__text">BALANCE</p>
+                        <p className="dashboard__num"> ꜩ25000</p>
                     </div>
                 </div>
             </header>

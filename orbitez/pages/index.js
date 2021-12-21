@@ -29,7 +29,7 @@ export default function Landing() {
                 <meta name="theme-color" content="#ffffff" />
             </Head>
             
-            <header className="header container">
+            <header className="header container headerLp">
                 <Link href="/leaderboard">
                     <a className="header__linkLeft link">LEADERBOARD</a>
                 </Link>
@@ -42,7 +42,7 @@ export default function Landing() {
                 <a className="lp__btn btn btn--center btn--neon" onClick={() => joinGame()}>Join the game</a>
             </main>
 
-            <video className="bgVideo__video" loop="true" muted="true" autoPlay="true" poster="/img/lp-bg-poster.png">
+            <video className="bgVideo__video" loop muted autoPlay poster={"/img/lp-bg-poster.png"}>
                 <source src="/video/lp-bg-video-6.mp4" type="video/mp4" />
                 <source src="/video/lp-bg-video-8.webm" type="video/webm" />
             </video>

@@ -42,7 +42,7 @@ export default function Hud() {
                     <div className="planet">
                         <img className="planet__img" src="/img/planet.png" alt="planet background" />
                         <Link href="/hud">
-                            <a className="planet__btn btn btn--center">START</a>
+                            <a className="planet__btn btn btn--center btn--neon">START</a>
                         </Link>
                         <Link href="/dashboard">
                             <a className="btn btn--center" >CANCEL</a>
