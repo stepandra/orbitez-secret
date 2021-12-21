@@ -89,11 +89,16 @@ export default function Hud() {
     return (
         <div className="bgImageNone">
             <Head>
-                <meta charset="UTF-8" />
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>Hud - Orbitez.io</title>
-                <link href='style.css' rel="stylesheet" />
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+                <link rel="manifest" href="/site.webmanifest"/>
+                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/>
+                <meta name="msapplication-TileColor" content="#da532c"/>
+                <meta name="theme-color" content="#1a113c" />
             </Head>
 
             <header className="header hud-header">
@@ -101,15 +106,15 @@ export default function Hud() {
                     
                 </div>
                 
-                <div className="panel">
-                    <div className="panel__icon">
-                        <a className="panel__link" href="">
-                            <img className="panel__img" src="/img/icon-home.png" alt="Home icon" />
+                <div className="dashboard">
+                    <div className="dashboard__icon">
+                        <a className="dashboard__link" href="">
+                            <img className="dashboard__img" src="/img/icon-home.png" alt="Home icon" />
                         </a>
                     </div>
-                    <div className="panel__info">
-                        <p className="panel__text">SCORE</p>
-                        <p className="panel__num">35000</p>
+                    <div className="dashboard__info">
+                        <p className="dashboard__text">SCORE</p>
+                        <p className="dashboard__num">35000</p>
                     </div>
                 </div>
             </header>

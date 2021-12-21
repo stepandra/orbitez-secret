@@ -1,4 +1,13 @@
+.headerLp {
+    height: auto;
+}
+
 .lp {
+
+    &__logo {
+        margin-top: 60px;
+    }
+
     &__text {
         padding: 0 50px;
         text-align: center;
