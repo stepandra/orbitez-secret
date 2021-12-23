@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useTezos } from '../hooks/useTezos'
 import { CONTRACT_ADDRESS } from '../constants'
 import Link from 'next/link';
+import { useNFT } from '../hooks/useNFT.ts';
 
 export default function Dashboard() {
     const { connectWallet, address, Tezos, balance } = useTezos()
     const router = useRouter()
+
+    const { data, loading } = useNFT('KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE', ['215920']);
+
+    useEffect(() => {
+        console.log('NFT',loading, data)
+    }, [loading])
 
     const [planetsAvailable, setPlanetsAvailable] = useState([])
     const [planetSelected, setPlanetSelected] = useState(null)
