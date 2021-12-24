@@ -5,7 +5,9 @@ import { useState, useEffect, memo } from 'react'
 import { NFT_ADDRESS } from '../constants'
 
 export function useTezos() {
-  const RPC_URL = 'https://hangzhounet.smartpy.io'
+  const RPC_URL = 'https://mainnet.smartpy.io/';
+  // 'https://hangzhounet.smartpy.io'
+
   const Tezos = new TezosToolkit(RPC_URL)
   const wallet = new BeaconWallet({ name: "Orbitez" })
   const [balance, setBalance] = useState(0)

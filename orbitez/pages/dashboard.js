@@ -4,13 +4,36 @@ import { useRouter } from 'next/router'
 import { useTezos } from '../hooks/useTezos'
 import { CONTRACT_ADDRESS } from '../constants'
 import Link from 'next/link';
-import { useNFT } from '../hooks/useNFT.ts';
+import { useNFT} from '../hooks/useNFT.ts';
 
 export default function Dashboard() {
     const { connectWallet, address, Tezos, balance } = useTezos()
     const router = useRouter()
+    const fxhash_tokenid = [];
+   
+    
+    fetch("https://api.fxhash.xyz/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({ query: '{generativeToken(slug: "Orbitoid", id: 3808) {entireCollection {id owner {id} metadata }}}' })
+      })
+        .then(res => res.json())
+        .then(res => {
+            // console.log(res.data.generativeToken.entireCollection);
+            const owners_ids = res.data.generativeToken.entireCollection;
+            owners_ids.find(function(post, index) {
+                if(post.owner.id == address) {
+                    fxhash_tokenid.push(post.id+"");
+                    console.log(fxhash_tokenid);
+                    return true;
+                }
+            });
+        });
 
-    const { data, loading } = useNFT('KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE', ['215920']);
+    const { data, loading } = useNFT('KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE', fxhash_tokenid);
 
     useEffect(() => {
         console.log('NFT',loading, data)
