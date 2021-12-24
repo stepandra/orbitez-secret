@@ -9,9 +9,11 @@ import { useNFT} from '../hooks/useNFT.ts';
 export default function Dashboard() {
     const { connectWallet, address, Tezos, balance } = useTezos()
     const router = useRouter()
-    const fxhash_tokenid = [];
+    const img_url = "";
+    const [imgLink, setImgLink] = useState(null)
+    const fxhash_tokenid=[];
+
    
-    
     fetch("https://api.fxhash.xyz/graphql", {
         method: "POST",
         headers: {
@@ -26,26 +28,31 @@ export default function Dashboard() {
             const owners_ids = res.data.generativeToken.entireCollection;
             owners_ids.find(function(post, index) {
                 if(post.owner.id == address) {
-                    fxhash_tokenid.push(post.id+"");
+                    fxhash_tokenid.push(post.id);
                     console.log(fxhash_tokenid);
+                    // parse artifactUri to animate
+                    const ipfs_url = post.metadata.displayUri;
+                    setImgLink('https://cloudflare-ipfs.com/ipfs' + ipfs_url.slice(6))
                     return true;
                 }
             });
         });
 
-    const { data, loading } = useNFT('KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE', fxhash_tokenid);
 
-    useEffect(() => {
-        console.log('NFT',loading, data)
-    }, [loading])
+    // const { data, loading } = useNFT('KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE', fxhash_tokenid);
+
+    // useEffect(() => {
+    //     console.log('NFT',loading, data)
+    // }, [loading])
 
     const [planetsAvailable, setPlanetsAvailable] = useState([])
     const [planetSelected, setPlanetSelected] = useState(null)
+   
 
     const mintNft = () => {
         setPlanetsAvailable([...planetsAvailable, 'NFT #123'])
     }
-
+    
     const enterRoom = async () => {
         const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
         try {
@@ -126,8 +133,8 @@ export default function Dashboard() {
 
                 <div className="page__center">
                     <div className="planet planet--bgCircle">
-                        <img className="planet__img" src="/img/planet.png" alt="planet background" />
-                        {/* <iframe _ngcontent-hob-c70="" allow="accelerometer; camera; gyroscope; microphone; xr-spatial-tracking;" className="fs" sandbox="allow-scripts allow-same-origin" scrolling="" src="https://ipfs.io/ipfs/QmVnK79nz8TEPX7R26n7LdozNLU5dgUn5X1aBhV4fXtHnP?objkt=192102&amp;creator=tz1iJJPGh7arygfq5EC2sBaAF23T8iUYTpEH&amp;viewer=null"></iframe> */}
+                        {imgLink !== '' && <img className="planet__img " src={imgLink} alt="planet background" />}
+                        {/* <iframe _ng content-hob-c70="" allow="accelerometer; camera; gyroscope; microphone; xr-spatial-tracking;" className="fs" sandbox="allow-scripts allow-same-origin" scrolling="" src="https://ipfs.io/ipfs/QmVnK79nz8TEPX7R26n7LdozNLU5dgUn5X1aBhV4fXtHnP?objkt=192102&amp;creator=tz1iJJPGh7arygfq5EC2sBaAF23T8iUYTpEH&amp;viewer=null"></iframe> */}
                         <a onClick={() => { 
                             address == '' ? connectWallet() : enterRoom() 
                         }} className="planet__btn btn btn--center btn--neon" >
@@ -136,7 +143,7 @@ export default function Dashboard() {
                                 ? 'Connect wallet'
                                 : ( !planetsAvailable.length ) 
                                     ? 'Mint new NFT'
-                                    : 'PLAY 0.001 XTZ'
+                                    : 'PLAY 1 XTZ'
                             }
                         </a>
                     </div>
