@@ -95,13 +95,18 @@ export default function Hud() {
                 <div className="page__center">
                     <div className="planet">
                         <img className="planet__img" src="/img/planet.png" alt="planet background" />
-                        { 
-                            waitRoom.length === 10 && 
-                            <Link href="/hud">
-                                <a className="planet__btn btn btn--center btn--neon">START</a>
-                            </Link>
-                        }
-                        <a className="btn btn--center" onClick={() => refund()} >CANCEL</a>
+                        <button 
+                            style={{ 
+                                opacity: waitRoom.length === 10 ? 1 : 0.3, 
+                                cursor: waitRoom.length === 10 ? 'pointer' : 'not-allowed' 
+                            }} 
+                            disabled={waitRoom.length < 10} 
+                            className="planet__btn btn btn--center btn--neon"
+                            onClick={() => router.push('/hud')}
+                        >
+                            Start Game
+                        </button>
+                        <a className="btn btn--center" onClick={() => refund()} >Leave room</a>
                     </div>
                 </div>
 

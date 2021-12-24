@@ -1,11 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head'
-import { useTezos } from '../hooks/useTezos';
+import { useRouter } from 'next/router';
+import { CONTRACT_ADDRESS } from '../constants';
+import axios from 'axios';
+const signalR = require("@microsoft/signalr");
+
+const GAME_BLOCK_COUNT = 2
 
 export default function Hud() {
-    const { connectWallet, address, Tezos, balance } = useTezos()
+    const [startBlock, setStartBlock] = useState(null)
+    const [currentBlock, setCurrentBlock] = useState(0)
+    const router = useRouter()
+
+    const isGameLive = startBlock && currentBlock >= Number(startBlock) + GAME_BLOCK_COUNT
+
+    useEffect(() => {
+        const connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://api.hangzhou2net.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
+        .build();
+
+        axios.get(`https://api.hangzhou2net.tzkt.io/v1/contracts/${CONTRACT_ADDRESS}/storage`).then(res => {
+            setStartBlock(res.data.start_block)
+        })
     
-    // const router = useRouter()
+        async function init() {
+            // open connection
+            await connection.start();
+            // subscribe to head
+            await connection.invoke("SubscribeToBlocks"); 
+        };
+    
+        // auto-reconnect
+        connection.onclose(init);
+    
+        connection.on("blocks", (msg) => {
+            setCurrentBlock(msg.state)
+            console.log(msg.state)
+            if (!isGameLive) {
+                router.push('/last-game-stats')
+            }            
+        });
+    
+        init();
+      }, [])
+
     function createMarkup() {
         return {__html: `
         <div>
@@ -119,7 +157,7 @@ export default function Hud() {
                 </div>
             </header>
 
-            <div dangerouslySetInnerHTML={ createMarkup() } ></div>
+            <div dangerouslySetInnerHTML={ isGameLive ? createMarkup() : null } ></div>
             
             <main className='page container container--big'>
                 
