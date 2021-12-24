@@ -113,7 +113,7 @@ export default function LastGameStats() {
                         </li>
                     </ul>
                     <a onClick={() => payDividends()} className="planet__btn btn btn--center btn--neon" >
-                        Get Rewards
+                        Claim Rewards
                     </a>
                 </div>
 
