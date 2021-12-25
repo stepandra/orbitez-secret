@@ -1,13 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head'
 import Link from 'next/link';
 import { useTezos } from '../hooks/useTezos';
+import axios from 'axios';
+import { CONTRACT_ADDRESS } from '../constants';
 
 export default function LastGameStats() {
     const { connectWallet, address, Tezos, balance } = useTezos()
+    const [leaderboard, setLeaderboard] = useState([])
 
-    const payDividends = () => {
-      // DO SHIT
+    useEffect(() => {
+      const getLeaderboard = async () => {
+        const res = await axios.get('https://stats.orbitez.io')
+        setLeaderboard(res.data.leaderboard)
+      }
+
+      getLeaderboard()
+    }, [])
+
+    const payDividends = async () => {
+      const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
+      await contract.methods.endGame(leaderboard.map(el => el.name)).send()
     }
 
     return (
@@ -51,66 +64,15 @@ export default function LastGameStats() {
 
                 <div className="listBlock listBlock--wide">
                     <ul className="listBlock__list">
-                        <li className="listBlock__item">
-                            <p className="listBlock__rank">1</p>
-                            <p className="listBlock__nft">NFT #456677 </p> 
-                            <p className="listBlock__score">45667374647</p>
-                            <a className="listBlock__link" href=""></a>
-                        </li>
-                        <li className="listBlock__item listBlock__item--active">
-                            <p className="listBlock__rank">2</p>
-                            <p className="listBlock__nft">NFT #686890090876</p>  
-                            <p className="listBlock__score">6868937</p>
-                            <a className="listBlock__link" href=""></a>
-                        </li>
-                        <li className="listBlock__item">
-                            <p className="listBlock__rank">3</p>
-                            <p className="listBlock__nft">NFT #678978787 </p> 
-                            <p className="listBlock__score">45667374647</p>
-                            <a className="listBlock__link" href=""></a>
-                        </li>
-                        <li className="listBlock__item">
-                            <p className="listBlock__rank">4</p>
-                            <p className="listBlock__nft">NFT #87879 </p> 
-                            <p className="listBlock__score">45667374647</p>
-                            <a className="listBlock__link" href=""></a>
-                        </li>
-                        <li className="listBlock__item">
-                            <p className="listBlock__rank">5</p>
-                            <p className="listBlock__nft">NFT #878665 </p> 
-                            <p className="listBlock__score">45667374647</p>
-                            <a className="listBlock__link" href=""></a>
-                        </li>
-                        <li className="listBlock__item">
-                            <p className="listBlock__rank">6</p>
-                            <p className="listBlock__nft">NFT #456677 </p> 
-                            <p className="listBlock__score">4566737464</p>
-                            <a className="listBlock__link" href=""></a>
-                        </li>
-                        <li className="listBlock__item">
-                            <p className="listBlock__rank">7</p>
-                            <p className="listBlock__nft">NFT #456677 </p> 
-                            <p className="listBlock__score">4566737464</p>
-                            <a className="listBlock__link" href=""></a>
-                        </li>
-                        <li className="listBlock__item">
-                            <p className="listBlock__rank">8</p>
-                            <p className="listBlock__nft">NFT #456677 </p> 
-                            <p className="listBlock__score">456673746</p>
-                            <a className="listBlock__link" href=""></a>
-                        </li>
-                        <li className="listBlock__item">
-                            <p className="listBlock__rank">9</p>
-                            <p className="listBlock__nft">NFT #456677 </p> 
-                            <p className="listBlock__score">37117374</p>
-                            <a className="listBlock__link" href=""></a>
-                        </li>
-                        <li className="listBlock__item">
-                            <p className="listBlock__rank">10</p>
-                            <p className="listBlock__nft">NFT #456677 </p> 
-                            <p className="listBlock__score">3566737</p>
-                            <a className="listBlock__link" href=""></a>
-                        </li>
+                      {
+                        leaderboard.map((player, index) => (
+                          <li className={`listBlock__item ${address === player.name ? 'listBlock__item--active' : ''}`}>
+                            <p className="listBlock__rank">{index}</p>
+                            <p className="listBlock__nft">{player.name}</p> 
+                            <p className="listBlock__score">{player.score}</p>
+                          </li>
+                        ))
+                      }
                     </ul>
                     <a onClick={() => payDividends()} className="planet__btn btn btn--center btn--neon" >
                         Claim Rewards

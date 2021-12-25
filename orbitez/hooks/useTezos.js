@@ -24,6 +24,7 @@ export function useTezos() {
     if (activeAccount) {
       console.log(`Already connected: ${activeAccount.address}` )
       setAddress(activeAccount.address)
+      localStorage.setItem('tzAddress', address)
       return true
     } 
     return false
@@ -44,6 +45,7 @@ export function useTezos() {
       },})
       const addr = await wallet.getPKH()
       setAddress(addr)
+      localStorage.setItem('tzAddress', address)
     } else {
       const nft = await Tezos.contract.at(NFT_ADDRESS)
       // console.log(nft.methods.balance_of([{owner: address, token_id: 1}], 'KT1NXgqXUfYFowmoZK6FhUTxmcqkjzZnV5rg').send())
@@ -55,6 +57,7 @@ export function useTezos() {
   const disconnectWallet = async () => {
     await wallet.clearActiveAccount()
     setAddress('')
+    localStorage.removeItem('tzAddress')
     alert('Disconnected.')
   }
 

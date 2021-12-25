@@ -64,21 +64,20 @@ export default function Hud() {
             <div id="overlays" style="display: none;">
                 <div id="helloDialog">
                     <div className="form-group">
-                        <h2 id="title">Cigar2</h2>
+                        <h2 id="title">ORBITEZ.IO</h2>
                     </div>
 
                     <div className="form-group">
-                        <input id="nick" className="form-control" placeholder="Nickname" maxlength="15">
+                        <input id="nick" disabled className="form-control" placeholder="Nickname" maxlength="15">
                         <input id="skin" className="form-control" placeholder="Skin Name">
-                        <select id="gamemode" className="form-control" onchange="setserver(this.value)" required>
+                        <select style="display:none" id="gamemode" className="form-control" onchange="setserver(this.value)" required>
                            
                             <option value="ws.orbitez.io" selected>ws.orbitez.io</option>
                         </select>
                     </div>
 
                     <button id="play-btn" className="btn btn-play btn-primary btn-needs-server">Play</button>
-                    <button id="spectate-btn" onclick="spectate()"
-                        className="btn btn-warning btn-spectate btn-needs-server glyphicon glyphicon-eye-open"></button>
+                    
                     <button id="gallery-btn" onclick="openSkinsList()"
                         className="btn btn-play btn-primary btn-needs-server btn-info">Skins Gallery</button>
 

@@ -100,9 +100,12 @@ export default function Hud() {
                                 opacity: waitRoom.length === 10 ? 1 : 0.3,
                                 cursor: waitRoom.length === 10 ? 'pointer' : 'not-allowed'
                             }}
-                            disabled={waitRoom.length < 10}
+                            disabled={waitRoom.length > 10}
                             className="planet__btn btn btn--center btn--neon"
-                            onClick={() => router.push('/hud')}
+                            onClick={() => router.push({
+                                pathname: '/hud',
+                                query: { address },
+                            })}
                         >
                             Start Game
                         </a>
