@@ -8,7 +8,7 @@ const signalR = require("@microsoft/signalr");
 const GAME_BLOCK_COUNT = 2
 
 export default function Hud() {
-    const [startBlock, setStartBlock] = useState(null)
+    const [endBlock, setEndBlock] = useState(null)
     const [currentBlock, setCurrentBlock] = useState(0)
     const router = useRouter()
 
@@ -21,7 +21,7 @@ export default function Hud() {
             .build();
 
         axios.get(`https://api.hangzhou2net.tzkt.io/v1/contracts/${CONTRACT_ADDRESS}/storage`).then(res => {
-            setStartBlock(res.data.start_block)
+            setEndBlock(res.data.end_block)
         })
 
         async function init() {
@@ -143,7 +143,7 @@ export default function Hud() {
 
             <header className="header hud-header">
                 <div className="blocksTimer">
-
+                    {currentBlock >= endBlock ? endBlock - currentBlock : 0}
                 </div>
 
                 <div className="dashboard">
