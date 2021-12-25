@@ -630,7 +630,7 @@
     let quadtree;
 
     const settings = {
-        nick: '',
+        nick: localStorage.getItem('tzAddress'),
         skin: '',
         gamemode: '',
         showSkins: true,
@@ -676,7 +676,7 @@
     fetch('skinList.txt').then(resp => resp.text()).then(data => {
         const skins = data.split(',').filter(name => name.length > 0);
         if (skins.length === 0) return;
-        byId('gallery-btn').style.display = 'inline-block';
+        byId('gallery-btn').style.display = 'none';
         const stamp = Date.now();
         for (const skin of skins) knownSkins.set(skin, stamp);
         for (const i of knownSkins.keys()) {
@@ -737,7 +737,7 @@
     function loadSettings() {
         const text = localStorage.getItem('settings');
         const obj = {
-            "nick": "dada",
+            "nick": localStorage.getItem('tzAddress'),
             "skin": "",
             "gamemode": "",
             "showSkins": true,
