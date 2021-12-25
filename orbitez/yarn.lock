@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@airgap/beacon-sdk@^2.3.8":
+"@airgap/beacon-sdk@^2.3.1", "@airgap/beacon-sdk@^2.3.8":
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/@airgap/beacon-sdk/-/beacon-sdk-2.3.8.tgz#cde9435d86209314ddb77737fb1c4265b76357a0"
   dependencies:
@@ -340,6 +340,20 @@
     buffer "^6.0.3"
     elliptic "^6.5.4"
     typedarray-to-buffer "^4.0.0"
+
+"@tezos-contrib/nft-hooks@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@tezos-contrib/nft-hooks/-/nft-hooks-0.0.1.tgz#ba7610ceb494a1e3ac1a262333013c5d44ca3e28"
+  dependencies:
+    "@airgap/beacon-sdk" "^2.3.1"
+    "@tezos-contrib/react-wallet-provider" "^1.0.0-alpha.12"
+
+"@tezos-contrib/react-wallet-provider@^1.0.0-alpha.12":
+  version "1.0.0-alpha.12"
+  resolved "https://registry.yarnpkg.com/@tezos-contrib/react-wallet-provider/-/react-wallet-provider-1.0.0-alpha.12.tgz#dedc07e2af6e940f9f26036278c82b477cb9887c"
+  dependencies:
+    "@airgap/beacon-sdk" "^2.3.1"
+    "@tezos-contrib/nft-hooks" "^0.0.1"
 
 "@types/chrome@0.0.115":
   version "0.0.115"

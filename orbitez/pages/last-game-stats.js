@@ -1,10 +1,14 @@
 import React from 'react';
 import Head from 'next/head'
 import Link from 'next/link';
-import { useTezos } from '../hooks/useTezos'
+import { useTezos } from '../hooks/useTezos';
 
-export default function Leaderboard() {
+export default function LastGameStats() {
     const { connectWallet, address, Tezos, balance } = useTezos()
+
+    const payDividends = () => {
+      // DO SHIT
+    }
 
     return (
         <div className="background">
@@ -26,7 +30,7 @@ export default function Leaderboard() {
                         <img className="header__logoImg" src='/img/logo-2x.png' ></img>
                     </a>
                 </Link>
-                <h1 className="header__title">Leaderboard</h1>
+                <h1 className="header__title">Last Game Winners</h1>
                 <div className="header__dashboard dashboard">
                     <div className="dashboard__icon">
                         <Link href="/dashboard">
@@ -108,6 +112,9 @@ export default function Leaderboard() {
                             <a className="listBlock__link" href=""></a>
                         </li>
                     </ul>
+                    <a onClick={() => payDividends()} className="planet__btn btn btn--center btn--neon" >
+                        Claim Rewards
+                    </a>
                 </div>
 
             </main>
