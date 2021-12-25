@@ -916,6 +916,12 @@ class Server {
             else if (client.player.cells.length) ++alivePlayers;
             else ++spectatePlayers;
         }
+
+        var clients = this.clients.valueOf();
+        // console.log(clients);
+        clients.sort(function (a, b) {
+            return b.player._score - a.player._score;
+        });
         var s = {
             'server_name': this.config.serverName,
             'server_chat': this.config.serverChat ? "true" : "false",
@@ -931,7 +937,13 @@ class Server {
             'update_time': this.updateTimeAvg.toFixed(3),
             'uptime': Math.round((this.stepDateTime - this.startTime) / 1000 / 60),
             'start_time': this.startTime,
-            'stats_time': Date.now()
+            'stats_time': Date.now(),
+            'leaderboard': (clients.length > 0) ? clients.map(item => {
+                return {
+                    'name': item.player._name,
+                    'score': item.player._score,
+                }
+            }) : [],
         };
         this.statsObj = s;
         this.stats = JSON.stringify(s);

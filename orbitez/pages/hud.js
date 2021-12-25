@@ -12,40 +12,42 @@ export default function Hud() {
     const [currentBlock, setCurrentBlock] = useState(0)
     const router = useRouter()
 
-    const isGameLive = startBlock && currentBlock >= Number(startBlock) + GAME_BLOCK_COUNT
+    const isGameLive = true //startBlock && currentBlock >= Number(startBlock) + GAME_BLOCK_COUNT
+    // const isGameLive = startBlock && currentBlock >= Number(startBlock) + GAME_BLOCK_COUNT
 
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
-        .withUrl("https://api.hangzhou2net.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
-        .build();
+            .withUrl("https://api.hangzhou2net.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
+            .build();
 
         axios.get(`https://api.hangzhou2net.tzkt.io/v1/contracts/${CONTRACT_ADDRESS}/storage`).then(res => {
             setStartBlock(res.data.start_block)
         })
-    
+
         async function init() {
             // open connection
             await connection.start();
             // subscribe to head
-            await connection.invoke("SubscribeToBlocks"); 
+            await connection.invoke("SubscribeToBlocks");
         };
-    
+
         // auto-reconnect
         connection.onclose(init);
-    
+
         connection.on("blocks", (msg) => {
             setCurrentBlock(msg.state)
-            console.log(msg.state)
+            // console.log(msg.state)
             if (!isGameLive) {
                 router.push('/last-game-stats')
-            }            
+            }
         });
-    
+
         init();
-      }, [])
+    }, [])
 
     function createMarkup() {
-        return {__html: `
+        return {
+            __html: `
         <div>
             <link id="favicon" rel="icon" type="image/png" href="/img/favicon.png">
             <link href="https://fonts.googleapis.com/css?family=Ubuntu:700" rel="stylesheet" type="text/css">
@@ -130,20 +132,20 @@ export default function Hud() {
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>Hud - Orbitez.io</title>
-                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
-                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
-                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
-                <link rel="manifest" href="/site.webmanifest"/>
-                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/>
-                <meta name="msapplication-TileColor" content="#da532c"/>
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+                <link rel="manifest" href="/site.webmanifest" />
+                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+                <meta name="msapplication-TileColor" content="#da532c" />
                 <meta name="theme-color" content="#1a113c" />
             </Head>
 
             <header className="header hud-header">
                 <div className="blocksTimer">
-                    
+
                 </div>
-                
+
                 <div className="dashboard">
                     <div className="dashboard__icon">
                         <a className="dashboard__link" href="">
@@ -157,10 +159,10 @@ export default function Hud() {
                 </div>
             </header>
 
-            <div dangerouslySetInnerHTML={ isGameLive ? createMarkup() : null } ></div>
-            
+            <div dangerouslySetInnerHTML={isGameLive ? createMarkup() : null} ></div>
+
             <main className='page container container--big'>
-                
+
             </main>
         </div>
     )
