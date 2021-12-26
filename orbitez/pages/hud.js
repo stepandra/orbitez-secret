@@ -5,15 +5,12 @@ import { CONTRACT_ADDRESS } from '../constants';
 import axios from 'axios';
 const signalR = require("@microsoft/signalr");
 
-const GAME_BLOCK_COUNT = 2
-
 export default function Hud() {
-    const [startBlock, setStartBlock] = useState(null)
+    const [endBlock, setEndBlock] = useState(null)
     const [currentBlock, setCurrentBlock] = useState(0)
     const router = useRouter()
 
-    const isGameLive = true //startBlock && currentBlock >= Number(startBlock) + GAME_BLOCK_COUNT
-    // const isGameLive = startBlock && currentBlock >= Number(startBlock) + GAME_BLOCK_COUNT
+    const isGameLive = endBlock && currentBlock <= Number(endBlock)
 
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
@@ -21,7 +18,7 @@ export default function Hud() {
             .build();
 
         axios.get(`https://api.hangzhou2net.tzkt.io/v1/contracts/${CONTRACT_ADDRESS}/storage`).then(res => {
-            setStartBlock(res.data.start_block)
+            setEndBlock(res.data.end_block)
         })
 
         async function init() {
