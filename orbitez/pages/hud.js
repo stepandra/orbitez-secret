@@ -11,7 +11,7 @@ export default function Hud() {
     const [waitDone, setWaitDone] = useState(false)
     const router = useRouter()
 
-    const isGameLive = endBlock === null || currentBlock <= Number(endBlock)
+    const isGameLive = endBlock === null || currentBlock <= Number(endBlock) + 50
 
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
