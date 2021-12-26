@@ -159,7 +159,7 @@ export default function Hud() {
                 </div>
             </header>
 
-            <div dangerouslySetInnerHTML={isGameLive && waitDone ? createMarkup() : null} ></div>
+            <div dangerouslySetInnerHTML={isGameLive ? createMarkup() : null} ></div>
 
             <main className='page container container--big'>
 
