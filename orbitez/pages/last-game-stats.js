@@ -66,7 +66,7 @@ export default function LastGameStats() {
                     <ul className="listBlock__list">
                       {
                         leaderboard.map((player, index) => (
-                          <li className={`listBlock__item ${address === player.name ? 'listBlock__item--active' : ''}`}>
+                          <li key={'player-' + index} className={`listBlock__item ${address === player.name ? 'listBlock__item--active' : ''}`}>
                             <p className="listBlock__rank">{index + 1}</p>
                             <p className="listBlock__nft">{player.name}</p> 
                             <p className="listBlock__score">{player.score}</p>
