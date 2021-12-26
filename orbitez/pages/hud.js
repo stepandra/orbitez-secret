@@ -36,8 +36,7 @@ export default function Hud() {
 
         connection.on("blocks", (msg) => {
             setCurrentBlock(msg.state)
-            console.log(msg.state)
-            if (msg.state > Number(endBlock)) {
+            if (endBlock && msg.state > Number(endBlock)) {
                 router.push('/last-game-stats')
             }
         });
