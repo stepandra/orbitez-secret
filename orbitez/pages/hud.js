@@ -11,7 +11,7 @@ export default function Hud() {
     const [waitDone, setWaitDone] = useState(false)
     const router = useRouter()
 
-    const isGameLive = endBlock === null || currentBlock <= Number(endBlock) + 50
+    const isGameLive = endBlock === null || currentBlock <= Number(endBlock)
 
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
@@ -38,7 +38,7 @@ export default function Hud() {
         connection.on("blocks", (msg) => {
             setCurrentBlock(msg.state)
             // console.log(msg.state)
-            if (!isGameLive) {
+            if (msg.state <= Number(endBlock)) {
                 router.push('/last-game-stats')
             }
         });
