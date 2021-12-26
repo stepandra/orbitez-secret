@@ -8,10 +8,15 @@ const signalR = require("@microsoft/signalr");
 export default function Hud() {
     const [endBlock, setEndBlock] = useState(null)
     const [currentBlock, setCurrentBlock] = useState(0)
-    const [waitDone, setWaitDone] = useState(false)
     const router = useRouter()
 
     const isGameLive = endBlock === null || currentBlock <= Number(endBlock)
+
+    useEffect(() => {
+        if (!isGameLive) {
+            router.push('/last-game-stats')
+        }
+    }, [isGameLive])
 
     useEffect(() => {
         const connection = new signalR.HubConnectionBuilder()
@@ -28,7 +33,6 @@ export default function Hud() {
             // subscribe to head
             await connection.invoke("SubscribeToBlocks");
 
-            setWaitDone(true)
         };
 
         // auto-reconnect
@@ -36,9 +40,6 @@ export default function Hud() {
 
         connection.on("blocks", (msg) => {
             setCurrentBlock(msg.state)
-            if (endBlock && msg.state > Number(endBlock)) {
-                router.push('/last-game-stats')
-            }
         });
 
         init();
