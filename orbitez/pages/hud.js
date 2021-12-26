@@ -8,6 +8,7 @@ const signalR = require("@microsoft/signalr");
 export default function Hud() {
     const [endBlock, setEndBlock] = useState(null)
     const [currentBlock, setCurrentBlock] = useState(0)
+    const [waitDone, setWaitDone] = useState(false)
     const router = useRouter()
 
     const isGameLive = endBlock && currentBlock <= Number(endBlock)
@@ -26,6 +27,8 @@ export default function Hud() {
             await connection.start();
             // subscribe to head
             await connection.invoke("SubscribeToBlocks");
+
+            setWaitDone(true)
         };
 
         // auto-reconnect
@@ -42,7 +45,7 @@ export default function Hud() {
         init();
     }, [])
 
-    function createMarkup() {
+    function createMarkup () {
         return {
             __html: `
         <div>
@@ -155,7 +158,7 @@ export default function Hud() {
                 </div>
             </header>
 
-            <div dangerouslySetInnerHTML={isGameLive ? createMarkup() : null} ></div>
+            <div dangerouslySetInnerHTML={isGameLive && waitDone ? createMarkup() : null} ></div>
 
             <main className='page container container--big'>
 
