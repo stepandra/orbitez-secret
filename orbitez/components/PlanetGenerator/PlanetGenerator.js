@@ -1,19 +1,23 @@
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { InnerHtml } from './innerHtml';
 import Head from 'next/head'
 import Shaders from './Shaders'
 
-export default () => {
+export default function PlanetGenerator() {  
+  useEffect(() => {
+    setTimeout(() => {
+        window.initPlanet('opXb1R5Gsojdj45VM5NmJP1M6yQcpyjh2JTvWBjUX1DvVJG42KK')
+    }, 50);
+  }, [])
+
   return (
     <div>
       <Head>
-        <script src="/jquery-3.2.0.min.js"></script>
-        <script src="/seedrandom.js"></script>
         <link href="https://fonts.googleapis.com/css?family=Dosis|Raleway" rel="stylesheet" />
       </Head>
       <Shaders />
-      <div dangerouslySetInnerHTML={InnerHtml} ></div>
+     <div dangerouslySetInnerHTML={InnerHtml} ></div>
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { CONTRACT_ADDRESS } from '../constants';
 import axios from 'axios';
 import { renderInner } from '../components/agar-client/agar-client-html';
+import Script from 'next/script'
 const signalR = require("@microsoft/signalr");
 
 export default function Hud() {
@@ -65,9 +66,9 @@ export default function Hud() {
                 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
                 <meta name="msapplication-TileColor" content="#da532c" />
                 <meta name="theme-color" content="#1a113c" />
-                <script src="/assets/js/quadtree.js"></script>
-                <script src="/assets/js/main_out.js"></script>
             </Head>
+            <Script src="/assets/js/quadtree.js" strategy="beforeInteractive"></Script>
+            <Script src="/assets/js/main_out.js" strategy="beforeInteractive"></Script>
 
             <header className="header hud-header">
                 <div className="blocksTimer">

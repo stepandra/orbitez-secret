@@ -188,7 +188,7 @@ function renderPlanet(sz) {
     gl.drawArrays(primitiveType, offset, count);    
 }
 
-renderPlanet();
+
 
 var vertexShaderSource2 = document.getElementById("2d-vertex-shader").text;
 var fragmentShaderSource2 = document.getElementById("map-shader").text;
@@ -308,7 +308,6 @@ function nextFrame() {
 }
 
 // Once everything is set up, start game loop.
-requestAnimationFrame(nextFrame);
 
 function doParse(text) {
     var struct = null;
@@ -364,9 +363,9 @@ function randHex(len) {
 
 var genID = "?";
 
-function genFromRandomID() {
+function genFromRandomID(id) {
 	Math.seedrandom();
-	genFromID(randHex(8));
+	genFromID(id);
 }
 
 function genFromID(id) {
@@ -471,10 +470,17 @@ function doExpand(txt, context) {
     });
 }
 
-jQuery.ajax({
-    url: "/data.txt?" + (new Date()).getTime(),
-    success: function(txt) { doParse(txt); genFromRandomID(); }
-});
+window.initPlanet = (id) => {
+    jQuery.ajax({
+        url: "/data.txt?" + (new Date()).getTime(),
+        success: function(txt) { 
+            doParse(txt); 
+            genFromRandomID(id);
+            renderPlanet();
+            requestAnimationFrame(nextFrame);
+        }
+    });
+}
 
 function writeImageData() {
 	if (doRenderMap) {

@@ -1,26 +1,30 @@
 import React from 'react';
 
-export default (params) => {
+export default function Shaders(params) {
   return (
     <div>
-      <script id="2d-vertex-shader" type='notjs'>
-      {
-        `
-        // an attribute will receive data from a buffer
-        attribute vec4 a_position;
-      
-        // all shaders have a main function
-        void main() {
-      
-          // gl_Position is a special variable a vertex shader
-          // is responsible for setting
-          gl_Position = a_position;
-        }
-        `
-      }
-    </script>
-    <script id="2d-fragment-shader" type="notjs">
-    {` 
+      <a style={{display: 'none'}} id="2d-vertex-shader" type='notjs'
+       
+          dangerouslySetInnerHTML={{
+          __html: 
+          `
+          // an attribute will receive data from a buffer
+          attribute vec4 a_position;
+        
+          // all shaders have a main function
+          void main() {
+        
+            // gl_Position is a special variable a vertex shader
+            // is responsible for setting
+            gl_Position = a_position;
+          }
+          `
+        }}
+      >
+    </a>
+    <a style={{display: 'none'}} id="2d-fragment-shader" type="notjs"
+    dangerouslySetInnerHTML={{
+      __html: ` 
       // fragment shaders don't have a default precision so we need
       // to pick one. mediump is a good default
       precision mediump float;
@@ -30,11 +34,12 @@ export default (params) => {
         // is responsible for setting
         gl_FragColor = vec4(1, 0, 0.5, 1); // return redish-purple
       }
-    `}
-    </script>
-    <script id="planet-shader" type="notjs" src="/webgl/planet-shader.txt">
-      {
-        `
+    `}}>
+    </a>
+    <a style={{display: 'none'}} id="planet-shader" type="notjs" src="/webgl/planet-shader.txt"
+   
+     dangerouslySetInnerHTML={{
+      __html: `
         #ifdef GL_ES
         precision highp float;
         #endif
@@ -227,11 +232,12 @@ export default (params) => {
           gl_FragColor = planet(coord.xy / resolution.xy), 1.0;
         }
         `
-      }
-    </script>
-    <script id="map-shader" type="notjs" src="/webgl/map-shader.txt">
-      {
-        `
+      }}>
+    </a>
+    <a style={{display: 'none'}} id="map-shader" type="notjs" src="/webgl/map-shader.txt"
+   
+      dangerouslySetInnerHTML={{
+        __html: `
         #ifdef GL_ES
         precision highp float;
         #endif
@@ -403,8 +409,8 @@ export default (params) => {
           gl_FragColor = planet(coord.xy / resolution.xy), 1.0;
         }
         `
-      }
-    </script>
+      }}>
+    </a>
   </div>
   )
 }
