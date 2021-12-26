@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     if (typeof WebSocket === 'undefined' || typeof DataView === 'undefined' ||
@@ -635,7 +635,7 @@
         gamemode: '',
         showSkins: true,
         showNames: true,
-        darkTheme: false,
+        darkTheme: true,
         showColor: true,
         showMass: false,
         _showChat: true,
@@ -757,7 +757,7 @@
             "fillSkin": true,
             "backgroundSectors": false,
             "jellyPhysics": true
-          };
+        };
         for (const prop in settings) {
             const elm = byId(prop.charAt(0) === '_' ? prop.slice(1) : prop);
             if (elm) {
@@ -858,7 +858,7 @@
     }
 
     function drawPosition() {
-        if(border.centerX !== 0 || border.centerY !== 0 || !settings.showPosition) return;
+        if (border.centerX !== 0 || border.centerY !== 0 || !settings.showPosition) return;
         const width = 200 * (border.width / border.height);
         const height = 40 * (border.height / border.width);
 
@@ -931,7 +931,7 @@
                     text = leaderboard.items[i];
                 } else {
                     text = leaderboard.items[i].name,
-                    isMe = leaderboard.items[i].me;
+                        isMe = leaderboard.items[i].me;
                 }
                 if (leaderboard.type === 'ffa') text = `${i + 1}. ${text}`;
                 ctx.fillStyle = isMe ? '#FAA' : '#FFF';
@@ -1339,8 +1339,7 @@
                 }, (item) => item.parent !== this && sqDist(item, curP) <= 25);
                 if (!affected &&
                     (curP.x < border.left || curP.y < border.top ||
-                    curP.x > border.right || curP.y > border.bottom))
-                {
+                        curP.x > border.right || curP.y > border.bottom)) {
                     affected = true;
                 }
                 if (affected) {
@@ -1361,7 +1360,7 @@
             }
         }
         setName(rawName) {
-            const {name, skin} = Cell.parseName(rawName);
+            const { name, skin } = Cell.parseName(rawName);
             this.name = name;
             this.setSkin(skin);
         }
@@ -1475,7 +1474,7 @@
 
     // 2-var draw-stay cache
     const cachedNames = new Map();
-    const cachedMass  = new Map();
+    const cachedMass = new Map();
     window.cachedNames = cachedNames;
     window.cachedMass = cachedMass;
 
@@ -1523,8 +1522,8 @@
     }
     function newMassCache(size) {
         const canvases = {
-            0: { }, 1: { }, 2: { }, 3: { }, 4: { },
-            5: { }, 6: { }, 7: { }, 8: { }, 9: { }
+            0: {}, 1: {}, 2: {}, 3: {}, 4: {},
+            5: {}, 6: {}, 7: {}, 8: {}, 9: {}
         };
         for (const i in canvases) {
             const canvas = canvases[i].canvas = document.createElement('canvas');
@@ -1661,7 +1660,7 @@
 
         loadSettings();
         window.addEventListener('beforeunload', storeSettings);
-        document.addEventListener('wheel', handleScroll, {passive: true});
+        document.addEventListener('wheel', handleScroll, { passive: true });
         byId('play-btn').addEventListener('click', () => {
             const skin = settings.skin;
             sendPlay((skin ? `<${skin}>` : '') + settings.nick);
