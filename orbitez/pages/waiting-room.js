@@ -59,7 +59,7 @@ export default function Hud() {
 
 
     return (
-        <body className="background">
+        <div className="background">
             <Head>
                 <meta charset="UTF-8" />
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -103,8 +103,7 @@ export default function Hud() {
                             disabled={waitRoom.length > 10}
                             className="planet__btn btn btn--center btn--neon"
                             onClick={() => router.push({
-                                pathname: '/hud',
-                                query: { address },
+                                pathname: '/hud'
                             })}
                         >
                             Start Game
@@ -117,6 +116,6 @@ export default function Hud() {
 
                 </div>
             </main>
-        </body>
+        </div>
     )
 }

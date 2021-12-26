@@ -275,6 +275,7 @@
             Logger.debug('WebSocket init on existing connection');
             wsCleanup();
         }
+        if (!byId('connecting')) return
         byId('connecting').show(0.5);
         wsUrl = url;
         ws = new WebSocket(`ws${USE_HTTPS ? 's' : ''}://${url}`);
@@ -1651,7 +1652,7 @@
         camera.userZoom = Math.min(camera.userZoom, 4);
     }
 
-    function init() {
+    window.init = () => {
         mainCanvas = document.getElementById('canvas');
         mainCtx = mainCanvas.getContext('2d');
         chatBox = byId('chat_textbox');
@@ -1766,5 +1767,4 @@
         if (byId('gallery-body').innerHTML === '') buildGallery();
         byId('gallery').show(0.5);
     };
-    window.addEventListener('DOMContentLoaded', init);
 })();

@@ -5,6 +5,7 @@ import { useTezos } from '../hooks/useTezos'
 import { CONTRACT_ADDRESS } from '../constants'
 import Link from 'next/link';
 import { useNFT} from '../hooks/useNFT.ts';
+import PlanetGenerator from '../components/PlanetGenerator/PlanetGenerator';
 
 export default function Dashboard() {
     const { connectWallet, address, Tezos, balance } = useTezos()
@@ -133,7 +134,8 @@ export default function Dashboard() {
 
                 <div className="page__center">
                     <div className="planet planet--bgCircle">
-                        {imgLink !== '' && <img className="planet__img " src={imgLink} alt="planet background" />}
+                        <PlanetGenerator />
+                        {/* {imgLink !== '' && <img className="planet__img " src={imgLink} alt="planet background" />} */}
                         {/* <iframe _ng content-hob-c70="" allow="accelerometer; camera; gyroscope; microphone; xr-spatial-tracking;" className="fs" sandbox="allow-scripts allow-same-origin" scrolling="" src="https://ipfs.io/ipfs/QmVnK79nz8TEPX7R26n7LdozNLU5dgUn5X1aBhV4fXtHnP?objkt=192102&amp;creator=tz1iJJPGh7arygfq5EC2sBaAF23T8iUYTpEH&amp;viewer=null"></iframe> */}
                         <a onClick={() => { 
                             address == '' ? connectWallet() : enterRoom() 
