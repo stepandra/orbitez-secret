@@ -20,7 +20,6 @@ export default function Hud() {
 
         axios.get(`https://api.hangzhou2net.tzkt.io/v1/contracts/${CONTRACT_ADDRESS}/storage`).then(res => {
             setEndBlock(res.data.end_block)
-            console.log(res.data.end_block, currentBlock)
         })
 
         async function init() {
@@ -38,7 +37,7 @@ export default function Hud() {
         connection.on("blocks", (msg) => {
             setCurrentBlock(msg.state)
             // console.log(msg.state)
-            if (msg.state <= Number(endBlock)) {
+            if (msg.state > Number(endBlock)) {
                 router.push('/last-game-stats')
             }
         });
