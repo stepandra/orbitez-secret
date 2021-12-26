@@ -20,6 +20,7 @@ export default function Hud() {
 
         axios.get(`https://api.hangzhou2net.tzkt.io/v1/contracts/${CONTRACT_ADDRESS}/storage`).then(res => {
             setEndBlock(res.data.end_block)
+            console.log(endBlock)
         })
 
         async function init() {
