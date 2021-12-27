@@ -1,3 +1,5 @@
+(function () {
+
 var canvas = document.getElementById("c");
 var structs = {};
 var slots = {};
@@ -364,15 +366,13 @@ function randHex(len) {
 
 var genID = "?";
 
-function genFromRandomID() {
+function genFromRandomID(id) {
 	Math.seedrandom();
-	genFromID(fxhash);
+	genFromID(id);
 }
 
-function genFromID() {
-	genID = fxhash;
-	console.log("id_fxhash: " + fxhash);
-	Math.seedrandom(fxhash);
+function genFromID(genID) {
+	Math.seedrandom(genID);
 	var result = doGen("planet")
 	doDisplay(result);
 	var name = doExpand(result.struct.vals["desc"], result).split("</h1>")[0].replace("<h1>", "");
@@ -476,7 +476,7 @@ window.initPlanet = (id) => {
         url: "/data.txt?" + (new Date()).getTime(),
         success: function(txt) { 
             doParse(txt); 
-            genFromRandomID(fxhash);
+            genFromRandomID(id);
             renderPlanet();
             requestAnimationFrame(nextFrame);
         }
@@ -500,3 +500,4 @@ function doMapSwitch() {
 	doRenderMap = !doRenderMap;
 	document.getElementById("mapSwitch").innerHTML = doRenderMap ? '<img src="planet.png">' : '<img src="map.png">';
 }
+})()

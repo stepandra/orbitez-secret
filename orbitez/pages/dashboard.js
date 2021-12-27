@@ -151,7 +151,7 @@ export default function Dashboard() {
 
                 <div className="page__center">
                     <div className="planet planet--bgCircle">
-                       {mintHash.length ? <PlanetGenerator mint_hash={mintHash} />: <p>Please, wait</p> }
+                        <PlanetGenerator mint_hash={mintHash} />
                         {/* {imgLink !== '' && <img className="planet__img " src={imgLink} alt="planet background" />} */}
                         {/* <iframe _ng content-hob-c70="" allow="accelerometer; camera; gyroscope; microphone; xr-spatial-tracking;" className="fs" sandbox="allow-scripts allow-same-origin" scrolling="" src="https://ipfs.io/ipfs/QmVnK79nz8TEPX7R26n7LdozNLU5dgUn5X1aBhV4fXtHnP?objkt=192102&amp;creator=tz1iJJPGh7arygfq5EC2sBaAF23T8iUYTpEH&amp;viewer=null"></iframe> */}
                         <a onClick={() => { 

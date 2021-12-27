@@ -31,7 +31,6 @@ export const InnerHtml = {
   <div style="display:none" id="txt">
   <script src="/jquery-3.2.0.min.js"></script>
   <script src="/seedrandom.js"></script>
-  <script src="/webgl/main.js"></script>
 
   </div>
   
