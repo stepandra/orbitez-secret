@@ -1,13 +1,14 @@
-
 import React, {useEffect, useState} from 'react';
 import { InnerHtml } from './innerHtml';
 import Head from 'next/head'
 import Shaders from './Shaders'
 
-export default function PlanetGenerator() {  
+export default function PlanetGenerator(props) {  
+  // console.log(props.mint_hash);
   useEffect(() => {
     setTimeout(() => {
-        window.initPlanet('opXb1R5Gsojdj45VM5NmJP1M6yQcpyjh2JTvWBjUX1DvVJG42KK')
+        console.log('ZigHash: ', props.mint_hash);
+        window.initPlanet(fxhash);
     }, 50);
   }, [])
 

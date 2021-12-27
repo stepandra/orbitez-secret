@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useTezos } from '../hooks/useTezos'
-import { CONTRACT_ADDRESS } from '../constants'
+import { CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from '../constants'
 import Link from 'next/link';
 import { useNFT} from '../hooks/useNFT.ts';
 import PlanetGenerator from '../components/PlanetGenerator/PlanetGenerator';
@@ -11,8 +11,9 @@ export default function Dashboard() {
     const { connectWallet, address, Tezos, balance } = useTezos()
     const router = useRouter()
     const img_url = "";
-    const [imgLink, setImgLink] = useState(null)
-    const fxhash_tokenid=[];
+    const [imgLink, setImgLink] = useState(null);
+    const fxhash_tokenid = [];
+    const [mintHash, setMintHash] = useState('');
 
    
     fetch("https://api.fxhash.xyz/graphql", {
@@ -21,19 +22,24 @@ export default function Dashboard() {
           "Content-Type": "application/json",
           Accept: "application/json"
         },
-        body: JSON.stringify({ query: '{generativeToken(slug: "Orbitoid", id: 3808) {entireCollection {id owner {id} metadata }}}' })
+        body: JSON.stringify({ query: '{generativeToken(slug: "Orbitoid", id: 3808) {entireCollection {id owner {id} generationHash metadata }}}' })
       })
         .then(res => res.json())
         .then(res => {
             // console.log(res.data.generativeToken.entireCollection);
-            const owners_ids = res.data.generativeToken.entireCollection;
+            console.log(res.data?.generativeToken);
+            const owners_ids = res.data?.generativeToken?.entireCollection;
+            console.log(owners_ids);
             owners_ids.find(function(post, index) {
                 if(post.owner.id == address) {
                     fxhash_tokenid.push(post.id);
                     console.log(fxhash_tokenid);
                     // parse artifactUri to animate
                     const ipfs_url = post.metadata.displayUri;
-                    setImgLink('https://cloudflare-ipfs.com/ipfs' + ipfs_url.slice(6))
+                    const gen_hash = post.metadata.iterationHash;
+                    console.log('Gen Hash: ' + gen_hash);
+                    setMintHash('' + gen_hash);
+                    setImgLink('https://cloudflare-ipfs.com/ipfs' + ipfs_url.slice(6));
                     return true;
                 }
             });
@@ -59,6 +65,17 @@ export default function Dashboard() {
         try {
             await contract.methods.enterRoom(1, true).send({ amount: 1 })
             router.push('/waiting-room')
+        } catch (e) {
+            console.log('Transaction rejected:', e)
+        }
+    }
+
+    const mintOnFx = async () => {
+        const contract = await Tezos.wallet.at(NFT_CONTRACT_ADDRESS);
+        try {
+            await contract.methods.mint("tz1iJJPGh7arygfq5EC2sBaAF23T8iUYTpEH", 3808).send({ amount: 1 })
+
+            // router.push('/waiting-room')
         } catch (e) {
             console.log('Transaction rejected:', e)
         }
@@ -120,7 +137,7 @@ export default function Dashboard() {
                             !planetsAvailable.length && <p className="listBlock__text">{`Uh oh, Looks like you haven't minted any planet NFTs...`}</p>
                         }
                     </div>
-                    { address !== '' && <a className="btn btn--wide" onClick={() => mintNft()}>MINT NEW NFT</a>}
+                    { address !== '' && <a className="btn btn--wide" onClick={() => mintOnFx()}>MINT NEW NFT</a>}
 
                     <div className="payMethod">
                         <h3 className="payMethod__title">Payment method</h3>
@@ -134,7 +151,7 @@ export default function Dashboard() {
 
                 <div className="page__center">
                     <div className="planet planet--bgCircle">
-                        <PlanetGenerator />
+                       {mintHash.length ? <PlanetGenerator mint_hash={mintHash} />: <p>Please, wait</p> }
                         {/* {imgLink !== '' && <img className="planet__img " src={imgLink} alt="planet background" />} */}
                         {/* <iframe _ng content-hob-c70="" allow="accelerometer; camera; gyroscope; microphone; xr-spatial-tracking;" className="fs" sandbox="allow-scripts allow-same-origin" scrolling="" src="https://ipfs.io/ipfs/QmVnK79nz8TEPX7R26n7LdozNLU5dgUn5X1aBhV4fXtHnP?objkt=192102&amp;creator=tz1iJJPGh7arygfq5EC2sBaAF23T8iUYTpEH&amp;viewer=null"></iframe> */}
                         <a onClick={() => { 

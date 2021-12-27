@@ -291,9 +291,10 @@ function renderMap(sz) {
     var count = 6;
     gl.drawArrays(primitiveType, offset, count);    
 }
-
+// wrong rnd
 function rnd() {
-	return Math.random();
+	// return Math.random();
+return fxrand();
 }
 
 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -353,7 +354,7 @@ function randHex(len) {
   var maxlen = 8,
       min = Math.pow(16,Math.min(len,maxlen)-1) 
       max = Math.pow(16,Math.min(len,maxlen)) - 1,
-      n   = Math.floor( Math.random() * (max-min+1) ) + min,
+      n   = Math.floor( fxrand() * (max-min+1) ) + min,
       r   = n.toString(16);
   while ( r.length < len ) {
      r = r + randHex( len - maxlen );
@@ -363,25 +364,25 @@ function randHex(len) {
 
 var genID = "?";
 
-function genFromRandomID(id) {
+function genFromRandomID() {
 	Math.seedrandom();
-	genFromID(id);
+	genFromID(fxhash);
 }
 
-function genFromID(id) {
-	genID = id;
-	console.log(id);
-	Math.seedrandom(id);
+function genFromID() {
+	genID = fxhash;
+	console.log("id_fxhash: " + fxhash);
+	Math.seedrandom(fxhash);
 	var result = doGen("planet")
 	doDisplay(result);
 	var name = doExpand(result.struct.vals["desc"], result).split("</h1>")[0].replace("<h1>", "");
 	document.getElementById("download").download = name + " " + genID + ".png";
-	document.getElementById("downloadText").download = name + " " + genID + ".txt";
-	document.getElementById("downloadText").href = "data:text/plain," + encodeURI(doExpand(result.struct.vals["desc"], result).replace("<h1>", "").replace("</h1>", "\n\n").replace(/<br>/g, "\n") + "\n\n" +
-		"Habitability: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["hab"], result)))) * 10) + "%\n" +
-        "Size: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["sze"], result))))) + "\n" +
-        "Industry: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["min"], result))))) + "\n" +
-        "Science: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["sci"], result))))) + "\n\n" + id);
+	// document.getElementById("downloadText").download = name + " " + genID + ".txt";
+	// document.getElementById("downloadText").href = "data:text/plain," + encodeURI(doExpand(result.struct.vals["desc"], result).replace("<h1>", "").replace("</h1>", "\n\n").replace(/<br>/g, "\n") + "\n\n" +
+	// 	"Habitability: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["hab"], result)))) * 10) + "%\n" +
+    //     "Size: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["sze"], result))))) + "\n" +
+    //     "Industry: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["min"], result))))) + "\n" +
+    //     "Science: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["sci"], result))))) + "\n\n" + id_fxhash);
 }
 
 function setID() {
@@ -475,7 +476,7 @@ window.initPlanet = (id) => {
         url: "/data.txt?" + (new Date()).getTime(),
         success: function(txt) { 
             doParse(txt); 
-            genFromRandomID(id);
+            genFromRandomID(fxhash);
             renderPlanet();
             requestAnimationFrame(nextFrame);
         }
