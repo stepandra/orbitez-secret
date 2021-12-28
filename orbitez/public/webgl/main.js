@@ -296,7 +296,7 @@ function renderMap(sz) {
 // wrong rnd
 function rnd() {
 	// return Math.random();
-return fxrand();
+    return fxrand();
 }
 
 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -422,13 +422,20 @@ function doDisplay(result) {
     css("top", (jQuery(window).innerHeight() / 2 - jQuery("#c").height() / 2) + "px").
     css("left", (jQuery(window).innerWidth() / 2 - jQuery("#c").width() / 2) + "px");*/
 	//jQuery("#setID").html("ID: " + genID);
-    jQuery("#txt").html(doExpand(result.struct.vals["desc"], result));
-    jQuery("#stats").html(
-        "Habitability: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["hab"], result)))) * 10) + "%<br>" +
-        "Size: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["sze"], result))))) + "<br>" +
-        "Industry: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["min"], result))))) + "<br>" +
-        "Science: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["sci"], result)))))
-    );
+    // jQuery("#txt").html(doExpand(result.struct.vals["desc"], result));
+    // jQuery("#stats").html(
+    //     "Habitability: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["hab"], result)))) * 10) + "%<br>" +
+    //     "Size: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["sze"], result))))) + "<br>" +
+    //     "Industry: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["min"], result))))) + "<br>" +
+    //     "Science: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["sci"], result)))))
+    // );
+    window.$fxhashFeatures = {
+        "Habitability: ": getHab(fxrand()) + "%",
+        "Size: ": getSize(fxrand()),
+        "Age: ": getHab(fxrand()) + "M years",
+        "Gravity: ": getGravity(fxrand()),
+        "Exoplanet": isExoplanet(fxrand())
+      }
     vWaterLevel = eval(doExpand(result.struct.vals["watL"], result));
     vTemperature = eval(doExpand(result.struct.vals["temp"], result));
     vRivers = eval(doExpand(result.struct.vals["rive"], result));
@@ -460,7 +467,7 @@ function doDisplay(result) {
 function doExpand(txt, context) {
     if (!txt) { return ""; }
     if (txt.indexOf("{") == -1) { return txt; }
-    return txt.replace(/[{]([^}]*)[}]/g, function(m, capture) {
+    return txt.replace(/[{]([^}]*)[}]/g, function (m, capture) {
         if (capture.indexOf(":") == -1) {
             return context[capture].id;
         } else {
