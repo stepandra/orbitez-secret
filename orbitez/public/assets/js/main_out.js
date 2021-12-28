@@ -1391,7 +1391,7 @@
         drawShape(ctx) {
             ctx.fillStyle = settings.showColor ? this.color.toHex() : '#FFFFFF';
             ctx.strokeStyle = settings.showColor ? this.sColor.toHex() : '#E5E5E5';
-            ctx.lineWidth = Math.max(~~(this.s / 50), 10);
+            ctx.lineWidth = 0;
             if (this.s > 20) {
                 this.s -= ctx.lineWidth / 2;
             }
@@ -1432,15 +1432,11 @@
                 if (settings.fillSkin) ctx.fill();
                 ctx.save(); // for the clip
                 ctx.clip();
-                ctx.drawImage(skinImage, this.x - this.s, this.y - this.s,
-                    this.s * 2, this.s * 2);
+                ctx.drawImage(skinImage, this.x - this.s * 2, this.y - this.s * 2,
+                    this.s * 4, this.s * 4);
                 ctx.restore();
             } else {
                 ctx.fill();
-            }
-            if (this.s > 20) {
-                ctx.stroke();
-                this.s += ctx.lineWidth / 2;
             }
         }
         drawText(ctx) {
@@ -1604,7 +1600,7 @@
         ctx.restore();
     }
     function processKey(event) {
-        let key = CODE_TO_KEY[event.code] || event.key.toLowerCase();
+        let key = CODE_TO_KEY[event.code] || (event.key) ? event.key.toLowerCase() : null;
         if (Object.hasOwnProperty.call(IE_KEYS, key)) key = IE_KEYS[key]; // IE fix
         return key;
     }

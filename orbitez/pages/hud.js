@@ -12,11 +12,11 @@ export default function Hud() {
     const [currentBlock, setCurrentBlock] = useState(0)
     const router = useRouter()
 
-    const isGameLive = endBlock === null || currentBlock <= Number(endBlock)
+    const isGameLive = true// endBlock === null || currentBlock <= Number(endBlock)
 
     useEffect(() => {
         if (!isGameLive) {
-            router.push('/last-game-stats')
+            // router.push('/last-game-stats')
         }
     }, [isGameLive])
 
