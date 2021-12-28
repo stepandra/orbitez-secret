@@ -54,8 +54,6 @@ export const InnerHtml = {
 <canvas id="c" width="800" height="800"></canvas>
   <div style="display:none" id="stats"></div>
   <div style="display:none" id="txt">
-  <script src="/jquery-3.2.0.min.js"></script>
-  <script src="/seedrandom.js"></script>
 
   </div>
   
