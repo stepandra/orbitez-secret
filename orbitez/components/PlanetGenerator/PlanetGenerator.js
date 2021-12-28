@@ -8,10 +8,12 @@ export default function PlanetGenerator(props) {
   const [shouldGeneratePlanet, setShouldGeneratePlanet] = useState(false) 
   // console.log(props.mint_hash);
   useEffect(() => {
+    setTimeout(() => { 
     if (shouldGeneratePlanet && props.mint_hash) {
       localStorage.setItem('fxHash', props.mint_hash)
       window.initPlanet(props.mint_hash);
     }
+  }, 50)
   }, [props.mint_hash])
 
   return (
