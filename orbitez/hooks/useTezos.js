@@ -5,9 +5,8 @@ import { useState, useEffect, memo } from 'react'
 import { NFT_ADDRESS } from '../constants'
 
 export function useTezos() {
-  const RPC_URL = 'https://mainnet.smartpy.io/';
-  // 'https://hangzhounet.smartpy.io';
-  
+  const RPC_URL = 'https://hangzhounet.smartpy.io';
+  // 'https://mainnet.smartpy.io/';
 
   const Tezos = new TezosToolkit(RPC_URL)
   const wallet = new BeaconWallet({ name: "Orbitez" })
@@ -23,14 +22,14 @@ export function useTezos() {
   const connectionExistsCheck = async () => {
     const activeAccount = await wallet.client.getActiveAccount()
     if (activeAccount) {
-      console.log(`Already connected: ${activeAccount.address}` )
+      console.log(`Already connected: ${activeAccount.address}`)
       setAddress(activeAccount.address)
       localStorage.setItem('tzAddress', address)
       return true
-    } 
+    }
     return false
   }
-  
+
   const updateBalance = async () => {
     if (address == '') return
     const bal = await Tezos.rpc.getBalance(address)
@@ -40,11 +39,13 @@ export function useTezos() {
   const connectWallet = async () => {
     const connectionExists = await connectionExistsCheck()
     if (!connectionExists) {
-      await wallet.requestPermissions({ network: {
-        // type: NetworkType.HANGZHOUNET,
-        type: NetworkType.MAINNET,
-        rpcUrl: RPC_URL,
-      },})
+      await wallet.requestPermissions({
+        network: {
+          type: NetworkType.HANGZHOUNET,
+          // type: NetworkType.MAINNET,
+          rpcUrl: RPC_URL,
+        },
+      })
       const addr = await wallet.getPKH()
       setAddress(addr)
       localStorage.setItem('tzAddress', address)
@@ -62,7 +63,6 @@ export function useTezos() {
     localStorage.removeItem('tzAddress')
     alert('Disconnected.')
   }
-
 
   return {
     connectWallet,
