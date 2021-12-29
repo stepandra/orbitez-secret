@@ -38,7 +38,7 @@ export default function Leaderboard() {
                     </div>
                     <div className="dashboard__info">
                         <p onClick={() => connectWallet()} className="dashboard__text">{address == '' ? 'CONNECT WALLET' : 'BALANCE'}</p>
-                        {address != '' && <p className="dashboard__num">ꜩ{balance.toFixed(3)}</p>}
+                        {address != '' && <p className="dashboard__num"><span className='dashboard__symbol'>ꜩ</span>{balance.toFixed(3)}</p>}
                     </div>
                 </div>
             </header>

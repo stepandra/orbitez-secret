@@ -28,7 +28,7 @@ export default function LastGameStats() {
             <Head>
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title>Leaderboard - Orbitez.io</title>
+                <title>Game Winners - Orbitez.io</title>
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
                 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
                 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
@@ -55,12 +55,12 @@ export default function LastGameStats() {
                     </div>
                     <div className="dashboard__info">
                         <p onClick={() => connectWallet()} className="dashboard__text">{address == '' ? 'CONNECT WALLET' : 'BALANCE'}</p>
-                        {address != '' && <p className="dashboard__num">ꜩ{balance.toFixed(3)}</p>}
+                        {address != '' && <p className="dashboard__num"><span className='dashboard__symbol'>ꜩ</span>{balance.toFixed(3)}</p>}
                     </div>
                 </div>
             </header>
             
-            <main className='page container container--small'>
+            <main className='container container--small'>
 
                 <div className="listBlock listBlock--wide">
                     <ul className="listBlock__list">
@@ -74,10 +74,10 @@ export default function LastGameStats() {
                         ))
                       }
                     </ul>
-                    <a onClick={() => payDividends()} className="planet__btn btn btn--center btn--neon" >
-                        Claim Rewards
-                    </a>
                 </div>
+                <a onClick={() => payDividends()} className="btn btn--center btn--neon" >
+                    Claim Rewards
+                </a>
 
             </main>
         </div>
