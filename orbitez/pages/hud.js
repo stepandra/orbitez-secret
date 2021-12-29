@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head'
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { CONTRACT_ADDRESS } from '../constants';
 import axios from 'axios';
@@ -70,16 +71,19 @@ export default function Hud() {
             <Script src="/assets/js/quadtree.js" strategy="beforeInteractive"></Script>
             <Script src="/assets/js/main_out.js" strategy="beforeInteractive"></Script>
 
-            <header className="header hud-header">
+            <header className="header header--hud">
                 <div className="blocksTimer">
-                    {currentBlock >= endBlock ? endBlock - currentBlock : 0}
+                    <div className='blocksTimer__num'>{currentBlock >= endBlock ? endBlock - currentBlock : 0}</div>
+                    <div className='blocksTimer__text'>BLOCKS</div>
                 </div>
 
-                <div className="dashboard">
+                <div className="dashboard dashboard--hud">
                     <div className="dashboard__icon">
-                        <a className="dashboard__link" href="">
-                            <img className="dashboard__img" src="/img/icon-home.png" alt="Home icon" />
-                        </a>
+                        <Link href="/dashboard">
+                            <a className="dashboard__link" >
+                                <img className="dashboard__img" src="/img/icon-home.png" alt="Home icon" />
+                            </a>
+                        </Link>
                     </div>
                     <div className="dashboard__info">
                         <p className="dashboard__text">SCORE</p>
@@ -88,7 +92,7 @@ export default function Hud() {
                 </div>
             </header>
             <div dangerouslySetInnerHTML={ isGameLive ? renderInner() : null } ></div>
-            <main className='page container container--big'>
+            <main className='container container--big'>
                
             </main>
         </div>

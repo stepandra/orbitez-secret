@@ -8,7 +8,7 @@ import { useNFT} from '../hooks/useNFT.ts';
 import PlanetGenerator from '../components/PlanetGenerator/PlanetGenerator';
 
 export default function Dashboard() {
-    const { connectWallet, address, Tezos, balance } = useTezos()
+    const { connectWallet, disconnectWallet, address, Tezos, balance } = useTezos()
     const router = useRouter()
     const img_url = "";
     const [imgLink, setImgLink] = useState(null);
@@ -104,13 +104,13 @@ export default function Dashboard() {
                 <h1 className="header__title">Dashboard</h1>
                 <div className="header__dashboard dashboard">
                     <div className="dashboard__icon">
-                        <a className="dashboard__link" href="">
+                        <a className="dashboard__link" onClick={() => disconnectWallet()}>
                             <img className="dashboard__img" src="/img/icon-exite.png" alt="Home icon" />
                         </a>
                     </div>
                     <div className="dashboard__info">
                         <p onClick={() => connectWallet()} className="dashboard__text">{address == '' ? 'CONNECT WALLET' : 'BALANCE'}</p>
-                        {address != '' && <p className="dashboard__num">ꜩ{balance.toFixed(3)}</p>}
+                        {address != '' && <p className="dashboard__num"><span className='dashboard__symbol'>ꜩ</span>{balance.toFixed(3)}</p>}
                     </div>
                 </div>
             </header>
@@ -155,7 +155,6 @@ export default function Dashboard() {
                     <div className="planet planet--bgCircle">
                         <PlanetGenerator mint_hash={mintHash} />
                         {/* {imgLink !== '' && <img className="planet__img " src={imgLink} alt="planet background" />} */}
-                        {/* <iframe _ng content-hob-c70="" allow="accelerometer; camera; gyroscope; microphone; xr-spatial-tracking;" className="fs" sandbox="allow-scripts allow-same-origin" scrolling="" src="https://ipfs.io/ipfs/QmVnK79nz8TEPX7R26n7LdozNLU5dgUn5X1aBhV4fXtHnP?objkt=192102&amp;creator=tz1iJJPGh7arygfq5EC2sBaAF23T8iUYTpEH&amp;viewer=null"></iframe> */}
                         <a onClick={() => { 
                             address == '' ? connectWallet() : enterRoom() 
                         }} className="planet__btn btn btn--center btn--neon" >
