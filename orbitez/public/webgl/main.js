@@ -13,7 +13,7 @@ function createShader(gl, type, source) {
     return shader;
   }
  
-  console.log(gl.getShaderInfoLog(shader));
+//   console.log(gl.getShaderInfoLog(shader));
   gl.deleteShader(shader);
 }
 
@@ -27,7 +27,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
     return program;
   }
  
-  console.log(gl.getProgramInfoLog(program));
+//   console.log(gl.getProgramInfoLog(program));
   gl.deleteProgram(program);
 }
 function resize(canvas) {
@@ -51,7 +51,7 @@ var gl = canvas.getContext("webgl", {
 });
 var vertexShaderSource = document.getElementById("2d-vertex-shader").text;
 var fragmentShaderSource = document.getElementById("planet-shader").text;
-console.log(fragmentShaderSource)
+// console.log(fragmentShaderSource)
 var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
 var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 var program = createProgram(gl, vertexShader, fragmentShader);
@@ -296,7 +296,7 @@ function renderMap(sz) {
 // wrong rnd
 function rnd() {
 	// return Math.random();
-    return fxrand();
+    return window.fxrand();
 }
 
 var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -356,7 +356,7 @@ function randHex(len) {
   var maxlen = 8,
       min = Math.pow(16,Math.min(len,maxlen)-1) 
       max = Math.pow(16,Math.min(len,maxlen)) - 1,
-      n   = Math.floor( fxrand() * (max-min+1) ) + min,
+      n   = Math.floor( window.fxrand() * (max-min+1) ) + min,
       r   = n.toString(16);
   while ( r.length < len ) {
      r = r + randHex( len - maxlen );
@@ -430,11 +430,11 @@ function doDisplay(result) {
     //     "Science: " + (Math.max(1, Math.min(9, eval(doExpand(result.struct.vals["sci"], result)))))
     // );
     window.$fxhashFeatures = {
-        "Habitability: ": getHab(fxrand()) + "%",
-        "Size: ": getSize(fxrand()),
-        "Age: ": getHab(fxrand()) + "M years",
-        "Gravity: ": getGravity(fxrand()),
-        "Exoplanet": isExoplanet(fxrand())
+        "Habitability: ": getHab(window.fxrand()) + "%",
+        "Size: ": getSize(window.fxrand()),
+        "Age: ": getHab(window.fxrand()) + "M years",
+        "Gravity: ": getGravity(window.fxrand()),
+        "Exoplanet": isExoplanet(window.fxrand())
       }
     vWaterLevel = eval(doExpand(result.struct.vals["watL"], result));
     vTemperature = eval(doExpand(result.struct.vals["temp"], result));
