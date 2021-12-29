@@ -14,7 +14,10 @@ export default function Dashboard() {
     const [imgLink, setImgLink] = useState(null);
     const fxhash_tokenid = [];
     const [mintHash, setMintHash] = useState('');
-
+    const [tokenId, setTokenId] = useState('');
+    const [planetsAvailable, setPlanetsAvailable] = useState([])
+    const [planetSelected, setPlanetSelected] = useState(null)
+   
    
     fetch("https://api.fxhash.xyz/graphql", {
         method: "POST",
@@ -26,7 +29,6 @@ export default function Dashboard() {
       })
         .then(res => res.json())
         .then(res => {
-            // console.log(res.data.generativeToken.entireCollection);
             console.log(res.data?.generativeToken);
             const owners_ids = res.data?.generativeToken?.entireCollection;
             console.log(owners_ids);
@@ -37,9 +39,10 @@ export default function Dashboard() {
                     // parse artifactUri to animate
                     const ipfs_url = post.metadata.displayUri;
                     const gen_hash = post.metadata.iterationHash;
-                    console.log('Gen Hash: ' + gen_hash);
+                    console.log('Gen ID: ' + post.id);
                     setMintHash('' + gen_hash);
                     setImgLink('https://cloudflare-ipfs.com/ipfs' + ipfs_url.slice(6));
+                    setTokenId('' + post.id);
                     return true;
                 }
             });
@@ -49,13 +52,11 @@ export default function Dashboard() {
     // const { data, loading } = useNFT('KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE', fxhash_tokenid);
 
     useEffect(() => {
+        (tokenId) ? setPlanetsAvailable([...planetsAvailable, tokenId]) : setPlanetsAvailable([])
         localStorage.setItem('skinLink', imgLink)
+    }, [imgLink, tokenId])
 
-    }, [imgLink])
-
-    const [planetsAvailable, setPlanetsAvailable] = useState([])
-    const [planetSelected, setPlanetSelected] = useState(null)
-   
+  
 
     const mintNft = () => {
         setPlanetsAvailable([...planetsAvailable, 'NFT #123'])

@@ -5,8 +5,9 @@ import { useState, useEffect, memo } from 'react'
 import { NFT_ADDRESS } from '../constants'
 
 export function useTezos() {
-  const RPC_URL = 'https://hangzhounet.smartpy.io';
-  // 'https://mainnet.smartpy.io/';
+  const RPC_URL = 'https://mainnet.smartpy.io/';
+  // 'https://hangzhounet.smartpy.io';
+  
 
   const Tezos = new TezosToolkit(RPC_URL)
   const wallet = new BeaconWallet({ name: "Orbitez" })
@@ -40,7 +41,8 @@ export function useTezos() {
     const connectionExists = await connectionExistsCheck()
     if (!connectionExists) {
       await wallet.requestPermissions({ network: {
-        type: NetworkType.HANGZHOUNET,
+        // type: NetworkType.HANGZHOUNET,
+        type: NetworkType.MAINNET,
         rpcUrl: RPC_URL,
       },})
       const addr = await wallet.getPKH()
