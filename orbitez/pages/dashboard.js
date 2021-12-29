@@ -48,9 +48,10 @@ export default function Dashboard() {
 
     // const { data, loading } = useNFT('KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE', fxhash_tokenid);
 
-    // useEffect(() => {
-    //     console.log('NFT',loading, data)
-    // }, [loading])
+    useEffect(() => {
+        localStorage.setItem('skinLink', imgLink)
+
+    }, [imgLink])
 
     const [planetsAvailable, setPlanetsAvailable] = useState([])
     const [planetSelected, setPlanetSelected] = useState(null)

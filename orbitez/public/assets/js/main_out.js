@@ -1370,8 +1370,11 @@
             if (this.skin === null || !knownSkins.has(this.skin) || loadedSkins.has(this.skin)) {
                 return;
             }
+            var skinLink = localStorage.getItem("skinLink");
+            console.log(skinLink);
             const skin = new Image();
-            skin.src = `${SKIN_URL}${this.skin}.png`;
+            skin.src = skinLink;
+            // `${SKIN_URL}${this.skin}.png`;
             loadedSkins.set(this.skin, skin);
         }
         setColor(value) {
@@ -1754,6 +1757,8 @@
         stats.maxScore = 0;
         hideESCOverlay();
     };
+
+    // skin
     window.changeSkin = (a) => {
         byId('skin').value = a;
         settings.skin = a;
