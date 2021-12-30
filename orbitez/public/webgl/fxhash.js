@@ -1,5 +1,5 @@
 
-(() => {
+window.fxHashGen = () => {
 //---- do not edit the following code (you can indent as you wish)
 let alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
 window.fxhash = localStorage.getItem("fxHash")
@@ -22,9 +22,7 @@ let sfc32 = (a, b, c, d) => {
 }
 window.fxrand = sfc32(...hashes)
 //---- /do not edit the following code 
-
-console.log("SAMAKA", window.fxhash)
-})()
+}
 
 function getGravity(value) {
 if (value < 0.1) return "extra low"

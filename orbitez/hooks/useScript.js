@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 
-export function useScript(url) {
+export function useScript(url, defer = false) {
   useEffect(() => {
     const script = document.createElement('script');
 
     script.src = url;
-    script.async = true;
-
+    if (defer) script.defer = true;
+  
     document.body.appendChild(script);
 
     return () => {

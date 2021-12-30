@@ -14,7 +14,10 @@ export default function PlanetGenerator(props) {
   useEffect(() => {
     if (props.mint_hash !== '') {
       localStorage.setItem('fxHash', props.mint_hash)
+      window.fxHashGen()
+      window.main()
       window.initPlanet(props.mint_hash);
+      window.bundle()
     }
   }, [props.mint_hash])
 

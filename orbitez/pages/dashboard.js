@@ -7,19 +7,24 @@ import Link from 'next/link';
 import { useNFT} from '../hooks/useNFT.ts';
 import PlanetGenerator from '../components/PlanetGenerator/PlanetGenerator';
 
+const DEFAULT_PLANET_FEATURES = {
+    habitability: 0,
+    size: 0,
+    age: 0,
+    gravity: 0,
+    exoplanet: false
+}
+
 export default function Dashboard() {
     const { connectWallet, disconnectWallet, address, Tezos, balance } = useTezos()
     const router = useRouter()
-    const img_url = "";
-    const [imgLink, setImgLink] = useState(null);
-    const fxhash_tokenid = [];
     const [mintHash, setMintHash] = useState('');
-    const [tokenId, setTokenId] = useState('');
     const [planetsAvailable, setPlanetsAvailable] = useState([])
-    const [planetSelected, setPlanetSelected] = useState(null)
+    const [planetSelected, setPlanetSelected] = useState(0)
+    const [planetFeatures, setPlanetFeatures] = useState(DEFAULT_PLANET_FEATURES)
+
    
-   
-    fetch("https://api.fxhash.xyz/graphql", {
+    !planetsAvailable.length && fetch("https://api.fxhash.xyz/graphql", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,38 +34,32 @@ export default function Dashboard() {
       })
         .then(res => res.json())
         .then(res => {
-            console.log(res.data?.generativeToken);
             const owners_ids = res.data?.generativeToken?.entireCollection;
-            console.log(owners_ids);
-            owners_ids.find(function(post, index) {
-                if(post.owner.id == address) {
-                    fxhash_tokenid.push(post.id);
-                    console.log(fxhash_tokenid);
-                    // parse artifactUri to animate
-                    const ipfs_url = post.metadata.displayUri;
-                    const gen_hash = post.metadata.iterationHash;
-                    console.log('Gen ID: ' + post.id);
-                    setMintHash('' + gen_hash);
-                    setImgLink('https://cloudflare-ipfs.com/ipfs' + ipfs_url.slice(6));
-                    setTokenId('' + post.id);
-                    return true;
+            const planets = []
+            owners_ids.map((post) => {
+                if( post.owner.id == address ) {
+                    planets.push({
+                        img_link: 'https://cloudflare-ipfs.com/ipfs' + post.metadata.displayUri.slice(6),
+                        gen_hash: post.metadata.iterationHash,
+                        token_id: post.id
+                    })
                 }
             });
+            setPlanetsAvailable(planets)
         });
 
-
-    // const { data, loading } = useNFT('KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE', fxhash_tokenid);
+    useEffect(() => {
+        if (planetsAvailable?.[planetSelected]) {
+            const selected = planetsAvailable[planetSelected]
+            console.log(selected)
+            setMintHash(selected.gen_hash);
+            localStorage.setItem('skinLink', selected.img_link)
+        }
+    }, [planetSelected, planetsAvailable])
 
     useEffect(() => {
-        (tokenId) ? setPlanetsAvailable([...planetsAvailable, tokenId]) : setPlanetsAvailable([])
-        localStorage.setItem('skinLink', imgLink)
-    }, [imgLink, tokenId])
-
-  
-
-    const mintNft = () => {
-        setPlanetsAvailable([...planetsAvailable, 'NFT #123'])
-    }
+        window.$fxhashFeatures && setPlanetFeatures(window.$fxhashFeatures)
+    }, [mintHash])
     
     const enterRoom = async () => {
         const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
@@ -123,13 +122,13 @@ export default function Dashboard() {
                             planetsAvailable.length > 0 && 
                             <ul className="listBlock__list">
                                 {
-                                planetsAvailable.map(planet => 
+                                planetsAvailable.map((planet, index) => 
                                     <li 
-                                        key={'planet' + planet}
-                                        onClick={() => setPlanetSelected(planet)} 
-                                        className={`listBlock__item ${planet === planetSelected ? 'listBlock__item--active' : ''}`}
+                                        key={'planet' + planet.token_id}
+                                        onClick={() => setPlanetSelected(index)} 
+                                        className={`listBlock__item ${index === planetSelected ? 'listBlock__item--active' : ''}`}
                                         >
-                                        { planet }
+                                        { planet.token_id }
                                     </li> 
                                     )
                                 }
@@ -173,12 +172,11 @@ export default function Dashboard() {
                     <div className="listBlock">
                         <h2 className="listBlock__title">Statistics</h2>
                         <ul className="listBlock__list">
-                            <li className="listBlock__item">Matter eaten <span>12345</span></li>
-                            <li className="listBlock__item">Highest mass <span>12345</span></li>
-                            <li className="listBlock__item">Time alive <span>12:45</span></li>
-                            <li className="listBlock__item">On leaderboard <span>0:43</span></li>
-                            <li className="listBlock__item">Planets eaten <span>134</span></li>
-                            <li className="listBlock__item">Top position <span>134</span></li>
+                            {
+                                Object.keys(planetFeatures).map(
+                                    key => <li key={'features-'+key} className="listBlock__item">{key.toUpperCase()} <span>{planetFeatures[key]}</span></li>
+                                )
+                            }
                         </ul>
                     </div>
                     {/* <a className="btn btn--wide" href="/waiting-room">PLAY 1 XTZ</a>
