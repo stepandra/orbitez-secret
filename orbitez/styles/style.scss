@@ -272,6 +272,53 @@ select {
 	}
 }
 
+.overlays {
+	opacity: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 200;
+}
+
+.popUp {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+	width: 440px;
+	padding: 20px 30px;
+	border-radius: 15px;
+	box-shadow: $box-shadow;
+	// text-shadow: $text-shadow;
+	background-color: black;
+	color: white;
+
+	&--connect {
+		opacity: 0;
+		top: 13%;
+		z-index: 100;
+	}
+
+	&__title {
+		margin-bottom: 10px;
+	}
+
+	&__btn {
+		max-width: 100%;
+		margin: 20px 0;
+	}
+
+	&__instructions {
+		margin: 30px auto;
+		padding: 0 0 20px;
+		// border-top: 1px solid #eee;
+		border-bottom: 1px solid #eee;
+	}
+}
+
 .blocksTimer {
 	position: relative;
 	display: block;
