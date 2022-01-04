@@ -34,11 +34,11 @@ class Mode {
         connection.onclose(init);
 
         connection.on("blocks", (msg) => {
-            console.log('BLKS', msg);
+            // console.log('BLKS', msg);
         });
 
         connection.on("operations", (msg) => {
-            console.log('TRANS', msg);
+            // console.log('TRANS', msg);
         });
 
         init();

@@ -7,10 +7,17 @@ const Client = require('../Client');
 const BotPlayer = require('./BotPlayer');
 const MinionPlayer = require('./MinionPlayer');
 
-const botnameFile = "./ai/botnames.txt";
+const botnameFile = "src/ai/botnames.txt";
 let botnames = null;
-if(fs.existsSync(botnameFile))
+
+if (fs.existsSync(botnameFile)) {
+    console.log(botnameFile);
     botnames = fs.readFileSync(botnameFile, "utf-8").split("\n");
+    console.log(botnames);
+} else {
+    console.log("No botname")
+}
+
 
 class BotLoader {
     constructor(server) {
@@ -23,9 +30,7 @@ class BotLoader {
         socket.player = new BotPlayer(this.server, socket);
         socket.client = new Client(this.server, socket);
 
-        const name = botnames ?
-            botnames[Math.random() * botnames.length | 0] :
-            `Bot | ${this.botCount++}`;
+        const name = botnames[this.botCount++ | 0];
 
         // Add to client list and spawn.
         this.server.clients.push(socket);

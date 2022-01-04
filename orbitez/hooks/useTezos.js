@@ -22,13 +22,14 @@ export function useTezos() {
   const connectionExistsCheck = async () => {
     const activeAccount = await wallet.client.getActiveAccount()
     if (activeAccount) {
-      console.log(`Already connected: ${activeAccount.address}` )
+      console.log(`Already connected: ${activeAccount.address}`)
       setAddress(activeAccount.address)
+      localStorage.setItem('tzAddress', address)
       return true
-    } 
+    }
     return false
   }
-  
+
   const updateBalance = async () => {
     if (address == '') return
     const bal = await Tezos.rpc.getBalance(address)
@@ -38,12 +39,16 @@ export function useTezos() {
   const connectWallet = async () => {
     const connectionExists = await connectionExistsCheck()
     if (!connectionExists) {
-      await wallet.requestPermissions({ network: {
-        type: NetworkType.HANGZHOUNET,
-        rpcUrl: RPC_URL,
-      },})
+      await wallet.requestPermissions({
+        network: {
+          type: NetworkType.HANGZHOUNET,
+          // type: NetworkType.MAINNET,
+          rpcUrl: RPC_URL,
+        },
+      })
       const addr = await wallet.getPKH()
       setAddress(addr)
+      localStorage.setItem('tzAddress', address)
     } else {
       const nft = await Tezos.contract.at(NFT_ADDRESS)
       // console.log(nft.methods.balance_of([{owner: address, token_id: 1}], 'KT1NXgqXUfYFowmoZK6FhUTxmcqkjzZnV5rg').send())
@@ -55,9 +60,9 @@ export function useTezos() {
   const disconnectWallet = async () => {
     await wallet.clearActiveAccount()
     setAddress('')
+    localStorage.removeItem('tzAddress')
     alert('Disconnected.')
   }
-
 
   return {
     connectWallet,

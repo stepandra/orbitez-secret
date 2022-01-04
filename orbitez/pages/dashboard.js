@@ -2,62 +2,81 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useTezos } from '../hooks/useTezos'
-import { CONTRACT_ADDRESS } from '../constants'
+import { CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from '../constants'
 import Link from 'next/link';
 import { useNFT} from '../hooks/useNFT.ts';
+import PlanetGenerator from '../components/PlanetGenerator/PlanetGenerator';
+
+const DEFAULT_PLANET_FEATURES = {
+    habitability: 0,
+    size: 0,
+    age: 0,
+    gravity: 0,
+    exoplanet: false
+}
 
 export default function Dashboard() {
-    const { connectWallet, address, Tezos, balance } = useTezos()
+    const { connectWallet, disconnectWallet, address, Tezos, balance } = useTezos()
     const router = useRouter()
-    const img_url = "";
-    const [imgLink, setImgLink] = useState(null)
-    const fxhash_tokenid=[];
+    const [mintHash, setMintHash] = useState('');
+    const [planetsAvailable, setPlanetsAvailable] = useState([])
+    const [planetSelected, setPlanetSelected] = useState(0)
+    const [planetFeatures, setPlanetFeatures] = useState(DEFAULT_PLANET_FEATURES)
 
    
-    fetch("https://api.fxhash.xyz/graphql", {
+    !planetsAvailable.length && fetch("https://api.fxhash.xyz/graphql", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json"
         },
-        body: JSON.stringify({ query: '{generativeToken(slug: "Orbitoid", id: 3808) {entireCollection {id owner {id} metadata }}}' })
+        body: JSON.stringify({ query: '{generativeToken(slug: "Orbitoid", id: 3808) {entireCollection {id owner {id} generationHash metadata }}}' })
       })
         .then(res => res.json())
         .then(res => {
-            // console.log(res.data.generativeToken.entireCollection);
-            const owners_ids = res.data.generativeToken.entireCollection;
-            owners_ids.find(function(post, index) {
-                if(post.owner.id == address) {
-                    fxhash_tokenid.push(post.id);
-                    console.log(fxhash_tokenid);
-                    // parse artifactUri to animate
-                    const ipfs_url = post.metadata.displayUri;
-                    setImgLink('https://cloudflare-ipfs.com/ipfs' + ipfs_url.slice(6))
-                    return true;
+            const owners_ids = res.data?.generativeToken?.entireCollection;
+            const planets = []
+            owners_ids.map((post) => {
+                if( post.owner.id == address ) {
+                    planets.push({
+                        img_link: 'https://cloudflare-ipfs.com/ipfs' + post.metadata.displayUri.slice(6),
+                        gen_hash: post.metadata.iterationHash,
+                        token_id: post.id
+                    })
                 }
             });
+            setPlanetsAvailable(planets)
         });
 
+    useEffect(() => {
+        if (planetsAvailable?.[planetSelected]) {
+            const selected = planetsAvailable[planetSelected]
+            console.log(selected)
+            setMintHash(selected.gen_hash);
+            localStorage.setItem('skinLink', selected.img_link)
+        }
+    }, [planetSelected, planetsAvailable])
 
-    // const { data, loading } = useNFT('KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE', fxhash_tokenid);
-
-    // useEffect(() => {
-    //     console.log('NFT',loading, data)
-    // }, [loading])
-
-    const [planetsAvailable, setPlanetsAvailable] = useState([])
-    const [planetSelected, setPlanetSelected] = useState(null)
-   
-
-    const mintNft = () => {
-        setPlanetsAvailable([...planetsAvailable, 'NFT #123'])
-    }
+    useEffect(() => {
+        window.$fxhashFeatures && setPlanetFeatures(window.$fxhashFeatures)
+    }, [mintHash])
     
     const enterRoom = async () => {
         const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
         try {
             await contract.methods.enterRoom(1, true).send({ amount: 1 })
             router.push('/waiting-room')
+        } catch (e) {
+            console.log('Transaction rejected:', e)
+        }
+    }
+
+    const mintOnFx = async () => {
+        const contract = await Tezos.wallet.at(NFT_CONTRACT_ADDRESS);
+        try {
+            await contract.methods.mint("tz1iJJPGh7arygfq5EC2sBaAF23T8iUYTpEH", 3808).send({ amount: 1 })
+
+            // router.push('/waiting-room')
         } catch (e) {
             console.log('Transaction rejected:', e)
         }
@@ -84,13 +103,13 @@ export default function Dashboard() {
                 <h1 className="header__title">Dashboard</h1>
                 <div className="header__dashboard dashboard">
                     <div className="dashboard__icon">
-                        <a className="dashboard__link" href="">
+                        <a className="dashboard__link" onClick={() => disconnectWallet()}>
                             <img className="dashboard__img" src="/img/icon-exite.png" alt="Home icon" />
                         </a>
                     </div>
                     <div className="dashboard__info">
                         <p onClick={() => connectWallet()} className="dashboard__text">{address == '' ? 'CONNECT WALLET' : 'BALANCE'}</p>
-                        {address != '' && <p className="dashboard__num">ꜩ{balance.toFixed(3)}</p>}
+                        {address != '' && <p className="dashboard__num"><span className='dashboard__symbol'>ꜩ</span>{balance.toFixed(3)}</p>}
                     </div>
                 </div>
             </header>
@@ -103,13 +122,13 @@ export default function Dashboard() {
                             planetsAvailable.length > 0 && 
                             <ul className="listBlock__list">
                                 {
-                                planetsAvailable.map(planet => 
+                                planetsAvailable.map((planet, index) => 
                                     <li 
-                                        key={'planet' + planet}
-                                        onClick={() => setPlanetSelected(planet)} 
-                                        className={`listBlock__item ${planet === planetSelected ? 'listBlock__item--active' : ''}`}
+                                        key={'planet' + planet.token_id}
+                                        onClick={() => setPlanetSelected(index)} 
+                                        className={`listBlock__item ${index === planetSelected ? 'listBlock__item--active' : ''}`}
                                         >
-                                        { planet }
+                                        { planet.token_id }
                                     </li> 
                                     )
                                 }
@@ -119,7 +138,7 @@ export default function Dashboard() {
                             !planetsAvailable.length && <p className="listBlock__text">{`Uh oh, Looks like you haven't minted any planet NFTs...`}</p>
                         }
                     </div>
-                    { address !== '' && <a className="btn btn--wide" onClick={() => mintNft()}>MINT NEW NFT</a>}
+                    { address !== '' && <a className="btn btn--wide" onClick={() => mintOnFx()}>MINT NEW NFT</a>}
 
                     <div className="payMethod">
                         <h3 className="payMethod__title">Payment method</h3>
@@ -133,8 +152,8 @@ export default function Dashboard() {
 
                 <div className="page__center">
                     <div className="planet planet--bgCircle">
-                        {imgLink !== '' && <img className="planet__img " src={imgLink} alt="planet background" />}
-                        {/* <iframe _ng content-hob-c70="" allow="accelerometer; camera; gyroscope; microphone; xr-spatial-tracking;" className="fs" sandbox="allow-scripts allow-same-origin" scrolling="" src="https://ipfs.io/ipfs/QmVnK79nz8TEPX7R26n7LdozNLU5dgUn5X1aBhV4fXtHnP?objkt=192102&amp;creator=tz1iJJPGh7arygfq5EC2sBaAF23T8iUYTpEH&amp;viewer=null"></iframe> */}
+                        <PlanetGenerator mint_hash={mintHash} />
+                        {/* {imgLink !== '' && <img className="planet__img " src={imgLink} alt="planet background" />} */}
                         <a onClick={() => { 
                             address == '' ? connectWallet() : enterRoom() 
                         }} className="planet__btn btn btn--center btn--neon" >
@@ -153,12 +172,11 @@ export default function Dashboard() {
                     <div className="listBlock">
                         <h2 className="listBlock__title">Statistics</h2>
                         <ul className="listBlock__list">
-                            <li className="listBlock__item">Matter eaten <span>12345</span></li>
-                            <li className="listBlock__item">Highest mass <span>12345</span></li>
-                            <li className="listBlock__item">Time alive <span>12:45</span></li>
-                            <li className="listBlock__item">On leaderboard <span>0:43</span></li>
-                            <li className="listBlock__item">Planets eaten <span>134</span></li>
-                            <li className="listBlock__item">Top position <span>134</span></li>
+                            {
+                                Object.keys(planetFeatures).map(
+                                    key => <li key={'features-'+key} className="listBlock__item">{key.toUpperCase()} <span>{planetFeatures[key]}</span></li>
+                                )
+                            }
                         </ul>
                     </div>
                     {/* <a className="btn btn--wide" href="/waiting-room">PLAY 1 XTZ</a>

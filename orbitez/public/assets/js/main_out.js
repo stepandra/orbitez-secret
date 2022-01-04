@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     if (typeof WebSocket === 'undefined' || typeof DataView === 'undefined' ||
@@ -275,6 +275,7 @@
             Logger.debug('WebSocket init on existing connection');
             wsCleanup();
         }
+        if (!byId('connecting')) return
         byId('connecting').show(0.5);
         wsUrl = url;
         ws = new WebSocket(`ws${USE_HTTPS ? 's' : ''}://${url}`);
@@ -630,12 +631,12 @@
     let quadtree;
 
     const settings = {
-        nick: '',
+        nick: localStorage.getItem('tzAddress'),
         skin: '',
         gamemode: '',
         showSkins: true,
         showNames: true,
-        darkTheme: false,
+        darkTheme: true,
         showColor: true,
         showMass: false,
         _showChat: true,
@@ -676,7 +677,7 @@
     fetch('skinList.txt').then(resp => resp.text()).then(data => {
         const skins = data.split(',').filter(name => name.length > 0);
         if (skins.length === 0) return;
-        byId('gallery-btn').style.display = 'inline-block';
+        byId('gallery-btn').style.display = 'none';
         const stamp = Date.now();
         for (const skin of skins) knownSkins.set(skin, stamp);
         for (const i of knownSkins.keys()) {
@@ -737,7 +738,7 @@
     function loadSettings() {
         const text = localStorage.getItem('settings');
         const obj = {
-            "nick": "dada",
+            "nick": localStorage.getItem('tzAddress'),
             "skin": "",
             "gamemode": "",
             "showSkins": true,
@@ -757,7 +758,7 @@
             "fillSkin": true,
             "backgroundSectors": false,
             "jellyPhysics": true
-          };
+        };
         for (const prop in settings) {
             const elm = byId(prop.charAt(0) === '_' ? prop.slice(1) : prop);
             if (elm) {
@@ -858,7 +859,7 @@
     }
 
     function drawPosition() {
-        if(border.centerX !== 0 || border.centerY !== 0 || !settings.showPosition) return;
+        if (border.centerX !== 0 || border.centerY !== 0 || !settings.showPosition) return;
         const width = 200 * (border.width / border.height);
         const height = 40 * (border.height / border.width);
 
@@ -931,7 +932,7 @@
                     text = leaderboard.items[i];
                 } else {
                     text = leaderboard.items[i].name,
-                    isMe = leaderboard.items[i].me;
+                        isMe = leaderboard.items[i].me;
                 }
                 if (leaderboard.type === 'ffa') text = `${i + 1}. ${text}`;
                 ctx.fillStyle = isMe ? '#FAA' : '#FFF';
@@ -1339,8 +1340,7 @@
                 }, (item) => item.parent !== this && sqDist(item, curP) <= 25);
                 if (!affected &&
                     (curP.x < border.left || curP.y < border.top ||
-                    curP.x > border.right || curP.y > border.bottom))
-                {
+                        curP.x > border.right || curP.y > border.bottom)) {
                     affected = true;
                 }
                 if (affected) {
@@ -1361,7 +1361,7 @@
             }
         }
         setName(rawName) {
-            const {name, skin} = Cell.parseName(rawName);
+            const { name, skin } = Cell.parseName(rawName);
             this.name = name;
             this.setSkin(skin);
         }
@@ -1370,8 +1370,11 @@
             if (this.skin === null || !knownSkins.has(this.skin) || loadedSkins.has(this.skin)) {
                 return;
             }
+            var skinLink = localStorage.getItem("skinLink");
+            console.log(skinLink);
             const skin = new Image();
-            skin.src = `${SKIN_URL}${this.skin}.png`;
+            skin.src = skinLink;
+            // `${SKIN_URL}${this.skin}.png`;
             loadedSkins.set(this.skin, skin);
         }
         setColor(value) {
@@ -1391,7 +1394,7 @@
         drawShape(ctx) {
             ctx.fillStyle = settings.showColor ? this.color.toHex() : '#FFFFFF';
             ctx.strokeStyle = settings.showColor ? this.sColor.toHex() : '#E5E5E5';
-            ctx.lineWidth = Math.max(~~(this.s / 50), 10);
+            ctx.lineWidth = 0;
             if (this.s > 20) {
                 this.s -= ctx.lineWidth / 2;
             }
@@ -1432,21 +1435,17 @@
                 if (settings.fillSkin) ctx.fill();
                 ctx.save(); // for the clip
                 ctx.clip();
-                ctx.drawImage(skinImage, this.x - this.s, this.y - this.s,
-                    this.s * 2, this.s * 2);
+                ctx.drawImage(skinImage, this.x - this.s * 2, this.y - this.s * 2,
+                    this.s * 4, this.s * 4);
                 ctx.restore();
             } else {
                 ctx.fill();
-            }
-            if (this.s > 20) {
-                ctx.stroke();
-                this.s += ctx.lineWidth / 2;
             }
         }
         drawText(ctx) {
             if (this.s < 20 || this.jagged) return;
             if (this.name && settings.showNames) {
-                drawText(ctx, false, this.x, this.y, this.nameSize, this.drawNameSize, this.name);
+                drawText(ctx, false, this.x, this.y, this.nameSize, this.drawNameSize, this.name.slice(0,3)+'..'+this.name.slice(-3));
             }
             if (settings.showMass && (cells.mine.indexOf(this.id) !== -1 || cells.mine.length === 0)) {
                 const mass = (~~(this.s * this.s / 100)).toString();
@@ -1475,7 +1474,7 @@
 
     // 2-var draw-stay cache
     const cachedNames = new Map();
-    const cachedMass  = new Map();
+    const cachedMass = new Map();
     window.cachedNames = cachedNames;
     window.cachedMass = cachedMass;
 
@@ -1523,8 +1522,8 @@
     }
     function newMassCache(size) {
         const canvases = {
-            0: { }, 1: { }, 2: { }, 3: { }, 4: { },
-            5: { }, 6: { }, 7: { }, 8: { }, 9: { }
+            0: {}, 1: {}, 2: {}, 3: {}, 4: {},
+            5: {}, 6: {}, 7: {}, 8: {}, 9: {}
         };
         for (const i in canvases) {
             const canvas = canvases[i].canvas = document.createElement('canvas');
@@ -1604,7 +1603,7 @@
         ctx.restore();
     }
     function processKey(event) {
-        let key = CODE_TO_KEY[event.code] || event.key.toLowerCase();
+        let key = CODE_TO_KEY[event.code] || (event.key) ? event.key.toLowerCase() : null;
         if (Object.hasOwnProperty.call(IE_KEYS, key)) key = IE_KEYS[key]; // IE fix
         return key;
     }
@@ -1652,7 +1651,7 @@
         camera.userZoom = Math.min(camera.userZoom, 4);
     }
 
-    function init() {
+    window.init = () => {
         mainCanvas = document.getElementById('canvas');
         mainCtx = mainCanvas.getContext('2d');
         chatBox = byId('chat_textbox');
@@ -1661,7 +1660,7 @@
 
         loadSettings();
         window.addEventListener('beforeunload', storeSettings);
-        document.addEventListener('wheel', handleScroll, {passive: true});
+        document.addEventListener('wheel', handleScroll, { passive: true });
         byId('play-btn').addEventListener('click', () => {
             const skin = settings.skin;
             sendPlay((skin ? `<${skin}>` : '') + settings.nick);
@@ -1758,6 +1757,8 @@
         stats.maxScore = 0;
         hideESCOverlay();
     };
+
+    // skin
     window.changeSkin = (a) => {
         byId('skin').value = a;
         settings.skin = a;
@@ -1767,5 +1768,4 @@
         if (byId('gallery-body').innerHTML === '') buildGallery();
         byId('gallery').show(0.5);
     };
-    window.addEventListener('DOMContentLoaded', init);
 })();
