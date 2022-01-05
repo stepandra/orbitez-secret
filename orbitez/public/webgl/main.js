@@ -330,6 +330,10 @@ window.main = () => {
                 return;
             }
             if (k == "blocker") {
+                if (value === null || !value.blockers) {
+                    value = {}
+                    value.blockers = []
+                }
                 value.blockers.push([v.split(" ")[0], v.split(" ")[1]]);
                 return;
             }
