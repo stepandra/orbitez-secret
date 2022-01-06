@@ -55,7 +55,7 @@ export default function Hud() {
     }, [])
 
     return (
-        <div className="bgImageNone">
+        <div>
             <Head>
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -91,10 +91,8 @@ export default function Hud() {
                     </div>
                 </div>
             </header>
-            <div dangerouslySetInnerHTML={ isGameLive ? renderInner() : null } ></div>
-            <main className='container container--big'>
-               
-            </main>
+            
+            <main dangerouslySetInnerHTML={ isGameLive ? renderInner() : null } ></main>
         </div>
     )
 }
