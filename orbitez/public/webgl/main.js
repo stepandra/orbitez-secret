@@ -366,7 +366,7 @@ window.main = () => {
 
     function doGen(structID) {
         var result = {"struct": structs[structID]};
-        structs[structID].slots.forEach(function(slot) {
+        structs[structID]?.slots.forEach(function(slot) {
             var availableSlots = slots[slot].filter(function(value) {
                 return !value.blockers.some(function(blocker) {
                     var blockerSlot = blocker[0];
