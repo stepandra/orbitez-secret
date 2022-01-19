@@ -500,12 +500,37 @@ class Server {
         if (((this.ticks + 7) % 25) === 0)
             this.updateLeaderboard(); // once per second
         // ping server tracker
-        if (this.config.serverTracker && (this.ticks % 750) === 0)
+        if (this.config.serverTracker && (this.ticks % 750) === 0) {
             this.pingServerTracker(); // once per 30 seconds
+        }
+        if ((this.ticks % 250) === 0) {
+            this.getQuadData() // once per 30 seconds
+        }
         // update-update time
         var tEnd = process.hrtime(tStart);
         this.updateTime = tEnd[0] * 1e3 + tEnd[1] / 1e6;
     }
+
+    getQuadData() {
+        const bfs = (root) => {
+            const q = [root]
+            while(q.length) {
+                const node = q.shift()
+                for (let item of node.items) {
+                    const cell = item.cell
+                    if (cell.owner) {
+                        console.log(cell)
+                    }
+                }
+                for (let child of node.childNodes) {
+                    q.push(child)
+                }
+            }
+        }
+       
+        bfs(this.quadTree)
+    }
+
     // update remerge first
     movePlayer(cell, client) {
         if (client.socket.isConnected == false || client.frozen || !client.mouse)
