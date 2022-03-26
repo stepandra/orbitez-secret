@@ -629,10 +629,9 @@
     let mouseY = NaN;
     let macroIntervalID;
     let quadtree;
-
     const settings = {
         nick: localStorage.getItem('tzAddress'),
-        skin: '',
+        skin: localStorage.getItem("skinLink"),
         gamemode: '',
         showSkins: true,
         showNames: true,
@@ -677,7 +676,7 @@
     fetch('skinList.txt').then(resp => resp.text()).then(data => {
         const skins = data.split(',').filter(name => name.length > 0);
         if (skins.length === 0) return;
-        byId('gallery-btn').style.display = 'none';
+        // byId('gallery-btn').style.display = 'none';
         const stamp = Date.now();
         for (const skin of skins) knownSkins.set(skin, stamp);
         for (const i of knownSkins.keys()) {
@@ -1367,14 +1366,12 @@
         }
         setSkin(value) {
             this.skin = (value && value[0] === '%' ? value.slice(1) : value) || this.skin;
-            if (this.skin === null || !knownSkins.has(this.skin) || loadedSkins.has(this.skin)) {
+            if (!this.skin) {
                 return;
             }
-            var skinLink = localStorage.getItem("skinLink");
-            console.log(skinLink);
             const skin = new Image();
-            skin.src = skinLink;
-            // `${SKIN_URL}${this.skin}.png`;
+            skin.src = this.skin;
+            
             loadedSkins.set(this.skin, skin);
         }
         setColor(value) {
