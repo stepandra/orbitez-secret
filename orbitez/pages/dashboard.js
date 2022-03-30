@@ -22,7 +22,7 @@ export default function Dashboard() {
     const [planetsAvailable, setPlanetsAvailable] = useState([])
     const [planetSelected, setPlanetSelected] = useState(0)
     const [planetFeatures, setPlanetFeatures] = useState(DEFAULT_PLANET_FEATURES)
-
+    const [isDemoMode, setIsDemoMode] = useState(false)
    
     !planetsAvailable.length && fetch("https://api.fxhash.xyz/graphql", {
         method: "POST",
@@ -37,7 +37,7 @@ export default function Dashboard() {
             const owners_ids = res.data?.generativeToken?.entireCollection;
             const planets = []
             owners_ids.map((post) => {
-                if( post.owner.id == address ) {
+                if(post.owner.id == address) {
                     planets.push({
                         img_link: 'https://cloudflare-ipfs.com/ipfs' + post.metadata.displayUri.slice(6),
                         gen_hash: post.metadata.iterationHash,
@@ -45,13 +45,24 @@ export default function Dashboard() {
                     })
                 }
             });
+            if (!planets.length) {
+                planets.push({
+                    gen_hash: "ooKg2zuJu9XhZBRKQaBrEDvpeYZjDPmKREp3PMSZHLkoSFK3ejN",
+                    img_link: "https://cloudflare-ipfs.com/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi",
+                    token_id: 'DEMO PLANET'
+                })
+            }            
             setPlanetsAvailable(planets)
         });
 
     useEffect(() => {
         if (planetsAvailable?.[planetSelected]) {
             const selected = planetsAvailable[planetSelected]
-            console.log(selected)
+            if (selected.token_id === 'DEMO PLANET') {
+                setIsDemoMode(true)
+            } else {
+                setIsDemoMode(false)
+            }
             setMintHash(selected.gen_hash);
             localStorage.setItem('skinLink', selected.img_link)
         }
@@ -69,6 +80,10 @@ export default function Dashboard() {
         } catch (e) {
             console.log('Transaction rejected:', e)
         }
+    }
+
+    const demoHud = async () => {
+        router.push('/hud')
     }
 
     const mintOnFx = async () => {
@@ -155,13 +170,13 @@ export default function Dashboard() {
                         <PlanetGenerator mint_hash={mintHash} />
                         {/* {imgLink !== '' && <img className="planet__img " src={imgLink} alt="planet background" />} */}
                         <a onClick={() => { 
-                            address == '' ? connectWallet() : enterRoom() 
+                            address == '' ? connectWallet() : isDemoMode ? demoHud() : enterRoom() 
                         }} className="planet__btn btn btn--center btn--neon" >
                             {
                                 address == ''
                                 ? 'Connect wallet'
-                                : ( !planetsAvailable.length ) 
-                                    ? 'Mint new NFT'
+                                : ( isDemoMode ) 
+                                    ? 'Demo gameplay'
                                     : 'PLAY 1 XTZ'
                             }
                         </a>
