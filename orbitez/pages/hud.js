@@ -14,7 +14,12 @@ export default function Hud() {
     const router = useRouter()
 
     const isGameLive = true// endBlock === null || currentBlock <= Number(endBlock)
-
+    useEffect(() => {
+        if (!localStorage.getItem('skinLink')) {
+            localStorage.setItem('skinLink', 'https://cloudflare-ipfs.com/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi')
+            router.reload()
+        }
+    }, [])
     useEffect(() => {
         if (!isGameLive) {
             // router.push('/last-game-stats')
