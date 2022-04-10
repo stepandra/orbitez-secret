@@ -15,11 +15,11 @@ export default function Landing() {
     }
 
     return (
-        <div>
+        <>
             <Head>
+                <title>Orbitez.io</title>
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title>Orbitez.io</title>
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
                 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
                 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
@@ -29,25 +29,23 @@ export default function Landing() {
                 <meta name="theme-color" content="#ffffff" />
             </Head>
             
-            <header className="header container headerLp">
-                <Link href="/leaderboard">
-                    <a className="header__linkLeft link">LEADERBOARD</a>
-                </Link>
-                {address !== '' && <a className="header__linkRight link" onClick={() => disconnectWallet()}>LOGOUT</a>}
-            </header>
-            
             <main className='lp container container--small'>
-                <img className="lp__logo" src="/img/logo-big.png" alt="Logo" />
-                <p className="lp__text">Fight with players from all over the world as you try to become the biggest Planet in a solar system! Control your tiny planet and eat other players to grow larger. Mint your own, unique generative planet as NFT to enter the battlefield!</p>
-                <a className="lp__btn btn btn--center btn--neon" onClick={() => joinGame()}>Join the game</a>
+                <div className='lp__content'>
+                    <img className="lp__logo" src="/img/logo-big.png" alt="Logo" />
+                    <p className="lp__text">Fight with players from all over the world as you try to become the biggest Planet in a solar system! Control your tiny planet and eat other players to grow larger. Mint your own, unique generative planet as NFT to enter the battlefield!</p>
+                    <Link href="/dashboard">
+                        <a className="lp__btn btn btn--center btn--neon">Join the game</a>
+                    </Link>
+                </div>
+                <div className='lp__bg'>
+                    <video className="lp__video" loop muted autoPlay poster={"/img/lp-bg-poster.png"}>
+                        <source src="/video/lp-bg-video-6.mp4" type="video/mp4" />
+                        <source src="/video/lp-bg-video-8.webm" type="video/webm" />
+                    </video>
+                    <div className="lp__overlay"></div>
+                </div>
             </main>
-
-            <video className="bgVideo__video" loop muted autoPlay poster={"/img/lp-bg-poster.png"}>
-                <source src="/video/lp-bg-video-6.mp4" type="video/mp4" />
-                <source src="/video/lp-bg-video-8.webm" type="video/webm" />
-            </video>
-            <div className="bgVideo__overlay"></div>
-        </div>
+        </>
     )
 }
 

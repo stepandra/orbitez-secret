@@ -524,6 +524,7 @@ select {
 }
 
 .payMethod {
+	cursor: no-drop; // Temporary
 	width: 100%;
 	max-width: 324px;
 	margin-top: 40px;
@@ -556,10 +557,12 @@ select {
 
 	&__prev {
 		cursor: pointer;
+		cursor: no-drop; // Temporary
 	}
 
 	&__next {
 		cursor: pointer;
+		cursor: no-drop; // Temporary
 		transform: rotate(180deg);
 	}
 
@@ -586,7 +589,13 @@ select {
 
 	&__btn {
 		margin-top: 47px; // 96px
-		margin-bottom: 50px;
+		margin-bottom: 15px;
+	}
+
+	&__demoLink {
+		color: white;
+		text-decoration: underline;
+		cursor: pointer;
 	}
 }
 
@@ -600,5 +609,79 @@ select {
 	&:hover {
 		color: #bbb1cd;
 		text-shadow: $text-shadow;
+	}
+}
+
+
+
+@media (max-width: 1280px) { //------------------------------------------------------------------------------------ 1280
+	.page {
+		&__left {
+			width: 260px;
+		}
+
+		&__center {
+			width: calc(100% - 520px);
+		}
+
+		&__right {
+			width: 260px;
+		}
+	}
+}
+
+
+@media (max-width: 768px) { //------------------------------------------------------------------------------------ 768
+	.page {
+		flex-wrap: wrap;
+
+		&__left {
+			width: 100%;
+			text-align: center;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			order: 2;
+			
+		}
+
+		&__center {
+			width: 100%;
+			margin-bottom: 70px;
+			order: 1;
+		}
+
+		&__right {
+			width: 100%;
+			margin-top: 70px;
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			order: 3;
+		}
+	}
+
+	.planet {
+		min-height: 780px;
+	}
+	
+	.btn {
+		font-size: 20px;
+	}
+}
+
+
+@media (max-width: 768px) { //------------------------------------------------------------------------------------ 768
+	.planet {
+		min-height: 500px;
+
+		&--bgCircle {
+			background-size: 130%;
+		}
+	}
+
+	.listBlock {
+		margin-bottom: 0;
 	}
 }

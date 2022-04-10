@@ -180,6 +180,10 @@ export default function Dashboard() {
                                     : 'PLAY 1 XTZ'
                             }
                         </a>
+                        <a onClick={() => isDemoMode ? demoHud() : enterRoom() }
+                            className="planet__demoLink" >
+                            or try demo
+                        </a>
                     </div>
                 </div>
 
