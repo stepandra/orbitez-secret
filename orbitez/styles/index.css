@@ -77,8 +77,8 @@ input[type=checkbox] {
 #chat_textbox {
     transition: all .5s ease-in-out;
     position: absolute;
-    z-index: 1;
-    bottom: 10px;
+    z-index: 10;
+    bottom: 35px;
     background: rgba(0, 0, 0, .2);
     border: 0px;
     outline: none;

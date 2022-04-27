@@ -60,7 +60,7 @@ export default function Hud() {
     }, [])
 
     return (
-        <div>
+        <>
             <Head>
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -82,7 +82,7 @@ export default function Hud() {
                     <div className='blocksTimer__text'>BLOCKS</div>
                 </div>
 
-                <div className="dashboard dashboard--hud">
+                {/* <div className="dashboard dashboard--hud">
                     <div className="dashboard__icon">
                         <Link href="/dashboard">
                             <a className="dashboard__link" >
@@ -94,10 +94,10 @@ export default function Hud() {
                         <p className="dashboard__text">SCORE</p>
                         <p className="dashboard__num">35000</p>
                     </div>
-                </div>
+                </div> */}
             </header>
             
-            <main dangerouslySetInnerHTML={ isGameLive ? renderInner() : null } ></main>
-        </div>
+            <main className='hud' dangerouslySetInnerHTML={ isGameLive ? renderInner() : null } ></main>
+        </>
     )
 }
