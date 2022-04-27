@@ -11,7 +11,6 @@
     "@airgap/beacon-sdk": "^2.3.8",
     "@microsoft/signalr": "^6.0.1",
     "@taquito/beacon-wallet": "^11.1.0",
-    "@taquito/taquito": "^11.1.0",
     "@taquito/tezbridge-signer": "^11.1.0",
     "@tezos-contrib/nft-hooks": "^0.0.1",
     "axios": "^0.24.0",
@@ -19,7 +18,12 @@
     "next": "12.0.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "sass": "^1.45.1"
+    "sass": "^1.45.1",
+    "@taquito/signer": "^12.1.0",
+    "@taquito/taquito": "^12.0.3",
+    "bignumber.js": "^9.0.2",
+    "taquito": "^1.0.0",
+    "web3": "^1.7.1"
   },
   "devDependencies": {
     "eslint": "8.4.1",
