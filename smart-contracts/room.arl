@@ -1,0 +1,94 @@
+archetype room
+
+asset player identified by id {
+    id : address;
+    score: nat = 0;
+    entry_block: nat;
+} initialized by {
+  {tz1Vi2Csq7Vhxo3ZMybBRndLuVq3W6G8NhDk;0; 201020};
+  {tz1e8wrsyVhbVkAqEXC7ekCTEzEfy8KnjJKb;1; 201020};
+  {tz1Sg3gr3TSbgTLzEgMpMQPJjSeSYA65BaRq;4; 201020};
+  {tz1RgYYwvFK7t3XNgTviu3bwv3oVtAXwDUdK;22; 201020};
+  {tz1M6soUaLRHnEb8B3UfzsgqdHzXxKGt7wBW;199; 201020};
+  {tz1VNZGpVCLN5jRoG19HeFk2QoWPFm6bpJPq;12; 201020};
+  {tz1QGB6hkTJxxb4NVszgM39xv9trKPd1Q28o;187; 201020};
+  {tz1bEEiZZAxzsYRCDeThGSzBkCy8hkFkX4nQ;4; 201020}
+}
+constant oracle : key = "edpku2jGfeBS8X8axF5nSsduvwdA8Qq9mVhWjp3uTcQ4EMhbowsL7H"
+constant orb_address : address = @KT1VSEeZZ5SiKeUGmEf7Drh4tRinNzEUBEJg
+constant oracle_address: address = @KT1R5t9jpwpAtdQpaaBQgtfBBCtSaJxY8hBv
+constant admin : address = @tz1W8RgHPiTDPqB5bGommn4QgJwMFuT3B1QF
+
+constant room_size : nat = 10
+constant bet_price : tez = 1tz
+constant game_duration : nat = 30
+
+enum betType = 
+| Tez
+| Orb
+| OrbLP
+| OtherLP
+
+asset room {
+    cid : string;
+    finish_block  : nat = 0;
+    players: aggregate<player> = [];
+    bet_amount : tez;
+    bet_type : betType = Tez;
+    size: nat;
+    distance: nat;
+}
+
+states = 
+| Created initial
+| InProgress
+| Done
+| Closed
+| Refunded
+
+entry create_room (room_id : string, bet_size : tez, size_v: nat, game_duration_v: nat) {
+    called by admin
+    effect {
+        room.add({cid =room_id; bet_amount = bet_size; bet_type = Tez; size = size_v; distance = game_duration_v})
+    }
+}
+entry enter_room (room_id : string) {
+    // specification {
+    //     s1 : true;
+    // }
+    called by any
+    require {
+        r1: transferred = room[room_id].bet_amount otherwise "Incorrect bet amount!";
+        r3: player.count() < room_size otherwise "Room is full!" ;
+    }
+    effect {
+        player.add({ id = caller; entry_block = level});
+        room.update(room_id, {players += [caller]});
+        // room[room_id].players.add(caller);
+        if room[room_id].players.count() = 10 then room[room_id].finish_block := level + game_duration
+    }
+}
+
+entry refund (room_id : string) {
+    called by any
+    require {
+        r4: room[room_id].players.contains(caller) otherwise "Nothing to refund!";
+        r5: room[room_id].players.count() < 10 otherwise "Game already started! Play or die!";
+    }
+    effect {
+        player.remove(caller);
+        room[room_id].players.remove(caller);
+        if (not room[room_id].players.contains(caller)) then transfer bet_price to caller;
+    }
+
+}
+
+entry endGame (room_id : string, packed_outcome : bytes, signed_outcome : signature) {
+    require {
+        // r6: level > room[room_id].finish_block otherwise "Game not ended!";
+        // r7: room[room_id].players.contains(caller) otherwise "Are you participated?";
+    }
+    effect {
+        transfer 0tz to oracle_address call setoutcome<bytes * signature>((packed_outcome, signed_outcome))
+    }
+}
