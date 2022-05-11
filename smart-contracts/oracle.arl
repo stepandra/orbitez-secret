@@ -1,0 +1,26 @@
+archetype oraclesetvalue
+
+variable outcome : option<list<address * nat>> = none
+asset leaderboard identified by id {
+    id : address;
+    score: nat;
+    // map<address, nat>;
+}
+// oracle's public key
+constant oracle : key = "edpku2jGfeBS8X8axF5nSsduvwdA8Qq9mVhWjp3uTcQ4EMhbowsL7H"
+
+entry setoutcome (packed_outcome : bytes, signed_outcome : signature) {
+  effect {
+    if check_signature(oracle, signed_outcome, packed_outcome) then (
+
+      match unpack<list<address * nat>>(packed_outcome) with
+      | some(s) ->
+        for item in s do
+            leaderboard.add({id = item[0]; score = item[1]})
+        done
+      | none -> fail("Cannot unpack leaderboard")
+      end
+    ) else fail ("not signed by oracle")
+  }
+}
+
