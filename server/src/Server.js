@@ -4,6 +4,8 @@ const https = require("https");
 const fs = require("fs");
 let os;
 const WebSocket = require("ws");
+const _ = require('lodash')
+const crypto = require('crypto')
 
 // Project imports
 const Entity = require('./entity');
@@ -65,6 +67,7 @@ class Server {
         // Set border, quad-tree
         this.setBorder(this.config.borderWidth, this.config.borderHeight);
         this.quadTree = new QuadNode(this.border);
+        this.prevQuadTree = null
     }
     start() {
         this.timerLoopBind = this.timerLoop.bind(this);
@@ -503,8 +506,9 @@ class Server {
         if (this.config.serverTracker && (this.ticks % 750) === 0) {
             this.pingServerTracker(); // once per 30 seconds
         }
-        if ((this.ticks % 250) === 0) {
-            this.getQuadData() // once per 30 seconds
+        // this.getQuadData()
+        if ((this.ticks % 100) === 0) {
+           this.getQuadData()
         }
         // update-update time
         var tEnd = process.hrtime(tStart);
@@ -512,23 +516,9 @@ class Server {
     }
 
     getQuadData() {
-        const bfs = (root) => {
-            const q = [root]
-            while(q.length) {
-                const node = q.shift()
-                for (let item of node.items) {
-                    const cell = item.cell
-                    if (cell.owner) {
-                        console.log(cell)
-                    }
-                }
-                for (let child of node.childNodes) {
-                    q.push(child)
-                }
-            }
-        }
-       
-        bfs(this.quadTree)
+        const players = []
+        const hashSet = new Set()
+        let count = 0
     }
 
     // update remerge first
