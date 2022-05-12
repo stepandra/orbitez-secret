@@ -1117,7 +1117,7 @@
         quadtree = null;
         mainCtx.scale(camera.viewportScale, camera.viewportScale);
 
-        let height = 2;
+        let height = 200;
         mainCtx.fillStyle = settings.darkTheme ? '#FFF' : '#000';
         mainCtx.textBaseline = 'top';
         if (!isNaN(stats.score)) {

@@ -76,6 +76,7 @@
 
 body {
 	min-width: 320px;
+	//min-height: auto;
 	background-color: #081037;
 	color: #FFFFFF;
 	font-family: $font-sci-fi;
@@ -142,12 +143,84 @@ select {
 /* 02. Structure
 /*---------------------------------------------------------------*/
 .background {
-	width: 100vw;
-    height: 100vh;
-	//background-position: center;
+	//width: 100vw;
+    min-height: 100vh;
+	background-position: center;
 	background-repeat: no-repeat;
-	//background-size: cover;
+	background-size: cover;
 	background-image: url(img/bg.jpg);
+}
+
+.page {
+	display: flex;
+	justify-content: space-between;
+
+	// TODO: need refactoring
+	&__left 	{width: 324px;}
+	&__center 	{width: calc(100% - 648px);}
+	&__right 	{width: 324px;}
+}
+
+.container {
+	width: 100%;
+	max-width: calc(1700px + 48px);
+	margin: 0 auto;
+	padding-right: 24px;
+	padding-left: 24px;
+
+	&--small {
+		max-width: calc(1024px + 48px);
+	}
+
+	&--big {
+		max-width: calc(1920px + 48px);
+	}
+}
+
+.overlays {
+	opacity: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 200;
+}
+
+.popUp {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+	width: 440px;
+	padding: 20px 30px;
+	box-shadow: $box-shadow;
+	// text-shadow: $text-shadow;
+	background-color: black;
+	color: white;
+
+	&--connect {
+		opacity: 0;
+		top: 13%;
+		z-index: 100;
+	}
+
+	&__title {
+		margin-bottom: 10px;
+	}
+
+	&__btn {
+		max-width: 100%;
+		margin: 20px 0;
+	}
+
+	&__instructions {
+		margin: 30px auto;
+		padding: 0 0 20px;
+		// border-top: 1px solid #eee;
+		border-bottom: 1px solid #eee;
+	}
 }
 
 .header {
@@ -164,6 +237,7 @@ select {
 		left: 0;
 		right: 0;
 		bottom: auto;
+		z-index: 9;
 	}
 
 	&__linkLeft {
@@ -193,32 +267,6 @@ select {
 		margin: 0 auto;
 		text-align: center;
 		text-shadow: 1px 0 38px #04dbe0, 0 1px 0 #00d2e7;
-	}
-}
-
-.page {
-	display: flex;
-	justify-content: space-between;
-
-	// TODO: need refactoring
-	&__left 	{width: 324px;}
-	&__center 	{width: calc(100% - 648px);}
-	&__right 	{width: 324px;}
-}
-
-.container {
-	width: 100%;
-	max-width: calc(1700px + 48px);
-	margin: 0 auto;
-	padding-right: 24px;
-	padding-left: 24px;
-
-	&--small {
-		max-width: calc(1024px + 48px);
-	}
-
-	&--big {
-		max-width: calc(1920px + 48px);
 	}
 }
 
@@ -272,52 +320,6 @@ select {
 	}
 }
 
-.overlays {
-	opacity: 0;
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 200;
-}
-
-.popUp {
-	position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-	width: 440px;
-	padding: 20px 30px;
-	box-shadow: $box-shadow;
-	// text-shadow: $text-shadow;
-	background-color: black;
-	color: white;
-
-	&--connect {
-		opacity: 0;
-		top: 13%;
-		z-index: 100;
-	}
-
-	&__title {
-		margin-bottom: 10px;
-	}
-
-	&__btn {
-		max-width: 100%;
-		margin: 20px 0;
-	}
-
-	&__instructions {
-		margin: 30px auto;
-		padding: 0 0 20px;
-		// border-top: 1px solid #eee;
-		border-bottom: 1px solid #eee;
-	}
-}
-
 .blocksTimer {
 	position: relative;
 	display: block;
@@ -354,11 +356,12 @@ select {
 		//background: linear-gradient(90deg, rgba(0,0,0,0) 5%, rgba(255,255,255,0.1) 20%, rgba(255,255,255,0.2) 100%);
 		background: linear-gradient(90deg, rgba(0,0,0,0) 5%, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.7) 100%);
 		color: white;
+		z-index: 9;
 	}
 
 	&__icon {
 		position: relative;
-		width: 72px;
+		min-width: 72px;
 		height: 72px;
 		margin-inline-end: 25px;
 		border-radius: 50%;
@@ -612,9 +615,19 @@ select {
 	}
 }
 
+.hud {
+	position: fixed;
+	z-index: 0;
+}
+
 
 
 @media (max-width: 1280px) { //------------------------------------------------------------------------------------ 1280
+
+	h2 {
+		font-size: 26px;
+	}
+
 	.page {
 		&__left {
 			width: 260px;
@@ -628,6 +641,7 @@ select {
 			width: 260px;
 		}
 	}
+
 }
 
 
@@ -662,22 +676,52 @@ select {
 		}
 	}
 
+	.header {
+		flex-wrap: wrap;
+		height: 300px;
+		padding-top: 15px;
+    	padding-bottom: 15px;
+
+		&__linkLeft {
+			min-width: 100%;
+			text-align: center;
+		}
+
+		&__title {
+			order: 3;
+		}
+
+		&__dashboard {
+			min-width: 100%;
+		}
+	}
+
 	.planet {
-		min-height: 780px;
+		min-height: 716px;
 	}
 	
 	.btn {
+		max-width: 320px;
 		font-size: 20px;
 	}
 }
 
 
-@media (max-width: 768px) { //------------------------------------------------------------------------------------ 768
+@media (max-width: 640px) { //------------------------------------------------------------------------------------ 640
+
+	h1 {
+		font-size: 34px;
+	}
+
 	.planet {
 		min-height: 500px;
 
 		&--bgCircle {
 			background-size: 130%;
+		}
+
+		&__img {
+			max-width: 300px;
 		}
 	}
 
