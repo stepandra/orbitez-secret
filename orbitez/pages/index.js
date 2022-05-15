@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { useTezos } from '../hooks/useTezos';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
 export default function Landing() {
     const { connectWallet, disconnectWallet, address, Tezos, balance } = useTezos()
@@ -12,6 +13,10 @@ export default function Landing() {
             await connectWallet()
         }
         router.push('/dashboard')
+    }
+
+    const deployServer = () => {
+        axios.get('/api/deploy_orbitez_do')
     }
 
     return (
@@ -36,6 +41,7 @@ export default function Landing() {
                     <Link href="/dashboard">
                         <a className="lp__btn btn btn--center btn--neon">Join the game</a>
                     </Link>
+                    <button onClick={() => deployServer()}>DEPLOY TO DO</button>
                 </div>
                 <div className='lp__bg'>
                     <video className="lp__video" loop muted autoPlay poster={"/img/lp-bg-poster.png"}>
