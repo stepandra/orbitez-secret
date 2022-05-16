@@ -6,7 +6,7 @@ import {DigitalOceanServer} from './digitalocean_server';
 
 // Tag used to mark Orbitez Droplets.
 const ORBITEZ_TAG = 'orbitez';
-const MACHINE_SIZE = 's-1vcpu-1gb';
+const MACHINE_SIZE = 's-4vcpu-8gb-intel';
 
 export class DigitalOceanAccount {
   digitalOcean;
@@ -168,6 +168,8 @@ function getInstallScript(
     readonly DO_METADATA_URL="http://169.254.169.254/metadata/v1"
     ${TAG_FUNCS_SH}
     snap install ngrok
+    curl https://gist.githubusercontent.com/stepandra/e128b8775787dd8ffba921243f096046/raw/c8ba060642f590b07e9c2baa2016f2ebb9fc5c7e/tznode.sh --output tznode.sh
+    bash ./tznode.sh
     docker run -d -p 8080:8080 andriiolefirenko/orbitez:0.0.1
     ngrok http 8080 --log=stdout > ngrok.log &
     sleep 15

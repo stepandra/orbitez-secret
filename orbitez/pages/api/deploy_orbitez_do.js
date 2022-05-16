@@ -3,7 +3,7 @@ import { DigitalOceanAccount } from '../../digitalocean/digitalocean_account'
 import { Region } from '../../digitalocean/model/digitalocean';
 
 const TOKEN = ''
-const REGION = 'nyc3'
+const REGION = 'lon1'
 
 export default function handler(req, res) {
   const doAccount = new DigitalOceanAccount('do_account', TOKEN, true)
