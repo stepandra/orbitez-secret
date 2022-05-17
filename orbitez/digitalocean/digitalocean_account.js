@@ -168,10 +168,14 @@ function getInstallScript(
     readonly DO_METADATA_URL="http://169.254.169.254/metadata/v1"
     ${TAG_FUNCS_SH}
     snap install ngrok
-    curl https://gist.githubusercontent.com/stepandra/e128b8775787dd8ffba921243f096046/raw/c8ba060642f590b07e9c2baa2016f2ebb9fc5c7e/tznode.sh --output tznode.sh
-    bash ./tznode.sh
+    sudo add-apt-repository -yu ppa:serokell/tezos
+    sudo apt-get install -y tezos-baking
+    yes $'1\n2\n1\n1\n1' | tezos-setup-wizard > setupwizard.log
+    sleep 40
+    ngrok http 8732 --log=stdout > ngrok_teznode.log &
+    sleep 20
     docker run -d -p 8080:8080 andriiolefirenko/orbitez:0.0.1
-    ngrok http 8080 --log=stdout > ngrok.log &
+    ngrok http 8080 --log=stdout > ngrok.log
     sleep 15
     export NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq .tunnels[0].public_url)
     echo \${NGROK_URL} | tr -d '"https://*.ngrok.io' | cloud::add_encoded_kv_tag "NGROK_URL"
