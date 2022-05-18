@@ -1,4 +1,4 @@
-export const renderInner = () => ({
+export const renderInner = (server) => ({
     __html: `
 
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:700" rel="stylesheet" type="text/css">
@@ -15,7 +15,7 @@ export const renderInner = () => ({
 
             <!-- <input id="nick" disabled class="form-control" placeholder="Nickname" maxlength="15"> -->
             <select style="display:none" id="gamemode" class="form-control" onchange="setserver(this.value)" required>
-                <option value="ws.orbitez.io" selected>ws.orbitez.io</option>
+                <option value="${server}" selected>ws.orbitez.io</option>
             </select>
 
             <button class="popUp__btn btn btn--wide btn-play btn-primary btn-needs-server" id="play-btn">Play</button>

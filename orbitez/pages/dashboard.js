@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useTezos } from '../hooks/useTezos'
 import { CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from '../constants'
 import Link from 'next/link';
-import { useNFT} from '../hooks/useNFT.ts';
+import { useNFT } from '../hooks/useNFT.ts';
 import PlanetGenerator from '../components/PlanetGenerator/PlanetGenerator';
 import DeploymentModal from '../components/DeploymentModal'
 
@@ -16,6 +16,17 @@ const DEFAULT_PLANET_FEATURES = {
     exoplanet: false
 }
 
+const serverList = [
+    {
+        name: 'FRA Default',
+        value: 'ws.orbitez.io'
+    },
+    {
+        name: 'NYC DO 1',
+        value: '78fe-2604-a880-800-10-00-93a-f001.ngrok.io'
+    }
+]
+
 export default function Dashboard() {
     const { connectWallet, disconnectWallet, address, Tezos, balance } = useTezos()
     const router = useRouter()
@@ -25,6 +36,7 @@ export default function Dashboard() {
     const [planetFeatures, setPlanetFeatures] = useState(DEFAULT_PLANET_FEATURES)
     const [isDemoMode, setIsDemoMode] = useState(false)
     const [deploymentModalOpen, setDeploymentModalOpen] = useState(false)
+    const [selectedServerIndex, setSelectedServerIndex] = useState(0)
    
     setTimeout(() => {
         !planetsAvailable.length && fetch("https://api.fxhash.xyz/graphql", {
@@ -58,6 +70,10 @@ export default function Dashboard() {
             setPlanetsAvailable(planets)
         });
     }, 1000)
+
+    useEffect(() => {
+        localStorage.setItem('ORBITEZ_SERVER_URL', serverList[selectedServerIndex].value)
+    }, [selectedServerIndex])
 
     useEffect(() => {
         if (planetsAvailable?.[planetSelected]) {
@@ -164,7 +180,7 @@ export default function Dashboard() {
                     </div>
                     { address !== '' && <a className="btn btn--wide" onClick={() => mintOnFx()}>MINT NEW NFT</a>}
 
-                    <div className="payMethod">
+                    <div className="payMethod" style={{ marginTop: '10rem' }}>
                         <h3 className="payMethod__title">Payment method</h3>
                         <div className="payMethod__switcher">
                             <img className="payMethod__prev" src='/img/icon-prev.png'></img>
@@ -210,6 +226,14 @@ export default function Dashboard() {
                                 onClick={() => { openDeploymentModal() }}>
                                 <span>Deploy Server</span>
                             </a>
+                        </div>
+                    </div>
+                    <div className="payMethod" style={{ cursor: 'default' }}>
+                        <h3 className="payMethod__title">Select server</h3>
+                        <div className="payMethod__switcher">
+                            <img className="payMethod__prev" style={{ cursor: 'pointer' }} src='/img/icon-prev.png' onClick={() => selectedServerIndex > 0 && setSelectedServerIndex(selectedServerIndex - 1)}></img>
+                            <p className="payMethod__item">{serverList[selectedServerIndex].name}</p>
+                            <img className="payMethod__next" style={{ cursor: 'pointer' }} src='/img/icon-prev.png' onClick={() => selectedServerIndex < serverList.length - 1 && setSelectedServerIndex(selectedServerIndex + 1)}></img>
                         </div>
                     </div>
                     {/* <a className="btn btn--wide" href="/waiting-room">PLAY 1 XTZ</a>

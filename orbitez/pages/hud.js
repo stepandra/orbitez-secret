@@ -10,11 +10,15 @@ const signalR = require("@microsoft/signalr");
 
 export default function Hud() {
     const [endBlock, setEndBlock] = useState(null)
+    const [server, setServer] = useState('ws.orbitez.io')
     const [currentBlock, setCurrentBlock] = useState(0)
     const router = useRouter()
 
     const isGameLive = true// endBlock === null || currentBlock <= Number(endBlock)
+
     useEffect(() => {
+        const ls_server = localStorage.getItem('ORBITEZ_SERVER_URL') || 'ws.orbitez.io'
+        setServer(ls_server)
         if (!localStorage.getItem('skinLink')) {
             localStorage.setItem('skinLink', 'https://cloudflare-ipfs.com/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi')
             router.reload()
@@ -97,7 +101,7 @@ export default function Hud() {
                 </div> */}
             </header>
             
-            <main className='hud' dangerouslySetInnerHTML={ isGameLive ? renderInner() : null } ></main>
+            <main className='hud' dangerouslySetInnerHTML={ isGameLive ? renderInner(server) : null } ></main>
         </>
     )
 }

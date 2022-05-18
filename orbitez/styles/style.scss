@@ -433,7 +433,7 @@ select {
 .listBlock {
 	width: 100%;
 	max-width: 324px;
-	min-height: 420px;
+	min-height: 100px;
 	margin-bottom: 120px; // design 150px
 
 	&--wide {

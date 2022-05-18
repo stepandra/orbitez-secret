@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import DigitalOceanDeployment from './DigitalOceanDeployment'
 
-export default ({ closeModal }) => {
+export default function DeploymentModal({ closeModal }) {
   
   return (
     <div className='modal-background'>

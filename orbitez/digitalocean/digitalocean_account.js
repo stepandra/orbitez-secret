@@ -54,13 +54,13 @@ export class DigitalOceanAccount {
   }
 
   // Creates a server and returning it when it becomes active.
-  async createServer(region, name) {
+  async createServer(region, name, shouldDeployNode) {
     console.time('activeServer');
     console.time('servingServer');
     const keyPair = await crypto.generateKeyPair();
     const installCommand = getInstallScript(
       this.digitalOcean.accessToken,
-      name,
+      shouldDeployNode,
     );
 
     const dropletSpec = {
@@ -167,10 +167,22 @@ function cloud::add_encoded_kv_tag() {
 echo "true" | cloud::add_encoded_kv_tag "install-started"
 `
 
+const TEZOS_NODE_DEPLOY = `
+  sudo add-apt-repository -yu ppa:serokell/tezos
+  sudo apt-get install -y tezos-baking
+  echo "true" | cloud::add_encoded_kv_tag "node_install_started"
+  yes $'1\n2\n1\n1\n1' | tezos-setup-wizard
+  ngrok http 8732 --log=stdout > ngrok_teznode.log &
+  sleep 20
+  export TEZ_RPC_URL=$(grep 'addr=http://localhost:8732 url=' ngrok_teznode.log | sed 's/^.*url=https:\/\///')
+  echo \${TEZ_RPC_URL} | tr -d '"*.ngrok.io' | cloud::add_encoded_kv_tag "TEZ_RPC_URL"
+  echo "true" | cloud::add_encoded_kv_tag "node_live"
+`
+
 // cloudFunctions needs to define cloud::public_ip and cloud::add_tag.
 function getInstallScript(
   accessToken,
-  name,
+  shouldDeployNode,
 ){
   const sanitizedAccessToken = sanitizeDigitalOceanToken(accessToken);
   console.log(TAG_FUNCS_SH, sanitizedAccessToken)
@@ -187,15 +199,7 @@ function getInstallScript(
     export NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq .tunnels[0].public_url)
     echo \${NGROK_URL} | tr -d '"https://*.ngrok.io' | cloud::add_encoded_kv_tag "NGROK_URL"
     echo "true" | cloud::add_encoded_kv_tag "ngrok_ready"
-    sudo add-apt-repository -yu ppa:serokell/tezos
-    sudo apt-get install -y tezos-baking
-    echo "true" | cloud::add_encoded_kv_tag "node_install_started"
-    yes $'1\n2\n1\n1\n1' | tezos-setup-wizard
-    ngrok http 8732 --log=stdout > ngrok_teznode.log &
-    sleep 15
-    export TEZ_RPC_URL=$(grep 'addr=http://localhost:8732 url=' ngrok_teznode.log | sed 's/^.*url=https:\/\///')
-    echo \${TEZ_RPC_URL} | tr -d '"*.ngrok.io' | cloud::add_encoded_kv_tag "TEZ_RPC_URL"
-    echo "true" | cloud::add_encoded_kv_tag "node_live"
+    ${shouldDeployNode ? TEZOS_NODE_DEPLOY : ''}
     `
   );
 }
