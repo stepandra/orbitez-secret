@@ -81,7 +81,7 @@ export class DigitalOceanServer extends OrbitezServer {
   }
 
   updateInstallState() {
-    const TIMEOUT_MS = 5 * 60 * 1000;
+    const TIMEOUT_MS = 15 * 60 * 1000;
 
     const tagMap = this.getTagMap();
     if (tagMap.get(INSTALL_ERROR_TAG)) {
@@ -144,6 +144,7 @@ export class DigitalOceanServer extends OrbitezServer {
   getTagMap() {
     const ret = new Map();
     const tagPrefix = KEY_VALUE_TAG + ':';
+    console.log(this.dropletInfo.tags)
     for (const tag of this.dropletInfo.tags) {
       if (!startsWithCaseInsensitive(tag, tagPrefix)) {
         continue;

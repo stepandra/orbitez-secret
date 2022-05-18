@@ -8,6 +8,19 @@ import {DigitalOceanServer} from './digitalocean_server';
 const ORBITEZ_TAG = 'orbitez';
 const MACHINE_SIZE = 's-4vcpu-8gb-intel';
 
+export class DOSingleton {
+  constructor() {
+    throw new Error('Use DOSingleton.getInstance()');
+  }
+  
+  static getInstance(id,accessToken,debugMode) {
+      if (!DOSingleton.instance) {
+          DOSingleton.instance = new DigitalOceanAccount(id,accessToken,debugMode);
+      }
+      return DOSingleton.instance;
+  }
+}
+
 export class DigitalOceanAccount {
   digitalOcean;
   servers = [];
@@ -83,8 +96,8 @@ export class DigitalOceanAccount {
     return server;
   }
 
-  listServers(fetchFromHost = true) {
-    if (!fetchFromHost) {
+  listServers() {
+    if (this.servers.length) {
       return Promise.resolve(this.servers); // Return the in-memory servers.
     }
     return this.digitalOcean.getDropletsByTag(ORBITEZ_TAG).then((droplets) => {
@@ -168,18 +181,21 @@ function getInstallScript(
     readonly DO_METADATA_URL="http://169.254.169.254/metadata/v1"
     ${TAG_FUNCS_SH}
     snap install ngrok
-    sudo add-apt-repository -yu ppa:serokell/tezos
-    sudo apt-get install -y tezos-baking
-    yes $'1\n2\n1\n1\n1' | tezos-setup-wizard > setupwizard.log
-    sleep 40
-    ngrok http 8732 --log=stdout > ngrok_teznode.log &
-    sleep 20
     docker run -d -p 8080:8080 andriiolefirenko/orbitez:0.0.1
-    ngrok http 8080 --log=stdout > ngrok.log
+    ngrok http 8080 --log=stdout > ngrok.log &
     sleep 15
     export NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq .tunnels[0].public_url)
     echo \${NGROK_URL} | tr -d '"https://*.ngrok.io' | cloud::add_encoded_kv_tag "NGROK_URL"
     echo "true" | cloud::add_encoded_kv_tag "ngrok_ready"
+    sudo add-apt-repository -yu ppa:serokell/tezos
+    sudo apt-get install -y tezos-baking
+    echo "true" | cloud::add_encoded_kv_tag "node_install_started"
+    yes $'1\n2\n1\n1\n1' | tezos-setup-wizard
+    ngrok http 8732 --log=stdout > ngrok_teznode.log &
+    sleep 15
+    export TEZ_RPC_URL=$(grep 'addr=http://localhost:8732 url=' ngrok_teznode.log | sed 's/^.*url=https:\/\///')
+    echo \${TEZ_RPC_URL} | tr -d '"*.ngrok.io' | cloud::add_encoded_kv_tag "TEZ_RPC_URL"
+    echo "true" | cloud::add_encoded_kv_tag "node_live"
     `
   );
 }

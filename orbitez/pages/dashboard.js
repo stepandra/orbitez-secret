@@ -6,6 +6,7 @@ import { CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from '../constants'
 import Link from 'next/link';
 import { useNFT} from '../hooks/useNFT.ts';
 import PlanetGenerator from '../components/PlanetGenerator/PlanetGenerator';
+import DeploymentModal from '../components/DeploymentModal'
 
 const DEFAULT_PLANET_FEATURES = {
     habitability: 0,
@@ -23,15 +24,17 @@ export default function Dashboard() {
     const [planetSelected, setPlanetSelected] = useState(0)
     const [planetFeatures, setPlanetFeatures] = useState(DEFAULT_PLANET_FEATURES)
     const [isDemoMode, setIsDemoMode] = useState(false)
+    const [deploymentModalOpen, setDeploymentModalOpen] = useState(false)
    
-    !planetsAvailable.length && fetch("https://api.fxhash.xyz/graphql", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        },
-        body: JSON.stringify({ query: '{generativeToken(slug: "Orbitoid", id: 3808) {entireCollection {id owner {id} generationHash metadata }}}' })
-      })
+    setTimeout(() => {
+        !planetsAvailable.length && fetch("https://api.fxhash.xyz/graphql", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+            },
+            body: JSON.stringify({ query: '{generativeToken(slug: "Orbitoid", id: 3808) {entireCollection {id owner {id} generationHash metadata }}}' })
+        })
         .then(res => res.json())
         .then(res => {
             const owners_ids = res.data?.generativeToken?.entireCollection;
@@ -54,6 +57,7 @@ export default function Dashboard() {
             }            
             setPlanetsAvailable(planets)
         });
+    }, 1000)
 
     useEffect(() => {
         if (planetsAvailable?.[planetSelected]) {
@@ -95,6 +99,11 @@ export default function Dashboard() {
         } catch (e) {
             console.log('Transaction rejected:', e)
         }
+    }
+
+    const openDeploymentModal = async () => {
+        if (!address) connectWallet()
+        setDeploymentModalOpen(true)
     }
 
     return (
@@ -180,10 +189,6 @@ export default function Dashboard() {
                                     : 'PLAY 1 XTZ'
                             }
                         </a>
-                        <a onClick={() => isDemoMode ? demoHud() : enterRoom() }
-                            className="planet__demoLink" >
-                            or try demo
-                        </a>
                     </div>
                 </div>
 
@@ -198,10 +203,20 @@ export default function Dashboard() {
                             }
                         </ul>
                     </div>
+                    <div className="listBlock">
+                        <h2 className="listBlock__title">Deployments</h2>
+                        <div className="">
+                            <a className="planet__btn btn btn--center btn--neon" 
+                                onClick={() => { openDeploymentModal() }}>
+                                <span>Deploy Server</span>
+                            </a>
+                        </div>
+                    </div>
                     {/* <a className="btn btn--wide" href="/waiting-room">PLAY 1 XTZ</a>
                     <a className="btn btn--wide btn--second" href="/waiting-room">PLAY 10 XTZ</a> */}
                 </div>
             </main>
+            {deploymentModalOpen && <DeploymentModal closeModal={() => setDeploymentModalOpen(false)}/>}
         </div>
     )
 }

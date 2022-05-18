@@ -11,13 +11,24 @@ export default function PlanetGenerator(props) {
   useScript('/webgl/main.js')
   useScript('/bundle.js')
 
+  const updatePlanet = () => {
+    localStorage.setItem('fxHash', props.mint_hash)
+    window.fxHashGen()
+    window.main()
+    window.initPlanet(props.mint_hash);
+    window.bundle()
+  }
+
   useEffect(() => {
     if (props.mint_hash !== '') {
-      localStorage.setItem('fxHash', props.mint_hash)
-      window.fxHashGen()
-      window.main()
-      window.initPlanet(props.mint_hash);
-      window.bundle()
+      try {
+        updatePlanet()
+      } catch(e) {
+        setTimeout(() => {
+          updatePlanet()
+        }, 500)
+      }
+     
     }
   }, [props.mint_hash])
 

@@ -41,7 +41,6 @@ export default function Landing() {
                     <Link href="/dashboard">
                         <a className="lp__btn btn btn--center btn--neon">Join the game</a>
                     </Link>
-                    <button onClick={() => deployServer()}>DEPLOY TO DO</button>
                 </div>
                 <div className='lp__bg'>
                     <video className="lp__video" loop muted autoPlay poster={"/img/lp-bg-poster.png"}>
