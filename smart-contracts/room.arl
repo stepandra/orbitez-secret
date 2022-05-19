@@ -4,24 +4,23 @@ asset player identified by id {
     id : address;
     score: nat = 0;
     entry_block: nat;
-} initialized by {
-  {tz1Vi2Csq7Vhxo3ZMybBRndLuVq3W6G8NhDk;0; 201020};
-  {tz1e8wrsyVhbVkAqEXC7ekCTEzEfy8KnjJKb;1; 201020};
-  {tz1Sg3gr3TSbgTLzEgMpMQPJjSeSYA65BaRq;4; 201020};
-  {tz1RgYYwvFK7t3XNgTviu3bwv3oVtAXwDUdK;22; 201020};
-  {tz1M6soUaLRHnEb8B3UfzsgqdHzXxKGt7wBW;199; 201020};
-  {tz1VNZGpVCLN5jRoG19HeFk2QoWPFm6bpJPq;12; 201020};
-  {tz1QGB6hkTJxxb4NVszgM39xv9trKPd1Q28o;187; 201020};
-  {tz1bEEiZZAxzsYRCDeThGSzBkCy8hkFkX4nQ;4; 201020}
+}
+asset leaderboard {
+    idh : address;
+    scoreh: nat;
 }
 constant oracle : key = "edpku2jGfeBS8X8axF5nSsduvwdA8Qq9mVhWjp3uTcQ4EMhbowsL7H"
 constant orb_address : address = @KT1VSEeZZ5SiKeUGmEf7Drh4tRinNzEUBEJg
-constant oracle_address: address = @KT1R5t9jpwpAtdQpaaBQgtfBBCtSaJxY8hBv
+constant oracle_address: address = @KT1UqT4koMtfPZGSvqALfkvw3bNdCbyfXzZf
 constant admin : address = @tz1W8RgHPiTDPqB5bGommn4QgJwMFuT3B1QF
+constant treasury : address = @KT1UqT4koMtfPZGSvqALfkvw3bNdCbyfXzZf
 
 constant room_size : nat = 10
 constant bet_price : tez = 1tz
 constant game_duration : nat = 30
+
+variable v : list <address * nat > = []
+variable n : nat = 0
 
 enum betType = 
 | Tez
@@ -89,6 +88,25 @@ entry endGame (room_id : string, packed_outcome : bytes, signed_outcome : signat
         // r7: room[room_id].players.contains(caller) otherwise "Are you participated?";
     }
     effect {
-        transfer 0tz to oracle_address call setoutcome<bytes * signature>((packed_outcome, signed_outcome))
+        var e = require_entrypoint<bytes * signature>("%setoutcome", oracle_address, "invalid address");
+        transfer 0tz to entry e((packed_outcome, signed_outcome));
+        match callview<list<address * nat>>(oracle_address, "getList", Unit) with
+            | some(res) -> 
+              v := res;
+              n := length(res);
+              for item in res do
+                leaderboard.add({idh = item[0]; scoreh = item[1]})
+              done
+            | none -> fail("FAILED_TO_CALL_VIEW")
+        end;        
+
+      
+    //   var bank = room_size * bet_price;
+    //   var amount = 20% * bank;
+    //   transfer  1tz to treasury; 
+    //   transfer 1tz to v.nth(0)[0];
+    //   transfer 1tz to v.nth(1)[0];
+    //   transfer 1tz to v.nth(2)[0];
+
     }
 }

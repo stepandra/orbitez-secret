@@ -6,8 +6,9 @@ asset leaderboard identified by id {
     score: nat;
     // map<address, nat>;
 }
+variable outview : list<address * nat> = []
 // oracle's public key
-constant oracle : key = "edpku2jGfeBS8X8axF5nSsduvwdA8Qq9mVhWjp3uTcQ4EMhbowsL7H"
+constant oracle : key = "edpkuVyEa3uPuuxQo5azqcroDa59YX4rq3KnJ5RZkdDbyksLD4rr7n"
 
 entry setoutcome (packed_outcome : bytes, signed_outcome : signature) {
   effect {
@@ -15,12 +16,13 @@ entry setoutcome (packed_outcome : bytes, signed_outcome : signature) {
 
       match unpack<list<address * nat>>(packed_outcome) with
       | some(s) ->
-        for item in s do
-            leaderboard.add({id = item[0]; score = item[1]})
-        done
+        outview := s
       | none -> fail("Cannot unpack leaderboard")
       end
     ) else fail ("not signed by oracle")
   }
 }
 
+view getList () : list<address * nat> {
+  return outview
+}
