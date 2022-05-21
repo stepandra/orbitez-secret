@@ -18,9 +18,10 @@ export default function Hud() {
 
     useEffect(() => {
         const ls_server = localStorage.getItem('ORBITEZ_SERVER_URL') || 'ws.orbitez.io'
+        const gateway = localStorage.getItem('ipfs-gateway') || 'gateway.ipfs.io'
         setServer(ls_server)
         if (!localStorage.getItem('skinLink')) {
-            localStorage.setItem('skinLink', 'https://gateway.ipfs.io/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi')
+            localStorage.setItem('skinLink', `https://${gateway}/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi`)
             router.reload()
         }
     }, [])

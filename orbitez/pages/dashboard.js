@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useTezos } from '../hooks/useTezos'
 import { CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from '../constants'
 import Link from 'next/link';
-import { useNFT } from '../hooks/useNFT.ts';
+import axios from 'axios';
 import PlanetGenerator from '../components/PlanetGenerator/PlanetGenerator';
 import DeploymentModal from '../components/DeploymentModal'
 
@@ -23,7 +23,7 @@ const serverList = [
     },
     {
         name: 'NYC DO 1',
-        value: '78fe-2604-a880-800-10-00-93a-f001.ngrok.io'
+        value: 'ws.orbitez.io'
     }
 ]
 
@@ -37,8 +37,62 @@ export default function Dashboard() {
     const [isDemoMode, setIsDemoMode] = useState(false)
     const [deploymentModalOpen, setDeploymentModalOpen] = useState(false)
     const [selectedServerIndex, setSelectedServerIndex] = useState(0)
+
+    const makePromise = (gateway) => {
+        return new Promise((resolve, reject) => {
+            try {
+                axios.get(`https://${gateway}/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi`).then(res => {
+                    console.log(res.status)
+                    resolve(gateway)
+                }).catch(e => {
+                    console.log(e)
+                })
+            } catch (e) {
+                reject()
+            }
+        })
+    }
+
+    const ipfsRace = async () => {
+        const ipfsGateways = [
+            'gateway.ipfs.io',
+            'ipfs.io',
+            'infura-ipfs.io',
+            'hardbin.com',
+            'cloudflare-ipfs.com',
+            'jorropo.net',
+            'dweb.link',
+            'permaweb.eu.org',
+            'video.oneloveipfs.com',
+            'ipfs.fleek.co',
+            'ipfs.lain.la',
+            'nftstorage.link',
+            'ipfs.infura.io',
+            'cf-ipfs.com',
+            'ipfs.telos.miami',
+            'storry.tv',
+            'ipfs.eth.aragon.network',
+            'via0.com',
+            'gateway.pinata.cloud',
+            'ipfs.mihir.ch'
+        ]
+
+        const promiseList = []
+
+        for (let gateway of ipfsGateways) {
+            promiseList.push(makePromise(gateway))
+        }
+
+        const winner = await Promise.race(promiseList)
+        localStorage.setItem('ipfs-gateway', winner)
+    }
+
+    useEffect(() => {
+        ipfsRace()
+    }, [])
    
     setTimeout(() => {
+        const gateway = localStorage.getItem('ipfs-gateway') || 'gateway.ipfs.io'
         !planetsAvailable.length && fetch("https://api.fxhash.xyz/graphql", {
             method: "POST",
             headers: {
@@ -54,7 +108,7 @@ export default function Dashboard() {
             owners_ids.map((post) => {
                 if(post.owner.id == address) {
                     planets.push({
-                        img_link: 'https://gateway.ipfs.io/ipfs' + post.metadata.displayUri.slice(6),
+                        img_link: `https://${gateway}/ipfs` + post.metadata.displayUri.slice(6),
                         gen_hash: post.metadata.iterationHash,
                         token_id: post.id
                     })
@@ -63,13 +117,13 @@ export default function Dashboard() {
             if (!planets.length) {
                 planets.push({
                     gen_hash: "ooKg2zuJu9XhZBRKQaBrEDvpeYZjDPmKREp3PMSZHLkoSFK3ejN",
-                    img_link: "https://gateway.ipfs.io/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi",
+                    img_link: `https://${gateway}/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi`,
                     token_id: 'DEMO PLANET'
                 })
             }            
             setPlanetsAvailable(planets)
         });
-    }, 1000)
+    }, 1500)
 
     useEffect(() => {
         localStorage.setItem('ORBITEZ_SERVER_URL', serverList[selectedServerIndex].value)
