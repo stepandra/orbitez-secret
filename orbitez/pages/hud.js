@@ -20,7 +20,7 @@ export default function Hud() {
         const ls_server = localStorage.getItem('ORBITEZ_SERVER_URL') || 'ws.orbitez.io'
         setServer(ls_server)
         if (!localStorage.getItem('skinLink')) {
-            localStorage.setItem('skinLink', 'https://dweb.link/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi')
+            localStorage.setItem('skinLink', 'https://gateway.ipfs.io/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi')
             router.reload()
         }
     }, [])
