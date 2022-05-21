@@ -108,13 +108,13 @@ export default function DigitalOceanDeployment() {
     <>
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '50%', height: 300}}>
         <img width={progress === 100 ? 100 : 200} src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/DigitalOcean_logo.svg/1200px-DigitalOcean_logo.svg.png' />
-        {/* {
+        {
           progress !== 100 && requestedParams.requestedNode && <p style={{ textAlign: 'center' }}>The deployment of new Orbitez server and Tezos node takes about 90 min.</p>
         }
         {
           progress !== 100 && !requestedParams.requestedNode && <p style={{ textAlign: 'center' }}>The deployment of a new Orbitez server will take roughly 15 min.</p>
-        } */}
-        {/* {
+        }
+        {
           progress != 0 && progress !== 100 && 
           <>
             <div style={{ width: '80%'}}>
@@ -154,7 +154,7 @@ export default function DigitalOceanDeployment() {
             <p style={{ width: '85%' }}>Your own Tezos Node is live. Add the following RPC to your wallet:</p>
             <p></p>
           </>
-        } */}
+        }
         {
           progress !== 100 && 
           <>

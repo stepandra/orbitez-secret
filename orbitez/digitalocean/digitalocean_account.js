@@ -193,7 +193,7 @@ function getInstallScript(
     readonly DO_METADATA_URL="http://169.254.169.254/metadata/v1"
     ${TAG_FUNCS_SH}
     snap install ngrok
-    docker run -d -p 8080:8080 andriiolefirenko/orbitez:0.0.1
+    docker run -d -p 8080:8080 andriiolefirenko/orbitez:latest
     ngrok http 8080 --log=stdout > ngrok.log &
     sleep 15
     export NGROK_URL=$(curl -s localhost:4040/api/tunnels | jq .tunnels[0].public_url)
