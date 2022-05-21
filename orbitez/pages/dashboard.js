@@ -18,8 +18,8 @@ const DEFAULT_PLANET_FEATURES = {
 
 const serverList = [
     {
-        name: 'localhost',
-        value: 'localhost:8080'
+        name: 'ngrk',
+        value: '8b35-2604-a880-800-10-00-ac-6001.ngrok.io'
     },
     {
         name: 'NYC DO 1',
