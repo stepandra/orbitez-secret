@@ -54,7 +54,7 @@ export default function Dashboard() {
             owners_ids.map((post) => {
                 if(post.owner.id == address) {
                     planets.push({
-                        img_link: 'https://cloudflare-ipfs.com/ipfs' + post.metadata.displayUri.slice(6),
+                        img_link: 'https://dweb.link/ipfs' + post.metadata.displayUri.slice(6),
                         gen_hash: post.metadata.iterationHash,
                         token_id: post.id
                     })
@@ -63,7 +63,7 @@ export default function Dashboard() {
             if (!planets.length) {
                 planets.push({
                     gen_hash: "ooKg2zuJu9XhZBRKQaBrEDvpeYZjDPmKREp3PMSZHLkoSFK3ejN",
-                    img_link: "https://cloudflare-ipfs.com/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi",
+                    img_link: "https://dweb.link/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi",
                     token_id: 'DEMO PLANET'
                 })
             }            
