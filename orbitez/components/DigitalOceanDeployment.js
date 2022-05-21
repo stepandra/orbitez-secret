@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import ProgressBar from "@ramonak/react-progress-bar";
+import { useTezos } from '../hooks/useTezos'
 import axios from 'axios'
+import { MichelsonMap } from '@taquito/taquito'
+import { InMemorySigner } from '@taquito/signer';
 
 export default function DigitalOceanDeployment() {
   const [deployTezos, setDeployTezos] = useState(true)
@@ -9,6 +12,7 @@ export default function DigitalOceanDeployment() {
   const [progress, setProgress] = useState(0)
   const [animatedText, setAnimatedText] = useState('Deploying')
   const [orbitezNgrokUrl, setOrbitezNgrokUrl] = useState('')
+  const { Tezos, address } = useTezos()
 
   const getDroplets = async () => {
     const DO_TOKEN = localStorage.getItem('DO_TOKEN')
@@ -37,7 +41,7 @@ export default function DigitalOceanDeployment() {
 
     setTimeout(() => {
       pollStatus()
-    }, 5000)
+    }, 15000)
   } 
 
   useEffect(() => {
@@ -91,17 +95,26 @@ export default function DigitalOceanDeployment() {
     setProgress(newProgress)
   }
 
+  const activateServer = async () => {
+    const contract = await Tezos.wallet.at('KT1Wm2o5aow7dZEJa7h9JXKGtuiCDwkpBVbZ');
+    try {
+      await contract.methods.enter_room('kaka', 'limited').send({ storageLimit: 1000, amount: 1000000, mutez: true})
+    } catch (e) {
+      console.log('Transaction rejected:', e)
+    }
+  }
+
   return (
     <>
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '50%', height: 300}}>
         <img width={progress === 100 ? 100 : 200} src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/DigitalOcean_logo.svg/1200px-DigitalOcean_logo.svg.png' />
-        {
+        {/* {
           progress !== 100 && requestedParams.requestedNode && <p style={{ textAlign: 'center' }}>The deployment of new Orbitez server and Tezos node takes about 90 min.</p>
         }
         {
           progress !== 100 && !requestedParams.requestedNode && <p style={{ textAlign: 'center' }}>The deployment of a new Orbitez server will take roughly 15 min.</p>
-        }
-        {
+        } */}
+        {/* {
           progress != 0 && progress !== 100 && 
           <>
             <div style={{ width: '80%'}}>
@@ -141,12 +154,12 @@ export default function DigitalOceanDeployment() {
             <p style={{ width: '85%' }}>Your own Tezos Node is live. Add the following RPC to your wallet:</p>
             <p></p>
           </>
-        }
+        } */}
         {
-          progress === 100 && 
+          progress !== 100 && 
           <>
             <p style={{ width: '85%' }}>Your game server is ready! Hit activate button to start receiving rewards for every game hosted on your server.</p>
-            <button className="planet__btn btn btn--center" >
+            <button className="planet__btn btn btn--center" onClick={() => { activateServer() }}>
               Activate
             </button>
           </>

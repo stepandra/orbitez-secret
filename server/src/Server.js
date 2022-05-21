@@ -701,7 +701,6 @@ class Server {
             var maxGrow = this.config.foodMaxSize - cell.radius;
             cell.setSize(cell.radius += maxGrow * Math.random());
         }
-        cell.color = this.getRandomColor();
         this.addNode(cell);
     }
     // Вирусы
@@ -709,7 +708,7 @@ class Server {
     spawnVirus() {
         var virus = new Entity.Virus(this, null, this.randomPos(), this.config.virusMinSize);
         this.safeSpawn(virus);
-
+        
     }
     spawnCells(virusCount, foodCount) {
         for (var i = 0; i < foodCount; i++) {

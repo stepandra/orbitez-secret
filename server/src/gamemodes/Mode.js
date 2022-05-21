@@ -15,7 +15,7 @@ class Mode {
         const signalR = require("@microsoft/signalr");
 
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://api.hangzhou2net.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
+            .withUrl("https://api.hangzhou2net..io/v1/events") //https://api.tzkt.io/ MAINNEt
             .build();
 
         async function init() {

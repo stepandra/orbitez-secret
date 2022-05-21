@@ -37,9 +37,9 @@ export const renderInner = (server) => ({
         <img src="/img/split.png" id="splitBtn">
         <img src="/img/eject.png" id="ejectBtn">
     </div>
-
     <canvas id="canvas" width="800" height="600"></canvas>
+    <img style="position:fixed;" id="canvas-bg" src="/background.jpeg" />
+    <img style="position:fixed;" id="food-png" src="/food.png" />
     <input type="text" id="chat_textbox" placeholder="Press enter to chat" maxlength="200">
     <div style="font-family:'Ubuntu'">&nbsp;</div>
-
 `})

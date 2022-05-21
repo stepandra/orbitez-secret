@@ -225,7 +225,7 @@
     const QUADTREE_MAX_POINTS = 32;
     const CELL_POINTS_MIN = 5;
     const CELL_POINTS_MAX = 120;
-    const VIRUS_POINTS = 100;
+    const VIRUS_POINTS = 110;
     const PI_2 = Math.PI * 2;
     const SEND_254 = new Uint8Array([254, 6, 0, 0, 0]);
     const SEND_255 = new Uint8Array([255, 1, 0, 0, 0]);
@@ -349,7 +349,6 @@
                         jagged: !!(flagMask & 0x01) || !!(flagMask & 0x10),
                         ejected: !!(flagMask & 0x20),
                     };
-
                     const color = flags.updColor ? new Color(reader.getUint8(), reader.getUint8(), reader.getUint8()) : null;
                     const skin = flags.updSkin ? reader.getStringUTF8() : null;
                     const name = flags.updName ? reader.getStringUTF8() : null;
@@ -650,11 +649,11 @@
         showMinimap: true,
         showPosition: false,
         showBorder: false,
-        showGrid: true,
+        showGrid: false,
         playSounds: false,
         soundsVolume: 0.5,
         moreZoom: false,
-        fillSkin: true,
+        fillSkin: false,
         backgroundSectors: false,
         jellyPhysics: true,
     };
@@ -975,7 +974,7 @@
         const h = border.height / sectorCount;
 
         toCamera(mainCtx);
-        mainCtx.fillStyle = settings.darkTheme ? '#666' : '#DDD';
+        // mainCtx.fillStyle = settings.darkTheme ? '#666' : '#DDD';
         mainCtx.textBaseline = 'middle';
         mainCtx.textAlign = 'center';
         mainCtx.font = `${w / 3 | 0}px Ubuntu`;
@@ -1062,7 +1061,7 @@
         // draw name above user's pos if they have a cell on the screen
         const cell = cells.byId.get(cells.mine.find(id => cells.byId.has(id)));
         if (cell) {
-            mainCtx.fillStyle = settings.darkTheme ? '#DDD' : '#222';
+            // mainCtx.fillStyle = settings.darkTheme ? '#DDD' : '#222';
             mainCtx.font = `${sectorNameSize}px Ubuntu`;
             mainCtx.fillText(cell.name || EMPTY_NAME, myPosX, myPosY - 7 - sectorNameSize / 2);
         }
@@ -1103,13 +1102,26 @@
         mainCtx.save();
         mainCtx.resetTransform();
 
-        mainCtx.fillStyle = settings.darkTheme ? '#111' : '#F2FBFF';
+        mainCtx.fillStyle = settings.darkTheme ? '#FFF' : '#000';
+        var img = document.getElementById("canvas-bg");
+        var pat = mainCtx.createPattern(img, "repeat");
+        mainCtx.rect(0, 0, 150, 100);
+        mainCtx.fillStyle = pat;
+        mainCtx.fill();
+
+        // mainCtx.fillStyle = settings.darkTheme ? '#999' : '#F2FBFF';
         mainCtx.fillRect(0, 0, mainCanvas.width, mainCanvas.height);
         if (settings.showGrid) drawGrid();
         if (settings.backgroundSectors) drawBackgroundSectors();
 
         toCamera(mainCtx);
         drawBorders();
+        var background = new Image();
+        background.src = "http://i.imgur.com/yf6d9SX.jpg";
+
+        background.onload = function(){
+            mainCtx.drawImage(background,0,10000);   
+        };
 
         for (const cell of drawList) cell.draw(mainCtx);
 
@@ -1118,7 +1130,7 @@
         mainCtx.scale(camera.viewportScale, camera.viewportScale);
 
         let height = 200;
-        mainCtx.fillStyle = settings.darkTheme ? '#FFF' : '#000';
+
         mainCtx.textBaseline = 'top';
         if (!isNaN(stats.score)) {
             mainCtx.font = '30px Ubuntu';
@@ -1649,8 +1661,10 @@
     }
 
     window.init = () => {
+       
         mainCanvas = document.getElementById('canvas');
-        mainCtx = mainCanvas.getContext('2d');
+        mainCtx = mainCanvas.getContext('2d')
+
         chatBox = byId('chat_textbox');
         soundsVolume = byId('soundsVolume');
         mainCanvas.focus();
@@ -1731,6 +1745,7 @@
             }
         });
 
+        console.log("HUWHAUHUNKDS")
         gameReset();
         showESCOverlay();
 
@@ -1744,6 +1759,7 @@
         }
         drawGame();
         Logger.info(`Init done in ${Date.now() - LOAD_START}ms`);
+        
     }
     window.setserver = (url) => {
         if (url === wsUrl && ws && ws.readyState <= WebSocket.OPEN) return;

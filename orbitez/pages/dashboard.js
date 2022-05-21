@@ -18,8 +18,8 @@ const DEFAULT_PLANET_FEATURES = {
 
 const serverList = [
     {
-        name: 'FRA Default',
-        value: 'ws.orbitez.io'
+        name: 'localhost',
+        value: 'localhost:8080'
     },
     {
         name: 'NYC DO 1',
@@ -94,8 +94,9 @@ export default function Dashboard() {
     
     const enterRoom = async () => {
         const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
+
         try {
-            await contract.methods.enterRoom(1, true).send({ amount: 1 })
+            await contract.methods.enter_room(1, true).send(1)
             router.push('/waiting-room')
         } catch (e) {
             console.log('Transaction rejected:', e)

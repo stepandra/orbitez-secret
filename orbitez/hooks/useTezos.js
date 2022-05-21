@@ -1,25 +1,46 @@
 import { TezosToolkit } from "@taquito/taquito"
-import { BeaconWallet } from "@taquito/beacon-wallet"
 import { NetworkType } from "@airgap/beacon-sdk"
-import { useState, useEffect, memo } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { NFT_ADDRESS } from '../constants'
+import { useAppContext } from '../pages/_app'
+import { MichelCodecPacker } from '@taquito/taquito';
+import { InMemorySigner } from "@taquito/signer"
+
+export class LambdaViewSigner {
+  async publicKeyHash() {
+    return "tz1fVQangAfb9J1hRRMP2bSB6LvASD6KpY8A";
+  }
+
+  async publicKey() {
+    return "edpkvWbk81uh1DEvdWKR4g1bjyTGhdu1mDvznPUFE2zDwNsLXrEb9K";
+  }
+
+  async secretKey() {
+    throw new Error("Secret key cannot be exposed");
+  }
+
+  async sign() {
+    throw new Error("Cannot sign");
+  }
+}
 
 export function useTezos() {
-  const RPC_URL = 'https://hangzhounet.smartpy.io';
-  // 'https://mainnet.smartpy.io/';
-
+  const wallet = useAppContext()
+  const RPC_URL = 'https://ithacanet.smartpy.io';
   const Tezos = new TezosToolkit(RPC_URL)
-  const wallet = new BeaconWallet({ name: "Orbitez" })
+  Tezos.setPackerProvider(new MichelCodecPacker())
+  InMemorySigner.fromSecretKey('edskRzktjkrznmjWoVr5tKThrX41MM7n3fP6cVLwt6Tw65EUykyEGkaMVcTSGe9DsppM8KH6hiwAcyzQFqkEbXwEV4PgaL1dDB').then(signer => Tezos.setSignerProvider(signer))
+
   const [balance, setBalance] = useState(0)
-  Tezos.setWalletProvider(wallet)
   const [address, setAddress] = useState('')
 
-  useEffect(() => {
+  useEffect(async () => {
     connectionExistsCheck()
     updateBalance()
   }, [address])
 
   const connectionExistsCheck = async () => {
+    if (!wallet) return false
     const activeAccount = await wallet.client.getActiveAccount()
     if (activeAccount) {
       console.log(`Already connected: ${activeAccount.address}`)
@@ -41,7 +62,7 @@ export function useTezos() {
     if (!connectionExists) {
       await wallet.requestPermissions({
         network: {
-          type: NetworkType.HANGZHOUNET,
+          type: NetworkType.ITHACANET,
           // type: NetworkType.MAINNET,
           rpcUrl: RPC_URL,
         },
