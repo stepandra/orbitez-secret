@@ -4,11 +4,13 @@ asset player identified by id {
     id : address;
     score: nat = 0;
     entry_block: nat;
+    room_id : string;
 }
 asset leaderboard identified by idh {
     idh : address;
     scoreh: nat;
 }   
+
 constant oracle : key = "edpku2jGfeBS8X8axF5nSsduvwdA8Qq9mVhWjp3uTcQ4EMhbowsL7H"
 constant orb_address : address = @KT1VSEeZZ5SiKeUGmEf7Drh4tRinNzEUBEJg
 constant oracle_address: address = @KT1UqT4koMtfPZGSvqALfkvw3bNdCbyfXzZf
@@ -29,15 +31,22 @@ enum betType =
 | OrbLP
 | OtherLP
 
-asset room {
+asset room identified by cid {
     cid : string;
     finish_block  : nat = 0;
-    players: aggregate<player> = [];
     bet_amount : tez;
     bet_type : betType = Tez;
     size: nat;
     distance: nat;
 }
+
+asset server {
+    sid: string;
+    manager: address;
+    server_url: string = "";
+    rooms: aggregate<room> = [];
+    players: aggregate<player> = [];
+}   
 
 states = 
 | Created initial
@@ -46,52 +55,74 @@ states =
 | Closed
 | Refunded
 
-entry create_room (room_id : string, bet_size : tez, size_v: nat, game_duration_v: nat) {
-    called by admin
-    effect {
-        room.add({cid =room_id; bet_amount = bet_size; bet_type = Tez; size = size_v; distance = game_duration_v})
-    }
+// entry create_room (room_id : string,) {
+//     called by admin
+//     effect {
+        // room.add({cid =room_id;server_id=[{ sid="YS3ED48E5Y3070016"; manager=@tz1W8RgHPiTDPqB5bGommn4QgJwMFuT3B1QF;server_url="https://ngrok.cock"}]; bet_amount = bet_size; bet_type = Tez; size = size_v; distance = game_duration_v})
+//     }
+// }
+
+entry create_server (serverd : string, manag : address, room_idx : string, serverurl : string,  bet_size : tez, size_v: nat, game_duration_v: nat) {
+
+    room.add({cid =room_idx; bet_amount = bet_size; bet_type = Tez; size = size_v; distance = game_duration_v});
+    server.add({sid=serverd; manager = manag; server_url = serverurl;rooms=[]});
+    server[serverd].rooms.add(room_idx);
+    
+    // server.add({sid=serverd, manager=manag, server_url=serverurl});
 }
-entry enter_room (room_id : string) {
+entry enter_room (room_idv : string, serverid: string) {
     // specification {
     //     s1 : true;
     // }
     called by any
     require {
-        r1: transferred = room[room_id].bet_amount otherwise "Incorrect bet amount!";
-        r3: player.count() < room_size otherwise "Room is full!" ;
+        r1: transferred = room[room_idv].bet_amount otherwise "Incorrect bet amount!";
+        r2: server[serverid].rooms.contains(room_idv) otherwise "Room not found!";
+        r3: server[serverid].players.count() < room[room_idv].size otherwise "Room is full!" ;
     }
     effect {
-        player.add({ id = caller; entry_block = level});
-        room.update(room_id, {players += [caller]});
+        player.add({ id = caller; entry_block = level; room_id = room_idv});
+        server[serverid].players.add(caller);
         // room[room_id].players.add(caller);
-        if room[room_id].players.count() = 10 then room[room_id].finish_block := level + game_duration
+
+        if server[serverid].players.count() = room[room_idv].size then room[room_idv].finish_block := level + game_duration
     }
 }
 
-entry refund (room_id : string) {
+entry refund (room_idq : string, server_id : string) {
     called by any
     require {
-        r4: room[room_id].players.contains(caller) otherwise "Nothing to refund!";
-        r5: room[room_id].players.count() < 10 otherwise "Game already started! Play or die!";
+        r4: server[server_id].players.contains(caller) otherwise "Nothing to refund!";
+        // r5: server[server_id].players[caller].room_id = server[server_id].rooms[room_idq].cid otherwise "Game already started! Play or die!";
+        //   .players.count() < server[server_id].rooms[room_idq].size
     }
     effect {
-        player.remove(caller);
-        room[room_id].players.remove(caller);
-        if (not room[room_id].players.contains(caller)) then transfer (bet_price * 1tz) to caller;
+        // player.remove(caller);
+        server[server_id].players.remove(caller);
+        if (not server[server_id].players.contains(caller)) then transfer (bet_price * 1tz) to caller;
     }
-
 }
 
-entry endGame (room_id : string, server_id : string, packed_outcome : bytes, signed_outcome : signature) {
+entry endGame (room_idb : string, serverid : string, packed_outcome : bytes, signed_outcome : signature) {
     require {
         // r6: level > room[room_id].finish_block otherwise "Game not ended!";
         // r7: room[room_id].players.contains(caller) otherwise "Are you participated?";
+        // r6 : room[room_id].server_id.contains(serverid) or serverid="default" otherwise "Wrong server!";
+        // r6: server[serverid].rooms.contains(room_idb) or serverid="default" otherwise "Wrong server!";
     }
     effect {
         var e = require_entrypoint<bytes * signature>("%setoutcome", oracle_address, "invalid address");
-        var amount : tez = 20% * balance;
-        transfer amount to entry e((packed_outcome, signed_outcome));
+        
+        // var serer : string = room[room_id].server_id.nth(0);
+        
+        // if (serverid <> "default") then (
+            
+        //     transfer (10% * balance) to treasury;
+        // ) else (
+        //     transfer (20% * balance) to treasury;
+        // );
+       
+        transfer 0tz to entry e((packed_outcome, signed_outcome));
         match callview<list<address * nat>>(oracle_address, "getList", Unit) with
             | some(res) -> 
               v := res;
@@ -101,10 +132,13 @@ entry endGame (room_id : string, server_id : string, packed_outcome : bytes, sig
               done
             | none -> fail("FAILED_TO_CALL_VIEW")
         end;        
-        
+
+        var manage : address = server[serverid].manager;
+        transfer (10% * balance) to manage;
         sortido := leaderboard.sort(desc(scoreh));
         transfer (40% * balance) to sortido.nth(0);
         transfer (25% * balance) to sortido.nth(1);
         transfer (15% * balance) to sortido.nth(2);
+        server[serverid].players.clear();
     }
 }
