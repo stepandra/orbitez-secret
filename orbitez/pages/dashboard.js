@@ -23,7 +23,7 @@ const serverList = [
     },
     {
         name: 'NYC DO 1',
-        value: '78fe-2604-a880-800-10-00-93a-f001.ngrok.io'
+        value: '8348-161-35-66-46.eu.ngrok.io'
     }
 ]
 
@@ -179,7 +179,7 @@ export default function Dashboard() {
                             !planetsAvailable.length && <p className="listBlock__text">{`Uh oh, Looks like you haven't minted any planet NFTs...`}</p>
                         }
                     </div>
-                    { address !== '' && <a className="btn btn--wide" onClick={() => mintOnFx()}>MINT NEW NFT</a>}
+                    { address !== '' && <a className="btn btn--wide" onClick={() => window.open("https://www.fxhash.xyz/marketplace/generative/3808", "_blank")}>MINT NEW NFT</a>}
 
                     <div className="payMethod" style={{ marginTop: '10rem' }}>
                         <h3 className="payMethod__title">Payment method</h3>
