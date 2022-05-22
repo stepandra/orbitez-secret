@@ -36,6 +36,7 @@ export default function WaitingRoom() {
                 players.push(key.replaceAll('"', ''))
             }
         }
+        console.log(waitRoom.length)
         setWaitRoom(players)
 
         const connection = new signalR.HubConnectionBuilder()
@@ -119,10 +120,10 @@ export default function WaitingRoom() {
                         <img className="planet__img" src="/img/planet.png" alt="planet background" />
                         <a
                             style={{
-                                opacity: waitRoom.length === 5 ? 1 : 0.3,
-                                cursor: waitRoom.length === 5 ? 'pointer' : 'not-allowed'
+                                opacity: waitRoom.length === roomSize ? 1 : 0.3,
+                                cursor: waitRoom.length === roomSize ? 'pointer' : 'not-allowed'
                             }}
-                            disabled={waitRoom.length > roomSize}
+                            disabled={waitRoom.length < roomSize}
                             className="planet__btn btn btn--center btn--neon"
                             onClick={() => router.push({
                                 pathname: '/hud'

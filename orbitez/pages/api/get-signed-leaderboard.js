@@ -97,6 +97,8 @@ export default async function handler(req, res) {
     wsSend(SEND_254)
     wsSend(SEND_255)
     wsSend(new Uint8Array([254]))
+    wsSend(new Uint8Array([254]))
+    wsSend(new Uint8Array([254]))
   }
 
   function wsError(error) {

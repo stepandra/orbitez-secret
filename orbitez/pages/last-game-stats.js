@@ -25,7 +25,7 @@ export default function LastGameStats() {
     const payDividends = async () => {
       const server = localStorage.getItem('ORBITEZ_SERVER_NAME')
       const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
-      await contract.methods.endGame(server, server, endgameData.packed, endgameData.signed).send()
+      await contract.methods.endGame(server, server, endgameData.packed, endgameData.sig).send()
     }
 
     return (
