@@ -8,16 +8,20 @@ import {DigitalOceanServer} from './digitalocean_server';
 const ORBITEZ_TAG = 'orbitez';
 const MACHINE_SIZE = 's-4vcpu-8gb-intel';
 
-export class DOSingleton {
+export class DOSingleton { 
   constructor() {
     throw new Error('Use DOSingleton.getInstance()');
   }
   
   static getInstance(id,accessToken,debugMode) {
-      if (!DOSingleton.instance) {
-          DOSingleton.instance = new DigitalOceanAccount(id,accessToken,debugMode);
-      }
-      return DOSingleton.instance;
+    if (!DOSingleton.instanceMap) {
+      DOSingleton.instanceMap = new Map() 
+    }
+    if (!DOSingleton.instanceMap.has(accessToken)) {
+      DOSingleton.instanceMap.set(accessToken, new DigitalOceanAccount(id,accessToken,debugMode)) 
+    }
+    
+    return DOSingleton.instanceMap.get(accessToken);
   }
 }
 
