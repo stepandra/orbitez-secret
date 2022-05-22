@@ -10,6 +10,7 @@ import axios from 'axios';
 export default function WaitingRoom() {
     const { Tezos, address } = useTezos()
     const [waitRoom, setWaitRoom] = useState([])
+    const [roomSize, setRoomSize] = useState(10)
     const router = useRouter()
 
     const refund = async () => {
@@ -25,7 +26,9 @@ export default function WaitingRoom() {
         const storage = await contract.storage()
         const serverName = localStorage.getItem('ORBITEZ_SERVER_NAME')
         const sanitized = serverName.replaceAll('"', '')
-
+        console.log(serverName)
+        console.log(Number(storage.room.valueMap.get(serverName).size))
+        setRoomSize(Number(storage.room.valueMap.get(serverName).size))
         const players = []
         for (let [key, value] of storage.player.valueMap) {
             console.log(value)
@@ -99,7 +102,7 @@ export default function WaitingRoom() {
             <main className="page container">
                 <div className="page__left">
                     <div className="listBlock">
-                        <h2 className="listBlock__title blockTitle">{waitRoom.length ? `Waiting for players ${waitRoom.length} / 5` : 'Loading players list...'}</h2>
+                        <h2 className="listBlock__title blockTitle">{waitRoom.length ? `Waiting for players ${waitRoom.length} / ${roomSize}` : 'Loading players list...'}</h2>
                         <ul className="listBlock__list">
                             {
                                 waitRoom.map(el => el === address
