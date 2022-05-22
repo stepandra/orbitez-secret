@@ -259,14 +259,12 @@ export default function Dashboard() {
                     <div className="planet planet--bgCircle">
                         <PlanetGenerator mint_hash={mintHash} />
                         <a onClick={() => { 
-                            address == '' ? connectWallet() : isDemoMode ? demoHud() : enterRoom() 
+                            address == '' ? connectWallet() : enterRoom() 
                         }} className="planet__btn btn btn--center btn--neon" >
                             {
                                 address == ''
                                 ? 'Connect wallet'
-                                : ( isDemoMode ) 
-                                    ? 'Demo gameplay'
-                                    : 'PLAY 1 XTZ'
+                                : 'PLAY 1 XTZ'
                             }
                         </a>
                     </div>
