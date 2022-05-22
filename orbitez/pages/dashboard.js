@@ -88,6 +88,8 @@ export default function Dashboard() {
                     break
                 }
             }
+        } else {
+            setSelectedServerIndex(0)
         }
     }, [])
    
