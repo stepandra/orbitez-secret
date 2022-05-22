@@ -3,12 +3,14 @@ import Head from 'next/head'
 import Link from 'next/link';
 import { useTezos } from '../hooks/useTezos';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { CONTRACT_ADDRESS } from '../constants';
 
 export default function LastGameStats() {
     const { connectWallet, address, Tezos, balance } = useTezos()
     const [leaderboard, setLeaderboard] = useState([])
     const [endgameData, setEndgameData] = useState({packed: '', signed: ''})
+    const router = useRouter()
 
     useEffect(() => {
       const getLeaderboard = async () => {
@@ -25,7 +27,9 @@ export default function LastGameStats() {
     const payDividends = async () => {
       const server = localStorage.getItem('ORBITEZ_SERVER_NAME')
       const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
-      await contract.methods.endGame(server, server, endgameData.packed, endgameData.sig).send({ storageLimit: 1000})
+      const sanitized = server.replaceAll('"', '')
+      await contract.methods.endGame(sanitized, sanitized, endgameData.packed, endgameData.sig).send({ storageLimit: 1000 })
+      router.push('/dashboard')
     }
 
     return (

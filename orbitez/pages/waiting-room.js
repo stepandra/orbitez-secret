@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head'
-import Link from 'next/link';
 import { CONTRACT_ADDRESS } from '../constants'
 import { useRouter } from 'next/router';
 import { useTezos } from '../hooks/useTezos';
