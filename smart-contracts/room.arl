@@ -141,6 +141,7 @@ entry endGame (room_idb : string, serverid : string, packed_outcome : bytes, sig
         transfer (25% * balance) to sortido.nth(1);
         transfer (15% * balance) to sortido.nth(2);
         server[serverid].players.clear();
+        leaderboard.clear();
         sortido := [];
     }
 }
