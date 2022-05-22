@@ -16,13 +16,6 @@ const DEFAULT_PLANET_FEATURES = {
     exoplanet: false
 }
 
-const defaultServerList = [
-    {
-        name: 'DEFAULT',
-        server_url: '8b35-2604-a880-800-10-00-ac-6001.ngrok.io'
-    },
-]
-
 export default function Dashboard() {
     const { connectWallet, disconnectWallet, address, Tezos, balance } = useTezos()
     const router = useRouter()
@@ -32,8 +25,8 @@ export default function Dashboard() {
     const [planetFeatures, setPlanetFeatures] = useState(DEFAULT_PLANET_FEATURES)
     const [isDemoMode, setIsDemoMode] = useState(false)
     const [deploymentModalOpen, setDeploymentModalOpen] = useState(false)
-    const [selectedServerIndex, setSelectedServerIndex] = useState(0)
-    const [serverList, setServerList] = useState(defaultServerList)
+    const [selectedServerIndex, setSelectedServerIndex] = useState(undefined)
+    const [serverList, setServerList] = useState([])
 
     const promisify = (gateway) => {
         return new Promise((resolve, reject) => {
@@ -87,18 +80,15 @@ export default function Dashboard() {
         }
 
         setServerList(contractServerList)
-
-
         let ls_server = localStorage.getItem('ORBITEZ_SERVER_URL')
         if (ls_server) {
             for (let i = 0; i < contractServerList.length; i++) {
-                if (contractServerList[i].name === ls_server) {
+                if (contractServerList[i].server_url === ls_server) {
                     setSelectedServerIndex(i)
+                    break
                 }
-                break
             }
         }
-        localStorage.setItem('ORBITEZ_SERVER_NAME', serverList[selectedServerIndex].name)
     }, [])
    
     setTimeout(async () => {
@@ -141,6 +131,7 @@ export default function Dashboard() {
     }, 2000)
 
     useEffect(() => {
+        if (typeof selectedServerIndex == 'undefined' || !serverList.length) return
         localStorage.setItem('ORBITEZ_SERVER_URL', serverList[selectedServerIndex].server_url)
         localStorage.setItem('ORBITEZ_SERVER_NAME', serverList[selectedServerIndex].name)
     }, [selectedServerIndex])
@@ -163,10 +154,10 @@ export default function Dashboard() {
     }, [mintHash])
     
     const enterRoom = async () => {
-        const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
+        const contract = await Tezos.wallet.at('KT1Wm2o5aow7dZEJa7h9JXKGtuiCDwkpBVbZ');
 
         try {
-            await contract.methods.enter_room(1, true).send(1)
+            await contract.methods.enter_room(serverList[selectedServerIndex]?.name.replaceAll('"', ''), serverList[selectedServerIndex]?.name.replaceAll('"', '')).send({ storageLimit: 1000, amount: 1 })
             router.push('/waiting-room')
         } catch (e) {
             console.log('Transaction rejected:', e)
@@ -302,7 +293,7 @@ export default function Dashboard() {
                         <h3 className="payMethod__title">Select server</h3>
                         <div className="payMethod__switcher">
                             <img className="payMethod__prev" style={{ cursor: 'pointer' }} src='/img/icon-prev.png' onClick={() => selectedServerIndex > 0 && setSelectedServerIndex(selectedServerIndex - 1)}></img>
-                            <p className="payMethod__item">{serverList[selectedServerIndex].name}</p>
+                            <p className="payMethod__item">{serverList[selectedServerIndex]?.name}</p>
                             <img className="payMethod__next" style={{ cursor: 'pointer' }} src='/img/icon-prev.png' onClick={() => selectedServerIndex < serverList.length - 1 && setSelectedServerIndex(selectedServerIndex + 1)}></img>
                         </div>
                     </div>
