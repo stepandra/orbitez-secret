@@ -11,8 +11,8 @@ export default function LastGameStats() {
 
     useEffect(() => {
       const getLeaderboard = async () => {
-        const res = await axios.get('https://stats.orbitez.io')
-        setLeaderboard(res.data.leaderboard)
+        const server = localStorage.getItem('ORBITEZ_SERVER_NAME')
+        const res = await axios.post('/api/get-signed-leaderboard', { server })
       }
 
       getLeaderboard()

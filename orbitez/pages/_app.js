@@ -4,7 +4,6 @@ import '../styles/style.scss'
 import '../styles/style-lp.scss'
 import React, {useState} from 'react';
 import { BeaconWallet } from "@taquito/beacon-wallet"
-import Script from 'next/script'
 import { createContext, useContext, useEffect } from 'react';
 
 const AppContext = createContext(undefined);
@@ -16,7 +15,7 @@ export class SingletonBeacon {
 
   static getInstance() {
     if (!SingletonBeacon.instance && typeof window !== 'undefined') {
-      SingletonBeacon.instance = new BeaconWallet({ name: 'Orbitez' })
+      SingletonBeacon.instance = new BeaconWallet({ name: 'Orbitez', preferredNetwork: 'ithacanet' })
     }
     return SingletonBeacon.instance
   }
@@ -24,10 +23,6 @@ export class SingletonBeacon {
 
 export function AppWrapper({ children }) {
   const [wallet, setWallet] = useState(SingletonBeacon.getInstance());   
-
-  useEffect(() => {
-    setWallet()
-  }, [])
 
   return (
     <AppContext.Provider value={wallet}>

@@ -17,8 +17,6 @@ const INSTALL_ERROR_TAG = 'install-error';
 
 
 function getCompletionFraction(state) {
-  // Values are based on observed installation timing.
-  // Installation typically takes 90 seconds in total.
   switch (state) {
     case 'UNKNOWN':
       return 0.1;
@@ -65,19 +63,6 @@ export class DigitalOceanServer extends OrbitezServer {
     this.updateInstallState();
     // Start polling for state updates.
     this.pollInstallState();
-  }
-
-  async *monitorInstallProgress() {
-    for await (const state of this.installState.watch()) {
-      console.log('COMPLETE BY', getCompletionFraction(state))
-      yield getCompletionFraction(state);
-    }
-
-    if (this.installState.get() === 'FAILED') {
-      throw new errors.ServerInstallFailedError();
-    } else if (this.installState.get() === 'CANCELED') {
-      throw new errors.ServerInstallCanceledError();
-    }
   }
 
   updateInstallState() {
@@ -152,7 +137,7 @@ export class DigitalOceanServer extends OrbitezServer {
       const keyValuePair = tag.slice(tagPrefix.length);
       const [key, hexValue] = keyValuePair.split(':', 2);
       try {
-        ret.set(key.toLowerCase(), hexToString(hexValue));
+        ret.set(key.toLowerCase(), hexValue);
       } catch (e) {
         console.error('error decoding hex string');
       }
@@ -171,8 +156,6 @@ export class DigitalOceanServer extends OrbitezServer {
   }
 
   getHost() {
-    // Construct a new DigitalOceanHost object, to be sure it has the latest
-    // session and droplet info.
     return new DigitalOceanHost(this.digitalOcean, this.dropletInfo, this.onDelete.bind(this));
   }
 

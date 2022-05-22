@@ -1104,11 +1104,13 @@
 
         mainCtx.fillStyle = settings.darkTheme ? '#FFF' : '#000';
         var img = document.getElementById("canvas-bg");
-        var pat = mainCtx.createPattern(img, "repeat");
-        mainCtx.rect(0, 0, 150, 100);
-        mainCtx.fillStyle = pat;
-        mainCtx.fill();
-
+        if (img) {
+            var pat = mainCtx.createPattern(img, "repeat");
+            mainCtx.rect(0, 0, 150, 100);
+            mainCtx.fillStyle = pat;
+            mainCtx.fill();
+        }
+       
         // mainCtx.fillStyle = settings.darkTheme ? '#999' : '#F2FBFF';
         mainCtx.fillRect(0, 0, mainCanvas.width, mainCanvas.height);
         if (settings.showGrid) drawGrid();
@@ -1117,7 +1119,6 @@
         toCamera(mainCtx);
         drawBorders();
         var background = new Image();
-        background.src = "http://i.imgur.com/yf6d9SX.jpg";
 
         background.onload = function(){
             mainCtx.drawImage(background,0,10000);   
@@ -1745,7 +1746,6 @@
             }
         });
 
-        console.log("HUWHAUHUNKDS")
         gameReset();
         showESCOverlay();
 

@@ -1,35 +1,15 @@
 import { TezosToolkit } from "@taquito/taquito"
 import { NetworkType } from "@airgap/beacon-sdk"
-import { useState, useEffect, useContext } from 'react'
-import { NFT_ADDRESS } from '../constants'
+import { useState, useEffect } from 'react'
 import { useAppContext } from '../pages/_app'
 import { MichelCodecPacker } from '@taquito/taquito';
-import { InMemorySigner } from "@taquito/signer"
-
-export class LambdaViewSigner {
-  async publicKeyHash() {
-    return "tz1fVQangAfb9J1hRRMP2bSB6LvASD6KpY8A";
-  }
-
-  async publicKey() {
-    return "edpkvWbk81uh1DEvdWKR4g1bjyTGhdu1mDvznPUFE2zDwNsLXrEb9K";
-  }
-
-  async secretKey() {
-    throw new Error("Secret key cannot be exposed");
-  }
-
-  async sign() {
-    throw new Error("Cannot sign");
-  }
-}
 
 export function useTezos() {
   const wallet = useAppContext()
   const RPC_URL = 'https://ithacanet.smartpy.io';
   const Tezos = new TezosToolkit(RPC_URL)
   Tezos.setPackerProvider(new MichelCodecPacker())
-  InMemorySigner.fromSecretKey('edskRzktjkrznmjWoVr5tKThrX41MM7n3fP6cVLwt6Tw65EUykyEGkaMVcTSGe9DsppM8KH6hiwAcyzQFqkEbXwEV4PgaL1dDB').then(signer => Tezos.setSignerProvider(signer))
+  Tezos.setWalletProvider(wallet)
 
   const [balance, setBalance] = useState(0)
   const [address, setAddress] = useState('')
@@ -71,9 +51,6 @@ export function useTezos() {
       setAddress(addr)
       localStorage.setItem('tzAddress', address)
     } else {
-      const nft = await Tezos.contract.at(NFT_ADDRESS)
-      // console.log(nft.methods.balance_of([{owner: address, token_id: 1}], 'KT1NXgqXUfYFowmoZK6FhUTxmcqkjzZnV5rg').send())
-      // console.log("New connection: ", address)
       alert(`Already connected`)
     }
   }

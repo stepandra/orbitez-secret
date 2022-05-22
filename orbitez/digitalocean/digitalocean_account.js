@@ -83,16 +83,6 @@ export class DigitalOceanAccount {
       dropletSpec
     );
     const server = this.createDigitalOceanServer(this.digitalOcean, response.droplet);
-    server.onceDropletActive
-      .then(async () => {
-        console.timeEnd('activeServer');
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        for await (const _ of server.monitorInstallProgress()) {
-          /* do nothing */
-        }
-        console.timeEnd('servingServer');
-      })
-      .catch((e) => console.log("Couldn't time installation", e));
     return server;
   }
 
@@ -133,6 +123,7 @@ function sanitizeDigitalOceanToken(input){
   return sanitizedInput;
 }
 
+// cloudFunctions needs to define cloud::public_ip and cloud::add_tag.
 const TAG_FUNCS_SH = `
 # Applies a tag to this droplet.
 function cloud::add_tag() {
@@ -173,19 +164,17 @@ const TEZOS_NODE_DEPLOY = `
   echo "true" | cloud::add_encoded_kv_tag "node_install_started"
   yes $'1\n2\n1\n1\n1' | tezos-setup-wizard
   ngrok http 8732 --log=stdout > ngrok_teznode.log &
-  sleep 20
-  export TEZ_RPC_URL=$(grep 'addr=http://localhost:8732 url=' ngrok_teznode.log | sed 's/^.*url=https:\/\///')
-  echo \${TEZ_RPC_URL} | tr -d '"*.ngrok.io' | cloud::add_encoded_kv_tag "TEZ_RPC_URL"
+  sleep 10
+  export TEZ_RPC_URL=$(grep 'addr=http://localhost:8732 url=' ngrok_teznode.log | sed 's/^.*url=https://' | tr -d '"//*.ngrok.io' )
+  echo \${TEZ_RPC_URL} | cloud::add_encoded_kv_tag "TEZ_RPC_URL"
   echo "true" | cloud::add_encoded_kv_tag "node_live"
 `
 
-// cloudFunctions needs to define cloud::public_ip and cloud::add_tag.
 function getInstallScript(
   accessToken,
   shouldDeployNode,
 ){
   const sanitizedAccessToken = sanitizeDigitalOceanToken(accessToken);
-  console.log(TAG_FUNCS_SH, sanitizedAccessToken)
   return (
     `#!/bin/bash
     exec &> "./install-shadowbox-output"

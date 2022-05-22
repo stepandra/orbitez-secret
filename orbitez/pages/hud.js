@@ -14,7 +14,7 @@ export default function Hud() {
     const [currentBlock, setCurrentBlock] = useState(0)
     const router = useRouter()
 
-    const isGameLive = true// endBlock === null || currentBlock <= Number(endBlock)
+    const isGameLive = endBlock === null || currentBlock <= Number(endBlock)
 
     useEffect(() => {
         const ls_server = localStorage.getItem('ORBITEZ_SERVER_URL') || 'ws.orbitez.io'
@@ -24,10 +24,13 @@ export default function Hud() {
             localStorage.setItem('skinLink', `https://${gateway}/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi`)
             router.reload()
         }
+
+        setInterval(() => { window.wsSend(new Uint8Array([254, 6, 0, 0, 0])) }, 5000)
     }, [])
+
     useEffect(() => {
         if (!isGameLive) {
-            // router.push('/last-game-stats')
+            router.push('/last-game-stats')
         }
     }, [isGameLive])
 

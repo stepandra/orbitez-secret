@@ -16,15 +16,11 @@ const DEFAULT_PLANET_FEATURES = {
     exoplanet: false
 }
 
-const serverList = [
+const defaultServerList = [
     {
-        name: 'ngrk',
-        value: '8b35-2604-a880-800-10-00-ac-6001.ngrok.io'
+        name: 'DEFAULT',
+        server_url: '8b35-2604-a880-800-10-00-ac-6001.ngrok.io'
     },
-    {
-        name: 'NYC DO 1',
-        value: '8348-161-35-66-46.eu.ngrok.io'
-    }
 ]
 
 export default function Dashboard() {
@@ -37,8 +33,9 @@ export default function Dashboard() {
     const [isDemoMode, setIsDemoMode] = useState(false)
     const [deploymentModalOpen, setDeploymentModalOpen] = useState(false)
     const [selectedServerIndex, setSelectedServerIndex] = useState(0)
+    const [serverList, setServerList] = useState(defaultServerList)
 
-    const makePromise = (gateway) => {
+    const promisify = (gateway) => {
         return new Promise((resolve, reject) => {
             try {
                 axios.get(`https://${gateway}/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi`).then(res => {
@@ -58,41 +55,59 @@ export default function Dashboard() {
             'gateway.ipfs.io',
             'ipfs.io',
             'infura-ipfs.io',
-            'hardbin.com',
             'cloudflare-ipfs.com',
-            'jorropo.net',
             'dweb.link',
-            'permaweb.eu.org',
-            'video.oneloveipfs.com',
             'ipfs.fleek.co',
             'ipfs.lain.la',
             'nftstorage.link',
             'ipfs.infura.io',
-            'cf-ipfs.com',
             'ipfs.telos.miami',
-            'storry.tv',
             'ipfs.eth.aragon.network',
             'via0.com',
             'gateway.pinata.cloud',
-            'ipfs.mihir.ch'
         ]
 
         const promiseList = []
 
         for (let gateway of ipfsGateways) {
-            promiseList.push(makePromise(gateway))
+            promiseList.push(promisify(gateway))
         }
 
         const winner = await Promise.race(promiseList)
         localStorage.setItem('ipfs-gateway', winner)
     }
 
-    useEffect(() => {
+    useEffect(async () => {
         ipfsRace()
+        const contract = await Tezos.wallet.at('KT1Wm2o5aow7dZEJa7h9JXKGtuiCDwkpBVbZ')
+        const storage = await contract.storage()
+        const contractServerList = []
+        for (let [key, value] of storage.server.valueMap) {
+            contractServerList.push({...value, name: key})
+        }
+
+        setServerList(contractServerList)
+
+
+        let ls_server = localStorage.getItem('ORBITEZ_SERVER_URL')
+        if (ls_server) {
+            for (let i = 0; i < contractServerList.length; i++) {
+                if (contractServerList[i].name === ls_server) {
+                    setSelectedServerIndex(i)
+                }
+                break
+            }
+        }
+        localStorage.setItem('ORBITEZ_SERVER_NAME', serverList[selectedServerIndex].name)
     }, [])
    
-    setTimeout(() => {
-        const gateway = localStorage.getItem('ipfs-gateway') || 'gateway.ipfs.io'
+    setTimeout(async () => {
+        let gateway
+        if (typeof window !== 'undefined')
+            gateway = localStorage.getItem('ipfs-gateway') || 'gateway.ipfs.io'
+        else {
+            gateway = 'gateway.ipfs.io'
+        }
         !planetsAvailable.length && fetch("https://api.fxhash.xyz/graphql", {
             method: "POST",
             headers: {
@@ -123,10 +138,11 @@ export default function Dashboard() {
             }            
             setPlanetsAvailable(planets)
         });
-    }, 1500)
+    }, 2000)
 
     useEffect(() => {
-        localStorage.setItem('ORBITEZ_SERVER_URL', serverList[selectedServerIndex].value)
+        localStorage.setItem('ORBITEZ_SERVER_URL', serverList[selectedServerIndex].server_url)
+        localStorage.setItem('ORBITEZ_SERVER_NAME', serverList[selectedServerIndex].name)
     }, [selectedServerIndex])
 
     useEffect(() => {
@@ -248,7 +264,6 @@ export default function Dashboard() {
                 <div className="page__center">
                     <div className="planet planet--bgCircle">
                         <PlanetGenerator mint_hash={mintHash} />
-                        {/* {imgLink !== '' && <img className="planet__img " src={imgLink} alt="planet background" />} */}
                         <a onClick={() => { 
                             address == '' ? connectWallet() : isDemoMode ? demoHud() : enterRoom() 
                         }} className="planet__btn btn btn--center btn--neon" >

@@ -2,16 +2,28 @@ import React, { useEffect, useState } from 'react';
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useTezos } from '../hooks/useTezos'
 import axios from 'axios'
-import { MichelsonMap } from '@taquito/taquito'
-import { InMemorySigner } from '@taquito/signer';
+
+const regionsList = [
+  { name: 'New York City', value: 'NYC3' },
+  { name: 'San Francisco', value: 'SFO3' },
+  { name: 'Toronto, Canada', value: 'TOR1' },
+  { name: 'London, United Kingdom', value: 'LON1' },
+  { name: 'Frankfurt, Germany', value: 'FRA1' },
+  { name: 'Amsterdam, the Netherlands', value: 'AMS3' },
+  { name: 'Singapore', value: 'SGP1' },
+  { name: 'Bangalore, India', value: 'BLR1' },
+]
 
 export default function DigitalOceanDeployment() {
-  const [deployTezos, setDeployTezos] = useState(true)
-  const [requestedParams, setRequestedParams] = useState({ requestedNode: true })
+  const [deployTezos, setDeployTezos] = useState(localStorage.getItem('DEPLOY_TEZ_NODE') == 'true')
   const [token, setToken] = useState( localStorage.getItem('DO_TOKEN') )
   const [progress, setProgress] = useState(0)
   const [animatedText, setAnimatedText] = useState('Deploying')
   const [orbitezNgrokUrl, setOrbitezNgrokUrl] = useState('')
+  const [rpcNgrokUrl, setRpcNgrokUrl] = useState('')
+  const [serverName, setServerName] = useState('')
+  const [regionIndex, setRegionIndex] = useState(0)
+
   const { Tezos, address } = useTezos()
 
   const getDroplets = async () => {
@@ -24,14 +36,23 @@ export default function DigitalOceanDeployment() {
       const tags = orbDroplet.tags
       tags.push(orbDroplet.status)
 
-      const ngrok_matches = tags.filter(s => s.includes('NGROK_URL'))  
-      if (ngrok_matches.length) {
-        const regex = /(?<=kv:NGROK_URL:).*/
-        const match = ngrok_matches[0].match(regex)
-        if (match.length) {
-          setOrbitezNgrokUrl(match[0])
+      for (let tag of tags) {
+        if (tag.includes('NGROK_URL')) {
+          const ngrk_rgx = /(?<=kv:NGROK_URL:).*/
+          const ngrk_match = tag.match(ngrk_rgx)
+          if (ngrk_match.length) {
+            setOrbitezNgrokUrl(`${ngrk_match[0]}.ngrok.io`)
+          }
+        }
+        if (tag.includes('TEZ_RPC_URL')) {
+          const rpc_rgx = /(?<=kv:TEZ_RPC_URL:).*/
+          const rpc_match = tag.match(rpc_rgx)
+          if (rpc_match.length) {
+            setRpcNgrokUrl(rpc_match[0])
+          }
         }
       }
+      
       setProgressBarFromTags(tags)
     }
   }
@@ -50,8 +71,7 @@ export default function DigitalOceanDeployment() {
   }, [])
 
   const deployDOServer = async () => {
-    setRequestedParams({ requestedNode: deployTezos })
-    await axios.post('/api/deploy_orbitez_do', { token, deployTezos })
+    await axios.post('/api/deploy_orbitez_do', { token, deployTezos, region: regionsList[regionIndex].value.toLowerCase() })
     setProgress(5)
   }
 
@@ -71,7 +91,6 @@ export default function DigitalOceanDeployment() {
   },[token])
 
   const setProgressBarFromTags = (tags) => {
-    const requestedNodeToo = requestedParams.requestedNode
     let newProgress = 5
     if (tags.includes('new')) {
       newProgress = 9
@@ -80,10 +99,10 @@ export default function DigitalOceanDeployment() {
       newProgress = 15
     }
     if (tags.includes('kv:install-started:true')) {
-      newProgress = requestedNodeToo ? 30 : 60
+      newProgress = deployTezos ? 30 : 60
     }
     if (tags.includes('kv:ngrok_ready:true')) {
-      newProgress = requestedNodeToo ? 35 : 100
+      newProgress = deployTezos ? 35 : 100
     }
     if (tags.includes('kv:node_install_started:true')) {
       newProgress = 85
@@ -98,7 +117,7 @@ export default function DigitalOceanDeployment() {
   const activateServer = async () => {
     const contract = await Tezos.wallet.at('KT1Wm2o5aow7dZEJa7h9JXKGtuiCDwkpBVbZ');
     try {
-      await contract.methods.enter_room('kaka', 'limited').send({ storageLimit: 1000, amount: 1000000, mutez: true})
+      await contract.methods.create_server(serverName, address, serverName, orbitezNgrokUrl, 1000000, 5, 30).send({ storageLimit: 1000 })
     } catch (e) {
       console.log('Transaction rejected:', e)
     }
@@ -106,13 +125,18 @@ export default function DigitalOceanDeployment() {
 
   return (
     <>
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '50%', height: 300}}>
-        <img width={progress === 100 ? 100 : 200} src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/DigitalOcean_logo.svg/1200px-DigitalOcean_logo.svg.png' />
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '50%'}}>
+        <img width={progress === 100 ? 0 : 200} src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/DigitalOcean_logo.svg/1200px-DigitalOcean_logo.svg.png' />
         {
-          progress !== 100 && requestedParams.requestedNode && <p style={{ textAlign: 'center' }}>The deployment of new Orbitez server and Tezos node takes about 90 min.</p>
-        }
-        {
-          progress !== 100 && !requestedParams.requestedNode && <p style={{ textAlign: 'center' }}>The deployment of a new Orbitez server will take roughly 15 min.</p>
+          progress == 0 &&
+          <div className="payMethod" style={{ cursor: 'default', marginTop: 0, marginBottom: '1rem' }}>
+              <h3 className="payMethod__title" style={{ textAlign: 'center' }}>Select server</h3>
+              <div className="payMethod__switcher">
+                  <img className="payMethod__prev" style={{ cursor: 'pointer' }} src='/img/icon-prev.png' onClick={() => regionIndex > 0 && setRegionIndex(regionIndex - 1)}></img>
+                  <p className="payMethod__item">{regionsList[regionIndex].name}</p>
+                  <img className="payMethod__next" style={{ cursor: 'pointer' }} src='/img/icon-prev.png' onClick={() => regionIndex < regionsList.length - 1 && setRegionIndex(regionIndex + 1)}></img>
+              </div>
+          </div>
         }
         {
           progress != 0 && progress !== 100 && 
@@ -125,12 +149,18 @@ export default function DigitalOceanDeployment() {
         {
           progress == 0 &&
           <>
-            <input value={token} onChange={e => setToken(e.target.value)} style={{ width: '65%' }} placeholder='DigitalOcean read/write token' />
-            <div style={{ display: 'flex', width: '100%', justifyContent: 'center', marginTop: '1rem'}} onClick={e => setDeployTezos(!deployTezos)}>
+            <input value={token} onChange={e => setToken(e.target.value)} style={{ width: '65%' }} placeholder='Paste your DigitalOcean read/write token here' />
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'center', marginTop: '1rem'}} onClick={e => {setDeployTezos(!deployTezos); localStorage.setItem('DEPLOY_TEZ_NODE', deployTezos ? 'false' : 'true')}}>
               <input style={{ width: 35, marginTop: 5 }} type={'checkbox'} checked={deployTezos}/>
               <h3 >Deploy Tezos node</h3>
             </div>
           </>
+        }
+        {
+          (progress !== 100 && deployTezos == true) && <p style={{ textAlign: 'center', fontSize: 12, padding: 10 }}>The deployment of new Orbitez server and Tezos node takes about 90 min.</p>
+        }
+        {
+          (progress !== 100 && deployTezos == false) && <p style={{ textAlign: 'center', fontSize: 12, padding: 10 }}>The deployment of a new Orbitez server will take roughly 15 min.</p>
         }
         {
           progress !== 100 && 
@@ -140,28 +170,33 @@ export default function DigitalOceanDeployment() {
               fontSize: 18,
               padding: 0,
               minHeight: 45,
-              cursor: progress != 0 ? 'progress' : 'pointer'
+              cursor: progress != 0 ? 'progress' : 'pointer',
+              cursor: token == '' ? 'no-drop' : 'pointer'
             }}
-            disabled={progress != 0}
+            disabled={progress != 0 || token == ''}
+            
             onClick={() => { deployDOServer() }}
           >
             <span>{progress == 0 ? 'Deploy Server' : animatedText}</span>
           </button>
         }
        {
-          (progress === 100 && requestedParams.requestedNode) && 
+          (progress === 100 && deployTezos) && 
           <>
-            <p style={{ width: '85%' }}>Your own Tezos Node is live. Add the following RPC to your wallet:</p>
-            <p></p>
+            <p style={{ width: '85%' }}>Your own Tezos Node is live. Add the following RPC to your wallet:<br/><br/> https://{rpcNgrokUrl}.ngrok.io</p>
+            <br/>
           </>
         }
         {
-          progress !== 100 && 
+          progress == 100 && 
           <>
-            <p style={{ width: '85%' }}>Your game server is ready! Hit activate button to start receiving rewards for every game hosted on your server.</p>
-            <button className="planet__btn btn btn--center" onClick={() => { activateServer() }}>
-              Activate
-            </button>
+            <p style={{ width: '85%' }}>Your game server is ready! Hit activate button to start receiving rewards for every game hosted on your server.<br/><br/></p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <input style={{ height: 50, width: '40%', margin: 0 }} placeholder='Server Name*' type={'text'} value={serverName} onChange={e => setServerName(e.target.value)}/>
+              <button style={{ margin: '0.5rem', fontSize: 14, minHeight: 0, height: 50, cursor: serverName == '' ? 'no-drop' : 'pointer' }} className="planet__btn btn btn--center" disabled={serverName == ''} onClick={() => { activateServer() }}>
+                Activate
+              </button>
+            </div>
           </>
         }
     </div>
