@@ -24,6 +24,9 @@ export default function DigitalOceanDeployment() {
   const [rpcNgrokUrl, setRpcNgrokUrl] = useState('')
   const [serverName, setServerName] = useState('')
   const [regionIndex, setRegionIndex] = useState(0)
+  const [roomSize, setRoomSize] = useState(undefined)
+  const [gameLength, setGameLength] = useState(undefined)
+
 
   const { Tezos, address } = useTezos()
 
@@ -118,7 +121,7 @@ export default function DigitalOceanDeployment() {
   const activateServer = async () => {
     const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
     try {
-      await contract.methods.create_server(serverName, address, serverName, orbitezNgrokUrl, 1000000, 5, 30).send({ storageLimit: 1000 })
+      await contract.methods.create_server(serverName, address, serverName, orbitezNgrokUrl, 1000000, roomSize, gameLength).send({ storageLimit: 1000 })
     } catch (e) {
       console.log('Transaction rejected:', e)
     }
@@ -189,12 +192,14 @@ export default function DigitalOceanDeployment() {
           </>
         }
         {
-          progress == 100 && 
+          progress !== 100 && 
           <>
             <p style={{ width: '85%' }}>Your game server is ready! Hit activate button to start receiving rewards for every game hosted on your server.<br/><br/></p>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
               <input style={{ height: 50, width: '40%', margin: 0 }} placeholder='Server Name*' type={'text'} value={serverName} onChange={e => setServerName(e.target.value)}/>
-              <button style={{ margin: '0.5rem', fontSize: 14, minHeight: 0, height: 50, cursor: serverName == '' ? 'no-drop' : 'pointer' }} className="planet__btn btn btn--center" disabled={serverName == ''} onClick={() => { activateServer() }}>
+              <input style={{ height: 50, width: '40%', margin: 0 }} placeholder='Room Size (3+)' type={'number'} value={roomSize} onChange={e => setRoomSize(e.target.value)}/>
+              <input style={{ height: 50, width: '40%', margin: 0 }} placeholder='Game Length (5+)' type={'number'} value={gameLength} onChange={e => setGameLength(e.target.value)}/>
+              <button style={{ margin: '0.5rem', fontSize: 14, minHeight: 0, height: 50, cursor: (serverName == '' || roomSize < 3 || gameLength < 5) ? 'no-drop' : 'pointer' }} className="planet__btn btn btn--center" disabled={(serverName == '' || roomSize < 3 || gameLength < 5)} onClick={() => { activateServer() }}>
                 Activate
               </button>
             </div>
