@@ -147,6 +147,7 @@ export default function Dashboard() {
                 setIsDemoMode(false)
             }
             setMintHash(selected.gen_hash);
+            localStorage.setItem('mintHash', selected.gen_hash)
             localStorage.setItem('skinLink', selected.img_link)
         }
     }, [planetSelected, planetsAvailable])
