@@ -61,9 +61,15 @@ export default function WaitingRoom() {
         connection.on("operations", (msg) => {
             console.log(msg)
             if (msg?.data?.[0]?.storage?.player) {
+                const players = []
                 const playersObject = msg?.data?.[0]?.storage?.player
-                console.log('settingWaitRoom', Object.keys(playersObject))
-                setWaitRoom(Object.keys(playersObject))
+                for (let [key, value] of playersObject) {
+                    console.log(value)
+                    if (value.room_id === sanitized) { 
+                        players.push(key.replaceAll('"', ''))
+                    }
+                }
+                setWaitRoom(players)
             } 
         });
 

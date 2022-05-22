@@ -173,7 +173,8 @@ export default async function handler(req, res) {
         sig: s.sig,
         value: s.prefixSig,
         packed: wrappedPacked.packed,
-        signed: s.bytes
+        signed: s.bytes,
+        leaderboard: newMapfromLiteral
       })
     });
   })

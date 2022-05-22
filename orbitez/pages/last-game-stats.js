@@ -8,13 +8,14 @@ import { CONTRACT_ADDRESS } from '../constants';
 export default function LastGameStats() {
     const { connectWallet, address, Tezos, balance } = useTezos()
     const [leaderboard, setLeaderboard] = useState([])
-    const [endgameData, setEndgameData] = useState({})
+    const [endgameData, setEndgameData] = useState({packed: '', signed: ''})
 
     useEffect(() => {
       const getLeaderboard = async () => {
         const server = localStorage.getItem('ORBITEZ_SERVER_NAME')
         const res = await axios.post('/api/get-signed-leaderboard', { server })
         setEndgameData(res.data)
+        setLeaderboard(res.data.leaderboard)
         console.log(res.data)
       }
 
@@ -22,8 +23,9 @@ export default function LastGameStats() {
     }, [])
 
     const payDividends = async () => {
+      const server = localStorage.getItem('ORBITEZ_SERVER_NAME')
       const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
-      await contract.methods.endGame().send()
+      await contract.methods.endGame(server, server, endgameData.packed, endgameData.signed).send()
     }
 
     return (
@@ -71,8 +73,8 @@ export default function LastGameStats() {
                         leaderboard.map((player, index) => (
                           <li key={'player-' + index} className={`listBlock__item ${address === player.name ? 'listBlock__item--active' : ''}`}>
                             <p className="listBlock__rank">{index + 1}</p>
-                            <p className="listBlock__nft">{player.name}</p> 
-                            <p className="listBlock__score">{player.score}</p>
+                            <p className="listBlock__nft">{player.address}</p> 
+                            <p className="listBlock__score">{player.amount}</p>
                           </li>
                         ))
                       }
