@@ -122,7 +122,7 @@ export default function WaitingRoom() {
                                 opacity: waitRoom.length === 5 ? 1 : 0.3,
                                 cursor: waitRoom.length === 5 ? 'pointer' : 'not-allowed'
                             }}
-                            disabled={waitRoom.length > 5}
+                            disabled={waitRoom.length > roomSize}
                             className="planet__btn btn btn--center btn--neon"
                             onClick={() => router.push({
                                 pathname: '/hud'
