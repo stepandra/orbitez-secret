@@ -23,9 +23,15 @@ export default function WaitingRoom() {
     useEffect(async () => {
         const contract = await Tezos.wallet.at(CONTRACT_ADDRESS)
         const storage = await contract.storage()
+        const serverName = localStorage.getItem('ORBITEZ_SERVER_NAME')
+        const sanitized = serverName.replaceAll('"', '')
+
         const players = []
         for (let [key, value] of storage.player.valueMap) {
-            players.push(key)
+            console.log(value)
+            if (value.room_id === sanitized) { 
+                players.push(key.replaceAll('"', ''))
+            }
         }
         setWaitRoom(players)
 
