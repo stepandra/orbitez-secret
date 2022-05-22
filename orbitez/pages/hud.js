@@ -14,7 +14,7 @@ export default function Hud() {
     const [currentBlock, setCurrentBlock] = useState(0)
     const router = useRouter()
 
-    const isGameLive = endBlock === null || currentBlock <= Number(endBlock)
+    const isGameLive = () => endBlock === null || currentBlock <= Number(571844)
 
     useEffect(() => {
         const ls_server = localStorage.getItem('ORBITEZ_SERVER_URL') || 'ws.orbitez.io'
@@ -27,10 +27,10 @@ export default function Hud() {
     }, [])
 
     useEffect(() => {
-        if (!isGameLive) {
+        if (!isGameLive()) {
             router.push('/last-game-stats')
         }
-    }, [isGameLive])
+    }, [currentBlock])
 
     useEffect(() => {
         setTimeout(() => {
@@ -61,6 +61,7 @@ export default function Hud() {
         connection.onclose(init);
 
         connection.on("blocks", (msg) => {
+            console.log('block', msg.state)
             setCurrentBlock(msg.state)
         });
 
