@@ -14,7 +14,7 @@ export default function Hud() {
     const [currentBlock, setCurrentBlock] = useState(0)
     const router = useRouter()
 
-    const isGameLive = () => endBlock === null || currentBlock <= Number(571844)
+    const isGameLive = () => endBlock === null || currentBlock <= Number(endBlock)
 
     useEffect(() => {
         const ls_server = localStorage.getItem('ORBITEZ_SERVER_URL') || 'ws.orbitez.io'
@@ -89,7 +89,7 @@ export default function Hud() {
 
             <header className="header header--hud">
                 <div className="blocksTimer">
-                    <div className='blocksTimer__num'>{currentBlock >= endBlock ? endBlock - currentBlock : 0}</div>
+                    <div className='blocksTimer__num'>{endBlock - currentBlock}</div>
                     <div className='blocksTimer__text'>BLOCKS</div>
                 </div>
 
