@@ -24,8 +24,6 @@ export default function Hud() {
             localStorage.setItem('skinLink', `https://${gateway}/ipfs/QmaXjh2fxGMN4LmzmHMWcjF8jFzT7yajhbHn7yBN7miFGi`)
             router.reload()
         }
-
-        setInterval(() => { window.wsSend(new Uint8Array([254, 6, 0, 0, 0])) }, 5000)
     }, [])
 
     useEffect(() => {
@@ -40,11 +38,15 @@ export default function Hud() {
         }, 100);
 
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://api.hangzhou2net.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
+            .withUrl("https://api.ithacanet.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
             .build();
 
-        axios.get(`https://api.hangzhou2net.tzkt.io/v1/contracts/${CONTRACT_ADDRESS}/storage`).then(res => {
-            setEndBlock(res.data.end_block)
+        const serverName = localStorage.getItem('ORBITEZ_SERVER_NAME')
+        const sanitized = serverName.replaceAll('"', '')
+
+        axios.get(`https://api.ithacanet.tzkt.io/v1/contracts/${CONTRACT_ADDRESS}/storage`).then(res => {
+            console.log(res.data)
+            setEndBlock(res.data.room[sanitized].finish_block)
         })
 
         async function init() {

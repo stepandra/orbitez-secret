@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { TezosToolkit } from '@taquito/taquito';
 import { InMemorySigner } from '@taquito/signer';
+import { CONTRACT_ADDRESS } from '../../constants'
 const WebSocket = require('ws');
 const SEND_254 = new Uint8Array([254, 6, 0, 0, 0]);
 const SEND_255 = new Uint8Array([255, 1, 0, 0, 0]);
@@ -53,13 +54,12 @@ export default async function handler(req, res) {
   console.log(server)
   let contractServerList = []
 
-  const contract = await Tezos.wallet.at('KT1Wm2o5aow7dZEJa7h9JXKGtuiCDwkpBVbZ')
+  const contract = await Tezos.wallet.at(CONTRACT_ADDRESS)
   const storage = await contract.storage()
 
   for (let [key, value] of storage.server.valueMap) {
       contractServerList.push({...value, name: key})
   }
-
   const selectedServers = contractServerList.filter(el => el.name == server)
   const WEBSOCKET_URL = selectedServers[0].server_url;
 

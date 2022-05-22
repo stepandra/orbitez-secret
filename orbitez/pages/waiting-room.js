@@ -7,23 +7,30 @@ import { useTezos } from '../hooks/useTezos';
 const signalR = require("@microsoft/signalr");
 import axios from 'axios';
 
-export default function Hud() {
+export default function WaitingRoom() {
     const { Tezos, address } = useTezos()
     const [waitRoom, setWaitRoom] = useState([])
     const router = useRouter()
 
     const refund = async () => {
         const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
-        await contract.methods.refund(address).send()
+        const serverName = localStorage.getItem('ORBITEZ_SERVER_NAME')
+        const sanitized = serverName.replaceAll('"', '')
+        await contract.methods.refund(sanitized, sanitized).send()
         router.push('/dashboard')
     }
 
-    useEffect(() => {
-        axios.get(`https://api.hangzhou2net.tzkt.io/v1/contracts/${CONTRACT_ADDRESS}/storage`).then(res => {
-            setWaitRoom(Object.keys(res.data.players))
-        })
+    useEffect(async () => {
+        const contract = await Tezos.wallet.at(CONTRACT_ADDRESS)
+        const storage = await contract.storage()
+        const players = []
+        for (let [key, value] of storage.player.valueMap) {
+            players.push(key)
+        }
+        setWaitRoom(players)
+
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://api.hangzhou2net.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
+            .withUrl("https://api.ithacanet.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
             .build();
 
         async function init() {
@@ -42,16 +49,16 @@ export default function Hud() {
         connection.onclose(init);
 
         connection.on("blocks", (msg) => {
-            // console.log('BLKS',msg);            
+            console.log('BLKS',msg);            
         });
 
         connection.on("operations", (msg) => {
-            if (msg?.data?.[0]?.storage?.players) {
-                const playersObject = msg?.data?.[0]?.storage?.players
+            console.log(msg)
+            if (msg?.data?.[0]?.storage?.player) {
+                const playersObject = msg?.data?.[0]?.storage?.player
                 console.log('settingWaitRoom', Object.keys(playersObject))
                 setWaitRoom(Object.keys(playersObject))
-            }
-            //   console.log('TRANS', msg);            
+            } 
         });
 
         init();
@@ -80,7 +87,7 @@ export default function Hud() {
             <main className="page container">
                 <div className="page__left">
                     <div className="listBlock">
-                        <h2 className="listBlock__title blockTitle">{waitRoom.length ? `Waiting for players ${waitRoom.length} / 10` : 'Loading players list...'}</h2>
+                        <h2 className="listBlock__title blockTitle">{waitRoom.length ? `Waiting for players ${waitRoom.length} / 5` : 'Loading players list...'}</h2>
                         <ul className="listBlock__list">
                             {
                                 waitRoom.map(el => el === address
@@ -97,10 +104,10 @@ export default function Hud() {
                         <img className="planet__img" src="/img/planet.png" alt="planet background" />
                         <a
                             style={{
-                                opacity: waitRoom.length === 10 ? 1 : 0.3,
-                                cursor: waitRoom.length === 10 ? 'pointer' : 'not-allowed'
+                                opacity: waitRoom.length === 5 ? 1 : 0.3,
+                                cursor: waitRoom.length === 5 ? 'pointer' : 'not-allowed'
                             }}
-                            disabled={waitRoom.length > 10}
+                            disabled={waitRoom.length > 5}
                             className="planet__btn btn btn--center btn--neon"
                             onClick={() => router.push({
                                 pathname: '/hud'

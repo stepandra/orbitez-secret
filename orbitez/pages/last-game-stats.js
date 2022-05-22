@@ -8,11 +8,14 @@ import { CONTRACT_ADDRESS } from '../constants';
 export default function LastGameStats() {
     const { connectWallet, address, Tezos, balance } = useTezos()
     const [leaderboard, setLeaderboard] = useState([])
+    const [endgameData, setEndgameData] = useState({})
 
     useEffect(() => {
       const getLeaderboard = async () => {
         const server = localStorage.getItem('ORBITEZ_SERVER_NAME')
         const res = await axios.post('/api/get-signed-leaderboard', { server })
+        setEndgameData(res.data)
+        console.log(res.data)
       }
 
       getLeaderboard()
@@ -20,7 +23,7 @@ export default function LastGameStats() {
 
     const payDividends = async () => {
       const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
-      await contract.methods.endGame(leaderboard.map(el => el.name)).send()
+      await contract.methods.endGame().send()
     }
 
     return (

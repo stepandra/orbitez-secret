@@ -72,7 +72,7 @@ export default function Dashboard() {
 
     useEffect(async () => {
         ipfsRace()
-        const contract = await Tezos.wallet.at('KT1Wm2o5aow7dZEJa7h9JXKGtuiCDwkpBVbZ')
+        const contract = await Tezos.wallet.at(CONTRACT_ADDRESS)
         const storage = await contract.storage()
         const contractServerList = []
         for (let [key, value] of storage.server.valueMap) {
@@ -154,7 +154,7 @@ export default function Dashboard() {
     }, [mintHash])
     
     const enterRoom = async () => {
-        const contract = await Tezos.wallet.at('KT1Wm2o5aow7dZEJa7h9JXKGtuiCDwkpBVbZ');
+        const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
 
         try {
             await contract.methods.enter_room(serverList[selectedServerIndex]?.name.replaceAll('"', ''), serverList[selectedServerIndex]?.name.replaceAll('"', '')).send({ storageLimit: 1000, amount: 1 })

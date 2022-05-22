@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ProgressBar from "@ramonak/react-progress-bar";
 import { useTezos } from '../hooks/useTezos'
 import axios from 'axios'
+import { CONTRACT_ADDRESS } from '../constants'
 
 const regionsList = [
   { name: 'New York City', value: 'NYC3' },
@@ -115,7 +116,7 @@ export default function DigitalOceanDeployment() {
   }
 
   const activateServer = async () => {
-    const contract = await Tezos.wallet.at('KT1Wm2o5aow7dZEJa7h9JXKGtuiCDwkpBVbZ');
+    const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
     try {
       await contract.methods.create_server(serverName, address, serverName, orbitezNgrokUrl, 1000000, 5, 30).send({ storageLimit: 1000 })
     } catch (e) {
