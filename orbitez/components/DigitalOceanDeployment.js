@@ -192,7 +192,7 @@ export default function DigitalOceanDeployment() {
           </>
         }
         {
-          progress !== 100 && 
+          progress == 100 && 
           <>
             <p style={{ width: '85%' }}>Your game server is ready! Hit activate button to start receiving rewards for every game hosted on your server.<br/><br/></p>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
