@@ -6,6 +6,8 @@ https://orbitez.io
 
 https://orbitez.io/dashboard
 
+Smart-contract addrress: https://better-call.dev/ithacanet/KT1K7vkeX6CWCEJuUDJkjGBMT3eCDf77C3gA/operations
+
 ## Game Universe
 
 The player will have to take part in the process of forming solar systems. He will fight for survival by controlling a small little planet, which is gradually gaining mass by collecting particles of matter and other small celestial bodies.
