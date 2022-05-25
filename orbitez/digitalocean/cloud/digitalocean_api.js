@@ -111,7 +111,7 @@ export class RestApiSession {
   }
 
   getDropletsByTag(tag) {
-    console.info('Requesting droplet by tag');
+    console.info('Requesting droplet by tag', tag);
     return this.request(
       'GET',
       `droplets?tag_name=${encodeURI(tag)}`
