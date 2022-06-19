@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useTezos } from '../hooks/useTezos'
+import axios            from 'axios';
+import Head             from 'next/head'
+import Link             from 'next/link';
+import { useRouter }    from 'next/router'
+import { useTezos }     from '../hooks/useTezos'
 import { CONTRACT_ADDRESS, NFT_CONTRACT_ADDRESS } from '../constants'
-import Link from 'next/link';
-import axios from 'axios';
-import PlanetGenerator from '../components/PlanetGenerator/PlanetGenerator';
-import DeploymentModal from '../components/DeploymentModal'
 
-const DEFAULT_PLANET_FEATURES = {
-    habitability: 0,
-    size: 0,
-    age: 0,
-    gravity: 0,
-    exoplanet: false
-}
+import Header           from '../components/Header/Header';
+import DeploymentModal  from '../components/DeploymentModal'
+import PlanetDataList   from '../components/PlanetDataList/PlanetDataList';
+import Planet           from '../components/Planet/Planet';
+
+import PlanetGenerator  from '../components/PlanetGenerator/PlanetGenerator';
+
 
 export default function Dashboard() {
     const { connectWallet, disconnectWallet, address, Tezos, balance } = useTezos()
@@ -22,7 +20,6 @@ export default function Dashboard() {
     const [mintHash, setMintHash] = useState('');
     const [planetsAvailable, setPlanetsAvailable] = useState([])
     const [planetSelected, setPlanetSelected] = useState(0)
-    const [planetFeatures, setPlanetFeatures] = useState(DEFAULT_PLANET_FEATURES)
     const [isDemoMode, setIsDemoMode] = useState(false)
     const [deploymentModalOpen, setDeploymentModalOpen] = useState(false)
     const [selectedServerIndex, setSelectedServerIndex] = useState(undefined)
@@ -153,7 +150,7 @@ export default function Dashboard() {
     }, [planetSelected, planetsAvailable])
 
     useEffect(() => {
-        window.$fxhashFeatures && setPlanetFeatures(window.$fxhashFeatures)
+        // window.$fxhashFeatures && setPlanetFeatures(window.$fxhashFeatures)
     }, [mintHash])
     
     const enterRoom = async () => {
@@ -188,122 +185,144 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="background">
+        <>
             <Head>
-                <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>Dashboard - Orbitez.io</title>
-                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
-                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
-                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
-                <link rel="manifest" href="/site.webmanifest"/>
-                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/>
-                <meta name="msapplication-TileColor" content="#da532c"/>
-                <meta name="theme-color" content="#ffffff" />
             </Head>
-            <header className="header container">
-                <Link href="/leaderboard">
-                    <a className="header__linkLeft link">LEADERBOARD</a>
-                </Link>
-                <h1 className="header__title">Dashboard</h1>
-                <div className="header__dashboard dashboard">
-                    <div className="dashboard__icon">
-                        <a className="dashboard__link" onClick={() => disconnectWallet()}>
-                            <img className="dashboard__img" src="/img/icon-exite.png" alt="Home icon" />
-                        </a>
-                    </div>
-                    <div className="dashboard__info">
-                        <p onClick={() => connectWallet()} className="dashboard__text">{address == '' ? 'CONNECT WALLET' : 'BALANCE'}</p>
-                        {address != '' && <p className="dashboard__num"><span className='dashboard__symbol'>ꜩ</span>{balance.toFixed(3)}</p>}
-                    </div>
-                </div>
-            </header>
+
+            <Header/>
             
-            <main className='page container'>
-                <div className="page__left">
-                    <div className="listBlock">
-                        <h2 className="listBlock__title">Select Planet</h2>
-                        {
-                            planetsAvailable.length > 0 && 
-                            <ul className="listBlock__list">
-                                {
-                                planetsAvailable.map((planet, index) => 
-                                    <li 
-                                        key={'planet' + planet.token_id}
-                                        onClick={() => setPlanetSelected(index)} 
-                                        className={`listBlock__item ${index === planetSelected ? 'listBlock__item--active' : ''}`}
-                                        >
-                                        { planet.token_id }
-                                    </li> 
-                                    )
-                                }
-                            </ul>
+            <main className='dashboard container'>
+                <div className="dashboard__left">
+                    <div className="planetsList">
+                        <h2 className="planetsList__title">YOUR <b>PLANETS:</b></h2>
+                        <ol className="planetsList__list">
+                        {planetsAvailable.length > 0 && 
+                            planetsAvailable.map((planet, index) => 
+                                <li 
+                                    key={'planet' + planet.token_id}
+                                    onClick={() => setPlanetSelected(index)} 
+                                    className={`planetsList__item ${index === planetSelected ? 'planetsList__item--active' : ''}`} 
+                                >
+                                    { planet.token_id }
+                                </li>)
                         }
-                        {
-                            !planetsAvailable.length && <p className="listBlock__text">{`Uh oh, Looks like you haven't minted any planet NFTs...`}</p>
+                        {!planetsAvailable.length && 
+                            <li className="planetsList__text">
+                                <a className="planetsList__link" href="https://www.fxhash.xyz/marketplace/generative/3808">Mint new planet</a> or  buy it <br />
+                                on <a className="planetsList__link" href="https://www.fxhash.xyz/marketplace/generative/3808">Marketplace</a>
+                            </li>
                         }
+                        </ol>
                     </div>
-                    { address !== '' && <a className="btn btn--wide" onClick={() => window.open("https://www.fxhash.xyz/marketplace/generative/3808", "_blank")}>MINT NEW NFT</a>}
+                </div>
 
-                    <div className="payMethod" style={{ marginTop: '10rem' }}>
-                        <h3 className="payMethod__title">Payment method</h3>
-                        <div className="payMethod__switcher">
-                            <img className="payMethod__prev" src='/img/icon-prev.png'></img>
-                            <p className="payMethod__item">LP Token</p>
-                            <img className="payMethod__next" src='/img/icon-prev.png'></img>
+                <div className={`planet `}>
+                    <PlanetGenerator mint_hash={mintHash} />
+
+                    <div className="payMethod">
+                        <div className="payMethod__tabs">
+                            <div className="payMethod__tabName payMethod__tabName--active">TEZ</div>
+                            <div className="payMethod__tabName">LP</div>
+                        </div>
+                        <div className="payMethod__content">
+                            <div className="payMethod__priceRow">
+                                <div className="payMethod__price">0,10</div>
+                                <div className="payMethod__price payMethod__price--active">1</div>
+                                <div className="payMethod__price">10</div>
+                            </div>
+                            <div className="payMethod__text">Possible winnings:  <b>100 LP</b></div>
                         </div>
                     </div>
                 </div>
 
-                <div className="page__center">
-                    <div className="planet planet--bgCircle">
-                        <PlanetGenerator mint_hash={mintHash} />
-                        <a onClick={() => { 
-                            address == '' ? connectWallet() : enterRoom() 
-                        }} className="planet__btn btn btn--center btn--neon" >
-                            {
-                                address == ''
-                                ? 'Connect wallet'
-                                : 'PLAY 1 XTZ'
-                            }
+                {/* <Planet>
+                    <div className="payMethod">
+                        <div className="payMethod__tabs">
+                            <div className="payMethod__tabName payMethod__tabName--active">TEZ</div>
+                            <div className="payMethod__tabName">LP</div>
+                        </div>
+                        <div className="payMethod__content">
+                            <div className="payMethod__priceRow">
+                                <div className="payMethod__price">0,10</div>
+                                <div className="payMethod__price payMethod__price--active">1</div>
+                                <div className="payMethod__price">10</div>
+                            </div>
+                            <div className="payMethod__text">Possible winnings:  <b>100 LP</b></div>
+                        </div>
+                    </div>
+                </Planet> */}
+
+                <div className="dashboard__right">
+                    <PlanetDataList />
+                </div>
+
+
+                <a  
+                    className="btn btn--wide" 
+                    onClick={() => window.open("https://www.fxhash.xyz/marketplace/generative/3808", "_blank")}
+                >
+                    <span className="btn__iconPlus"></span> MINT NEW PLANET
+                </a>
+
+                <a  
+                    className=" btn btn--center"
+                    onClick={() => { address == '' ? connectWallet() : enterRoom() }} 
+                >
+                    {address == '' ? 'Connect wallet' : 'PLAY'}
+                </a>
+
+                <Link href="/">
+                    <a className="btn btn--wide">
+                        Endless room
+                    </a>
+                </Link>
+
+
+                {/* <div className="listBlock">
+                    <h2 className="listBlock__title">Deployments</h2>
+                    <div className="">
+                        <a className="btn btn--center" 
+                            onClick={() => { openDeploymentModal() }}>
+                            <span>Deploy Server</span>
                         </a>
                     </div>
                 </div>
-
-                <div className="page__right">
-                    <div className="listBlock">
-                        <h2 className="listBlock__title">Statistics</h2>
-                        <ul className="listBlock__list">
-                            {
-                                Object.keys(planetFeatures).map(
-                                    key => <li key={'features-'+key} className="listBlock__item">{key.toUpperCase()} <span>{planetFeatures[key]}</span></li>
-                                )
-                            }
-                        </ul>
+                <div className="payMethod" style={{ cursor: 'default' }}>
+                    <h3 className="payMethod__title">Select server</h3>
+                    <div className="payMethod__switcher">
+                        <img className="payMethod__prev" style={{ cursor: 'pointer' }} src='/img/icon-prev.png' onClick={() => selectedServerIndex > 0 && setSelectedServerIndex(selectedServerIndex - 1)}></img>
+                        <p className="payMethod__item">{serverList[selectedServerIndex]?.name}</p>
+                        <img className="payMethod__next" style={{ cursor: 'pointer' }} src='/img/icon-prev.png' onClick={() => selectedServerIndex < serverList.length - 1 && setSelectedServerIndex(selectedServerIndex + 1)}></img>
                     </div>
-                    <div className="listBlock">
-                        <h2 className="listBlock__title">Deployments</h2>
-                        <div className="">
-                            <a className="planet__btn btn btn--center btn--neon" 
-                                onClick={() => { openDeploymentModal() }}>
-                                <span>Deploy Server</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div className="payMethod" style={{ cursor: 'default' }}>
-                        <h3 className="payMethod__title">Select server</h3>
-                        <div className="payMethod__switcher">
-                            <img className="payMethod__prev" style={{ cursor: 'pointer' }} src='/img/icon-prev.png' onClick={() => selectedServerIndex > 0 && setSelectedServerIndex(selectedServerIndex - 1)}></img>
-                            <p className="payMethod__item">{serverList[selectedServerIndex]?.name}</p>
-                            <img className="payMethod__next" style={{ cursor: 'pointer' }} src='/img/icon-prev.png' onClick={() => selectedServerIndex < serverList.length - 1 && setSelectedServerIndex(selectedServerIndex + 1)}></img>
-                        </div>
-                    </div>
-                    {/* <a className="btn btn--wide" href="/waiting-room">PLAY 1 XTZ</a>
-                    <a className="btn btn--wide btn--second" href="/waiting-room">PLAY 10 XTZ</a> */}
-                </div>
+                </div> */}
+                
             </main>
+
+            {/* <div className="overlays">
+                <div className="popUp">
+
+                    <div className="popUp__title">Waiting for players</div>
+                    <div className="popUp__progressBar">1 2 3 4 5 6 7 8 9</div>
+                    <div className="popUp__countPlayers">4 / 15</div>
+                    <div className="popUp__players">
+                        <div className="popUp__playerName">Marsofuel S5</div>
+                        <div className="popUp__playerName">Marsofuel S5</div>
+                        <div className="popUp__playerName">Marsofuel S5</div>
+                        <div className="popUp__playerName">Marsofuel S5</div>
+                        <div className="popUp__playerName">Marsofuel S5</div>
+                        <div className="popUp__playerName">Marsofuel S5</div>
+                        <div className="popUp__playerName">Marsofuel S5</div>
+                        <div className="popUp__playerName">Marsofuel S5</div>
+                    </div>
+                    <div className="popUp__btn btn btn--center">START</div>
+                    
+
+                </div>
+            </div> */}
+
             {deploymentModalOpen && <DeploymentModal closeModal={() => setDeploymentModalOpen(false)}/>}
-        </div>
+        </>
     )
 }
 

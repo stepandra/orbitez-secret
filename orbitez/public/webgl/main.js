@@ -349,6 +349,7 @@ window.main = () => {
                 value[k] = v;
             }
         });
+        console.log();
     }
 
     function genFromRandomID(id) {
@@ -358,6 +359,7 @@ window.main = () => {
 
     function genFromID(genID) {
         Math.seedrandom(genID);
+        console.log(genID);
         var result = doGen("planet")
         doDisplay(result);
         var name = doExpand(result.struct.vals["desc"], result).split("</h1>")[0].replace("<h1>", "");
@@ -365,6 +367,7 @@ window.main = () => {
     }
 
     function doGen(structID) {
+        console.log(structs);
         var result = {"struct": structs[structID]};
         structs[structID]?.slots.forEach(function(slot) {
             var availableSlots = slots[slot].filter(function(value) {
@@ -411,6 +414,7 @@ window.main = () => {
             "gravity": getGravity(window.fxrand()),
             "exoplanet": isExoplanet(window.fxrand())
         }
+        console.log(result);
         vWaterLevel = eval(doExpand(result.struct.vals["watL"], result));
         vTemperature = eval(doExpand(result.struct.vals["temp"], result));
         vRivers = eval(doExpand(result.struct.vals["rive"], result));
@@ -457,6 +461,7 @@ window.main = () => {
         jQuery.ajax({
             url: "/data.txt?" + (new Date()).getTime(),
             success: function(txt) { 
+                console.log(txt);
                 doParse(txt); 
                 genFromRandomID(id);
                 renderPlanet();

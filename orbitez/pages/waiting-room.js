@@ -16,30 +16,30 @@ export default function WaitingRoom() {
 
     const refund = async () => {
         const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
-        const serverName = localStorage.getItem('ORBITEZ_SERVER_NAME')
-        const sanitized = serverName.replaceAll('"', '')
-        await contract.methods.refund(sanitized, sanitized).send()
-        router.push('/dashboard')
+        const serverName = localStorage.getItem('ORBITEZ_SERVER_NAME');
+        const sanitized = serverName.replaceAll('"', '');
+        await contract.methods.refund(sanitized, sanitized).send();
+        router.push('/dashboard');
     }
 
     useEffect(async () => {
-        const contract = await Tezos.wallet.at(CONTRACT_ADDRESS)
-        const storage = await contract.storage()
-        const serverName = localStorage.getItem('ORBITEZ_SERVER_NAME')
-        setMintHash(localStorage.getItem('mintHash'))
-        const sanitized = serverName.replaceAll('"', '')
-        console.log(serverName)
-        console.log(Number(storage.room.valueMap.get(serverName).size))
-        setRoomSize(Number(storage.room.valueMap.get(serverName).size))
-        const players = []
+        const contract = await Tezos.wallet.at(CONTRACT_ADDRESS);
+        const storage = await contract.storage();
+        const serverName = localStorage.getItem('ORBITEZ_SERVER_NAME');
+        setMintHash(localStorage.getItem('mintHash'));
+        const sanitized = serverName.replaceAll('"', '');
+        console.log(serverName);
+        console.log(Number(storage.room.valueMap.get(serverName).size));
+        setRoomSize(Number(storage.room.valueMap.get(serverName).size));
+        const players = [];
         for (let [key, value] of storage.player.valueMap) {
             console.log(value)
             if (value.room_id === sanitized) { 
                 players.push(key.replaceAll('"', ''))
             }
         }
-        console.log(waitRoom.length)
-        setWaitRoom(players)
+        console.log(waitRoom.length);
+        setWaitRoom(players);
 
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("https://api.ithacanet.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
@@ -86,17 +86,7 @@ export default function WaitingRoom() {
     return (
         <div className="background">
             <Head>
-                <meta charset="UTF-8" />
-                <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>Waiting room - Orbitez.io</title>
-                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-                <link rel="manifest" href="/site.webmanifest" />
-                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-                <meta name="msapplication-TileColor" content="#da532c" />
-                <meta name="theme-color" content="#ffffff" />
             </Head>
             <header className="header">
                 <h1 className="header__title">Waiting room</h1>
@@ -126,7 +116,7 @@ export default function WaitingRoom() {
                                 cursor: waitRoom.length === roomSize ? 'pointer' : 'not-allowed'
                             }}
                             disabled={waitRoom.length < roomSize}
-                            className="planet__btn btn btn--center btn--neon"
+                            className="planet__btn btn btn--center"
                             onClick={() => router.push({
                                 pathname: '/hud'
                             })}

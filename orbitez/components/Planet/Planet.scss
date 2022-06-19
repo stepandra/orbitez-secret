@@ -1,0 +1,36 @@
+.planet {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	align-items: center;
+	//min-height: 880px;
+	//margin-top: 40px;
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url('../../public/img/bg-planet.png');
+
+	&--bgCircle {
+		width: 618px; // Temp
+        height: 618px; // Temp
+        margin-bottom: 30px; // Temp
+        background-image: url('../../public/img/temp-bg-planet.png');
+	}
+
+	&__name {
+		position: absolute;
+		left: 100px;
+    	top: -94px;
+		color: #FFE191;
+		font-weight: 700;
+		font-size: 20px;
+		line-height: 133%;
+
+		span {
+			color: #FFF;
+			font-size: 22px;
+		}
+	}
+}

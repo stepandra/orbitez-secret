@@ -1,10 +1,10 @@
-import '../styles/gallery.css'
-import '../styles/index.css'
+import React, {useState, createContext, useContext, useEffect} from 'react';
+import { BeaconWallet } from "@taquito/beacon-wallet"
+
+//import '../styles/gallery.css'
+//import '../styles/index.css'
 import '../styles/style.scss'
 import '../styles/style-lp.scss'
-import React, {useState} from 'react';
-import { BeaconWallet } from "@taquito/beacon-wallet"
-import { createContext, useContext, useEffect } from 'react';
 
 const AppContext = createContext(undefined);
 
