@@ -218,7 +218,7 @@ export default function Dashboard() {
                 </div>
 
                 <div className={`planet `}>
-                    <PlanetGenerator mint_hash={mintHash} />
+                    {/* <PlanetGenerator mint_hash={mintHash} /> */}
 
                     <div className="payMethod">
                         <div className="payMethod__tabs">
@@ -302,22 +302,47 @@ export default function Dashboard() {
             {/* <div className="overlays">
                 <div className="popUp">
 
-                    <div className="popUp__title">Waiting for players</div>
-                    <div className="popUp__progressBar">1 2 3 4 5 6 7 8 9</div>
-                    <div className="popUp__countPlayers">4 / 15</div>
-                    <div className="popUp__players">
-                        <div className="popUp__playerName">Marsofuel S5</div>
-                        <div className="popUp__playerName">Marsofuel S5</div>
-                        <div className="popUp__playerName">Marsofuel S5</div>
-                        <div className="popUp__playerName">Marsofuel S5</div>
-                        <div className="popUp__playerName">Marsofuel S5</div>
-                        <div className="popUp__playerName">Marsofuel S5</div>
-                        <div className="popUp__playerName">Marsofuel S5</div>
-                        <div className="popUp__playerName">Marsofuel S5</div>
+                    <h2 className="popUp__title">WAITING FOR PLAYERS</h2>
+                    <div className="popUp__progressBar">
+                        <div className="popUp__barItem popUp__barItem--active"></div>
+                        <div className="popUp__barItem popUp__barItem--active"></div>
+                        <div className="popUp__barItem popUp__barItem--active"></div>
+                        <div className="popUp__barItem popUp__barItem--active"></div>
+                        <div className="popUp__barItem popUp__barItem--active"></div>
+                        <div className="popUp__barItem popUp__barItem--active"></div>
+                        <div className="popUp__barItem popUp__barItem--active"></div>
+                        <div className="popUp__barItem"></div>
+                        <div className="popUp__barItem"></div>
+                        <div className="popUp__barItem"></div> 
                     </div>
-                    <div className="popUp__btn btn btn--center">START</div>
-                    
+                    <div className="popUp__countPlayers">7 / 10</div>
+                    <div className="popUp__players">
+                        <p className="popUp__playerName">Marsofuel S5</p>
+                        <p className="popUp__playerName">Orbitez NN</p>
+                        <p className="popUp__playerName">Agraried</p>
+                        <p className="popUp__playerName">SilverSpoon</p>
+                        <p className="popUp__playerName">Orbitez NN</p>
+                        <p className="popUp__playerName">Agraried</p>
+                        <p className="popUp__playerName">SilverSpoon</p>
+                        <p className="popUp__playerName">Marsofuel S5</p>
+                        <p className="popUp__playerName">Orbitez NN</p>
+                        <p className="popUp__playerName">Agraried</p>
+                        <p className="popUp__playerName">SilverSpoon</p>
+                        <p className="popUp__playerName">Orbitez NN</p>
+                        <p className="popUp__playerName">Agraried</p>
+                        <p className="popUp__playerName">SilverSpoon</p>
+                    </div>
+                    <a className="popUp__btn btn btn--center">START</a>
 
+                    <div className="popUp__leaveBlock leaveBlock">
+                        <p className="leaveBlock__time">14 sec</p>
+                        <div className="leaveBlock__closeWrap">
+                            <div className="leaveBlock__closeBtn"></div>
+                        </div>
+                        <p className="leaveBlock__text"><b>
+                            LEAVE</b> <br />(NO FEE)
+                        </p>
+                    </div>
                 </div>
             </div> */}
 

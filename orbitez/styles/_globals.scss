@@ -107,32 +107,8 @@ select {
 	}
 }
 
-// TODO: delete this
-/* The Modal (background) */
-.modal-background {
-	position: fixed; /* Stay in place */
-	z-index: 1; /* Sit on top */
-	left: 0;
-	top: 0;
-	width: 100%; /* Full width */
-	height: 100%; /* Full height */
-	overflow: auto; /* Enable scroll if needed */
-	  background-color: rgba(0,0,0,0.7);
-	; /* Black w/ opacity */
-  }
   
-  /* Modal Content/Box */
-  .modal-content {
-	  padding: 12px;
-	  border-radius: 4px;
-	  border: 1px solid #04dbe0;
-	  box-shadow: 1px 0 18px #04dbe0;
-	  background-color: rgba(0,0,0,0.8);
-	  margin: 5rem auto;
-	  padding: 20px;
-	  border: 1px solid #888;
-	  width: 80%; /* Could be more or less, depending on screen size */
-  }
+
   
   /* The Close Button */
   .close {
@@ -151,6 +127,7 @@ select {
     top: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(3px);
     z-index: 200;
 }
 
@@ -161,9 +138,12 @@ select {
     transform: translate(-50%, -50%);
 	width: 100%;
 	max-width: 868px;
-	padding: 40px;
+	padding: 60px 40px;
+	border-top: 2px solid #A1A8BC;
+	border-bottom: 2px solid #A1A8BC;
 	background-color: rgba(42, 46, 94, 0.7);
 	color: white;
+	text-align: center;
 
 	&--connect {
 		opacity: 0;
@@ -171,13 +151,53 @@ select {
 		z-index: 100;
 	}
 
-	&__title {
-		margin-bottom: 10px;
+	&__close {
+		content: url('../public/img/icon-close.png');
+		position: absolute;
+		top: 36px;
+		right: 36px;
+		display: block;
+		width: 43px;
+		min-height: 34px;
+		cursor: pointer;
 	}
 
-	&__btn {
-		max-width: 100%;
-		margin: 20px 0;
+	&__title {
+		margin-bottom: 15px;
+	}
+
+	&__progressBar {
+		display: flex;
+		justify-content: center;
+		margin-bottom: 24px;
+	}
+
+	&__barItem {
+		width: 12px;
+		height: 6px;
+		margin: 0 2px;
+		background-color: rgba(22, 16, 41, 0.65);
+
+		&--active {
+			background-color: #FFF;
+		}
+	}
+
+	&__countPlayers {
+		margin-bottom: 32px;
+		font-weight: 700;
+		font-size: 22px;
+		line-height: 133%;
+	}
+
+	&__players {
+		margin-bottom: 40px;
+	}
+
+	&__playerName {
+		color: #BFC5D9;
+		font-size: 20px;
+		line-height: 155.5%;
 	}
 
 	&__instructions {
@@ -186,12 +206,54 @@ select {
 		// border-top: 1px solid #eee;
 		border-bottom: 1px solid #eee;
 	}
+
+	&__leaveBlock {
+		position: absolute;
+		top: 56px;
+		right: 20px;
+	}
+}
+
+.leaveBlock {
+	&__time {
+		font-size: 15px;
+		line-height: 133%;
+	}
+
+	&__closeWrap {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 54px;
+		height: 54px;
+		margin: 12px auto;
+		border-radius: 50px;
+		border: 2px solid #9D7C14;
+		cursor: pointer;
+	}
+	
+	&__closeBtn {
+		width: 16px;
+		height: 16px;
+		background-color: #FFF;
+		clip-path: polygon(20% 0%, 0% 20%, 30% 50%, 0% 80%, 20% 100%, 50% 70%, 80% 100%, 100% 80%, 70% 50%, 100% 20%, 80% 0%, 50% 30%);
+	}
+	
+	&__text {
+		font-size: 15px;
+		line-height: 133%;
+		color: #A1A8BC;
+	
+		b {color: #FFF;}
+	}
 }
 
 
 
+
+
 .btn {
-	display: flex;
+	display: inline-flex;
     align-items: center;
     justify-content: center;
     max-width: 350px;

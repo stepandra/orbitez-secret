@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PlanetGenerator  from '../PlanetGenerator/PlanetGenerator';
 
 const DEFAULT_PLANET_FEATURES = {
@@ -11,11 +11,15 @@ const DEFAULT_PLANET_FEATURES = {
 
 export default function Planet({ className="", children }) {
     const [mintHash, setMintHash] = useState('');
-    const [planetFeatures, setPlanetFeatures] = useState(DEFAULT_PLANET_FEATURES)
+    const [planetFeatures, setPlanetFeatures] = useState(DEFAULT_PLANET_FEATURES);
+
+    useEffect(() => {
+        window.$fxhashFeatures && setPlanetFeatures(window.$fxhashFeatures)
+    }, [mintHash])
 
     return (
         <div className={`planet ${ className}`}>
-            <PlanetGenerator mint_hash={mintHash} />
+            {/* <PlanetGenerator mint_hash={mintHash} /> */}
 
             {children}
         </div>
