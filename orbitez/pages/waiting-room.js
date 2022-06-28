@@ -4,6 +4,7 @@ import { CONTRACT_ADDRESS } from '../constants'
 import { useRouter } from 'next/router';
 import { useTezos } from '../hooks/useTezos';
 import PlanetGenerator from '../components/PlanetGenerator/PlanetGenerator';
+import Header from '../components/Header/Header';
 
 const signalR = require("@microsoft/signalr");
 
@@ -88,9 +89,8 @@ export default function WaitingRoom() {
             <Head>
                 <title>Waiting room - Orbitez.io</title>
             </Head>
-            <header className="header">
-                <h1 className="header__title">Waiting room</h1>
-            </header>
+            
+            <Header/>
 
             <main className="page container">
                 <div className="page__left">

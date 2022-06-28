@@ -299,7 +299,7 @@ export default function Dashboard() {
                 
             </main>
 
-            {/* <div className="overlays">
+            <div className="overlays">
                 <div className="popUp">
 
                     <h2 className="popUp__title">WAITING FOR PLAYERS</h2>
@@ -344,7 +344,7 @@ export default function Dashboard() {
                         </p>
                     </div>
                 </div>
-            </div> */}
+            </div>
 
             {deploymentModalOpen && <DeploymentModal closeModal={() => setDeploymentModalOpen(false)}/>}
         </>

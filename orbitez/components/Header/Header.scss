@@ -16,6 +16,8 @@
 
 	&__linkBlock {
 		display: flex;
+		//justify-content: flex-end;
+		//min-width: 158px;
 	}
 
 	&__link {
@@ -74,23 +76,6 @@
 		height: 300px;
 		padding-top: 15px;
     	padding-bottom: 15px;
-
-		&__linkLeft {
-			min-width: 100%;
-			text-align: center;
-		}
-
-		&__title {
-			order: 3;
-		}
-
-		&__dashboard {
-			min-width: 100%;
-		}
 	}
-	
-	.btn {
-		max-width: 320px;
-		font-size: 20px;
-	}
+
 }

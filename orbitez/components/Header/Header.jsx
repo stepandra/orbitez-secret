@@ -1,24 +1,37 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import { useTezos } from '../../hooks/useTezos';
+import Link             from 'next/link';
+import Image            from 'next/image';
+import { useRouter }    from 'next/router';
+import { useTezos }     from '../../hooks/useTezos';
+
 
 export default function Header() {
-    const { connectWallet, disconnectWallet, address, balance } = useTezos()
+    const { connectWallet, disconnectWallet, address, balance } = useTezos();
+    const router = useRouter();
+    
+    let link = '/leaderboard';
+    let linkText = 'LeaderBoard';
+    let linkIcon = '/img/icon-leaderboard.png';
+
+    if (router.pathname === "/leaderboard") {
+        link = "/dashboard"
+        linkText = "Back";
+        linkIcon = '/img/icon-back.png';
+    }
 
     return (
         <header className="header container">
-            <div className="header__linkBlock">
+            <div className="header__linkBlock header__linkBlock--left">
                 <Image 
                     className="header__icon" 
-                    src="/img/icon-leaderboard.png" 
+                    src={linkIcon} 
                     layout="fixed" 
                     width={21} 
                     height={31}
                     alt=""
                 />
-                <Link href={'/leaderboard'}>
+                <Link href={link}>
                     <a className="header__link">
-                        LeaderBoard
+                        {linkText}
                     </a>
                 </Link>
             </div>
@@ -34,7 +47,7 @@ export default function Header() {
                 </div>
             </div>
 
-            <div className="header__linkBlock">
+            <div className="header__linkBlock header__linkBlock--right">
                 <Image 
                     className="header__icon" 
                     src="/img/icon-log-out.png" 
