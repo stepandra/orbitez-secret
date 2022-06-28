@@ -18,19 +18,4 @@
         margin-bottom: 30px; // Temp
         background-image: url('../../public/img/temp-bg-planet.png');
 	}
-
-	&__name {
-		position: absolute;
-		left: 100px;
-    	top: -94px;
-		color: #FFE191;
-		font-weight: 700;
-		font-size: 20px;
-		line-height: 133%;
-
-		span {
-			color: #FFF;
-			font-size: 22px;
-		}
-	}
 }

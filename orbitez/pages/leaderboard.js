@@ -1,12 +1,13 @@
-import React from 'react';
-import Head from 'next/head'
+import React    from 'react';
+import Head     from 'next/head'
+import Image    from 'next/image';
 
-import Header from '../components/Header/Header';
+import Header   from '../components/Header/Header';
+import Planet   from '../components/Planet/Planet';
 import PlanetDataList from '../components/PlanetDataList/PlanetDataList';
-import Planet from '../components/Planet/Planet';
+
 
 export default function Leaderboard() {
-    
 
     return (
         <>
@@ -19,6 +20,12 @@ export default function Leaderboard() {
             <main className='leaderBoard container'>
                 <div className="leaderBoard__inner">
 
+                    <div className="leaderBoard__bg">
+                        <Image src='/img/bg-leaderboard.png' layout='fill' />
+                    </div>
+                    <p className="leaderBoard__planetName"><span>NAME:</span> NFT#987654134526</p>
+                    <a className="leaderBoard__share">Share</a>
+                    
                     <div className="statList">
                         <h2 className="statList__title">LEADERBOARD:</h2>
                         <ul className="statList__list">
@@ -85,12 +92,9 @@ export default function Leaderboard() {
                         </ul>
                     </div>
 
-                    <div className="leaderBoard__mid">
-                        <Planet className='planet--bgCircle'>
-                            <p className="planet__name"><span>NAME: </span> NFT#987654134526</p>
-                            <a className="btn btn--center" href="">BUY</a>
-                        </Planet>
-                    </div>
+                    <Planet className='planet--bgCircle'>
+                        <a className="btn btn--center" href="">BUY</a>
+                    </Planet>
 
                     <PlanetDataList className='planetData--clear'/>
                 

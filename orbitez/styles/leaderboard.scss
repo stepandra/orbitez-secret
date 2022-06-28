@@ -1,13 +1,9 @@
 .leaderBoard {
-    height: 850px;
     margin-top: 30px;
     margin-bottom: 50px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-image: url('../public/img/bg-leaderboard.png');
 
     &__inner {
+		position: relative;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -15,13 +11,55 @@
         padding: 50px 20px;
     }
 
+	&__bg {
+		z-index: -1;
+	}
+
     &__planet {
         display: flex;
         justify-content: center;
         align-items: center;
-        
     }
+
+	&__planetName {
+		position: absolute;
+		left: 47%;
+		top: 5px;
+		color: #FFE191;
+		font-weight: 700;
+		font-size: 20px;
+		line-height: 133%;
+	
+		span {
+			margin-inline-end: 15px;
+			color: #FFF;
+			font-size: 22px;
+		}
+	}
+
+	&__share {
+		position: absolute;
+		right: 12%;
+		bottom: -4px;
+		display: flex;
+		align-items: center;
+		color: #FFF;
+		// font-weight: 700;
+		font-size: 20px;
+		line-height: 133%;
+		cursor: pointer;
+
+		&::before {
+			content: url('../public/img/icon-share.png');
+			display: block;
+			width: 25px;
+			min-height: 28px;
+			margin-inline-end: 11px;
+		}
+	}
 }
+
+
 
 .statList {
 	width: 100%;
@@ -30,6 +68,7 @@
 	&__title {
 		margin-bottom: 50px;
 		margin-inline-start: 95px;
+		color: #FFFFFF;
         text-decoration: underline;
 	}
 
