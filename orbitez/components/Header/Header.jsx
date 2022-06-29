@@ -20,7 +20,7 @@ export default function Header() {
 
     return (
         <header className="header container">
-            <div className="header__linkBlock header__linkBlock--left">
+            <div className="header__linkBlock">
                 <Image 
                     className="header__icon" 
                     src={linkIcon} 

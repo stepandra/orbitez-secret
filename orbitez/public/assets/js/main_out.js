@@ -891,6 +891,9 @@
     }
 
     function drawLeaderboard() {
+
+        return leaderboard.visible = false; // TODO: need refactoring
+
         if (leaderboard.type === null) return leaderboard.visible = false;
         if (!settings.showNames || leaderboard.items.length === 0) {
             return leaderboard.visible = false;
@@ -1130,7 +1133,7 @@
         quadtree = null;
         mainCtx.scale(camera.viewportScale, camera.viewportScale);
 
-        let height = 200;
+        let height = 280;
 
         mainCtx.textBaseline = 'top';
         if (!isNaN(stats.score)) {

@@ -147,7 +147,7 @@ select {
 
 	&--connect {
 		opacity: 0;
-		top: 13%;
+		top: 14%;
 		z-index: 100;
 	}
 
@@ -249,9 +249,6 @@ select {
 }
 
 
-
-
-
 .btn {
 	display: flex;
     align-items: center;
@@ -298,33 +295,6 @@ select {
 }
 
 
-.gameTimer {
-	position: absolute;
-	display: block;
-	width: 358px;
-
-	&__num {
-		margin-bottom: 7px;
-		color: #5B6483;
-		font-weight: 600;
-		font-size: 18px;
-		line-height: 192%;
-	}
-
-	&__item {
-		width: 10px;
-		height: 7px;
-		margin: 0 2px;
-		background: rgba(84, 90, 174, 0.3);
-
-		&--active {
-			background: #CEA105;
-		}
-	}
-}
-
-
-
 .link {
 	color: #FFFFFF;
 	font-size: 28px;
@@ -336,11 +306,6 @@ select {
 		color: #bbb1cd;
 		text-shadow: $text-shadow;
 	}
-}
-
-.hud {
-	position: fixed;
-	z-index: 0;
 }
 
 

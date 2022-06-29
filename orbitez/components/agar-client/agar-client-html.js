@@ -10,6 +10,7 @@ export const renderInner = (server) => ({
     </div>
 
     <div class='overlays' id="overlays" style="display: none;">
+
         <div class='popUp' id="helloDialog">
             <h2 class='popUp__title' id="title">ORBITEZ.IO</h2>
 
@@ -18,7 +19,7 @@ export const renderInner = (server) => ({
                 <option value="${server}" selected>ws.orbitez.io</option>
             </select>
 
-            <button class="popUp__btn btn btn--wide btn-play btn-primary btn-needs-server" id="play-btn">Play</button>
+            <button class="popUp__btn btn btn--wide btn--center btn-play btn-primary btn-needs-server" id="play-btn">Play</button>
 
             <div id="settings"></div>
 
@@ -29,6 +30,8 @@ export const renderInner = (server) => ({
             </p>
             <p id="footer">Have fun!</p>
         </div>
+
+        
     </div>
 
     <div id="mobileStuff" style="display: none;">
@@ -37,9 +40,11 @@ export const renderInner = (server) => ({
         <img src="/img/split.png" id="splitBtn">
         <img src="/img/eject.png" id="ejectBtn">
     </div>
+
     <canvas id="canvas" width="800" height="600"></canvas>
-    <img style="position:fixed;" id="canvas-bg" src="/background.jpeg" />
+    <img style="position:fixed;" id="canvas-bg" src="/img/bg.jpg" />
     <img style="position:fixed;" id="food-png" src="/food.png" />
+
     <input type="text" id="chat_textbox" placeholder="Press enter to chat" maxlength="200">
     <div style="font-family:'Ubuntu'">&nbsp;</div>
 `})
