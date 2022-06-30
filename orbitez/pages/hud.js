@@ -81,6 +81,77 @@ export default function Hud() {
             </Head>
             <Script src="/assets/js/quadtree.js" strategy="beforeInteractive"></Script>
             <Script src="/assets/js/main_out.js" strategy="beforeInteractive"></Script>
+ 
+            {/* <div className="overlay" id="deadPlayer">
+                <div className="popUp">
+                    <a className="popUp__close" href="#close"></a>
+                    <p className="popUp__title">You are dead</p>
+                    <div className="popUp__content">
+                        <p className="popUp__text">End of match in:</p>
+                        <p className="popUp__timer">10:15:00</p>
+                    </div>
+                    <a className="popUp__btn btn btn--center">RESPAWN</a>
+                </div>
+            </div> */}
+
+            {/* <div className="overlay" id="processing"> 
+                <div className="popUp">
+                    <a className="popUp__close" href="#close"></a>
+                    <p className="popUp__title">PROCESSING...</p>
+                    <div className="popUp__content">
+                        <p className="popUp__text">Start in:</p>
+                        <p className="popUp__timer">07 sec</p>
+                    </div>
+                </div>
+            </div> */}
+
+            {/* <div className="overlay" id="youWin" href="#close">
+                <div className="gamePopUp">
+                    <p className="gamePopUp__title">Match Results</p>
+                    <p className="gamePopUp__result">You WIN</p>
+                    <p className="gamePopUp__number">TEZ   250,000015</p>
+                    <p className="gamePopUp__numPlus">+ 0,0015</p> {/* if lose add className: gamePopUp__numPlus--lose }
+                    <div className="gamePopUp__content">
+                        <div className="gamePopUp__block">
+                            <div className="gamePopUp__row">
+                                <p className="gamePopUp__text">Food eaten</p>
+                                <p className="gamePopUp__value">12%</p>
+                            </div>
+                            <div className="gamePopUp__row">
+                                <p className="gamePopUp__text">Time alive</p>
+                                <p className="gamePopUp__value">43:07:40</p>
+                            </div>
+                            <div className="gamePopUp__row">
+                                <p className="gamePopUp__text">Cells eaten</p>
+                                <p className="gamePopUp__value">65 000</p>
+                            </div>
+                        </div>
+                        <div className="gamePopUp__block">
+                            <div className="gamePopUp__row">
+                                <p className="gamePopUp__text">Highest mass</p>
+                                <p className="gamePopUp__value">4 mln</p>
+                            </div>
+                            <div className="gamePopUp__row">
+                                <p className="gamePopUp__text">Leaderboard position</p>
+                                <p className="gamePopUp__value">12</p>
+                            </div>
+                            <div className="gamePopUp__row">
+                                <p className="gamePopUp__text">Top position</p>
+                                <p className="gamePopUp__value">2344</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a className="gamePopUp__btn btn btn--center" href="">PLAY 1 TEZ</a>
+                    <a className="gamePopUp__share" href="" >Invite friends</a>
+
+                    <div className="gamePopUp__bg">
+                        <Image src='/img/bg-game-pop-up-win.png' layout='fill' /> {/* if lose change image }
+                        {/* <Image src='/img/bg-game-pop-up-lose.png' layout='fill' /> }
+                    </div>
+                </div>
+            </div> */}
+
+            {/* <a href="#youWin">Открыть модальное окно</a> */}
 
             <header className="header header--hud container">
 

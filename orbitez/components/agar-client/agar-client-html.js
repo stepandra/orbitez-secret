@@ -10,7 +10,6 @@ export const renderInner = (server) => ({
     </div>
 
     <div class='overlays' id="overlays" style="display: none;">
-
         <div class='popUp' id="helloDialog">
             <h2 class='popUp__title' id="title">ORBITEZ.IO</h2>
 
@@ -30,8 +29,6 @@ export const renderInner = (server) => ({
             </p>
             <p id="footer">Have fun!</p>
         </div>
-
-        
     </div>
 
     <div id="mobileStuff" style="display: none;">
@@ -42,9 +39,10 @@ export const renderInner = (server) => ({
     </div>
 
     <canvas id="canvas" width="800" height="600"></canvas>
+
     <img style="position:fixed;" id="canvas-bg" src="/img/bg.jpg" />
     <img style="position:fixed;" id="food-png" src="/food.png" />
 
-    <input type="text" id="chat_textbox" placeholder="Press enter to chat" maxlength="200">
+    <input class="chatInput" id="chat_textbox" type="text" placeholder="Press enter to chat" maxlength="200">
     <div style="font-family:'Ubuntu'">&nbsp;</div>
 `})
