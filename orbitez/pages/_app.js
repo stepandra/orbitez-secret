@@ -15,7 +15,7 @@ export class SingletonBeacon {
 
   static getInstance() {
     if (!SingletonBeacon.instance && typeof window !== 'undefined') {
-      SingletonBeacon.instance = new BeaconWallet({ name: 'Orbitez', preferredNetwork: 'ithacanet' })
+      SingletonBeacon.instance = new BeaconWallet({ name: 'Orbitez', preferredNetwork: 'ghostnet' })
     }
     return SingletonBeacon.instance
   }

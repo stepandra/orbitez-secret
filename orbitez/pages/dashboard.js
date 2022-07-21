@@ -218,7 +218,7 @@ export default function Dashboard() {
                 </div>
 
                 <div className={`planet `}>
-                    {/* <PlanetGenerator mint_hash={mintHash} /> */}
+                    <PlanetGenerator mint_hash={mintHash} />
 
                     <div className="payMethod">
                         <div className="payMethod__tabs">
@@ -254,7 +254,7 @@ export default function Dashboard() {
                 </Planet> */}
 
                 <div className="dashboard__right">
-                    <PlanetDataList />
+                    <PlanetDataList mintHash={mintHash}/>
                 </div>
 
 

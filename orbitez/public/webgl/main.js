@@ -126,7 +126,7 @@ window.main = () => {
     var vCloudNoise = [6, 30];
 
     function renderPlanet(sz) {
-        sz = sz || Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.5);
+        sz = sz || Math.round(Math.min(window.innerWidth, window.innerHeight) * 0.45);
         jQuery("#c").
         css("width", sz + "px").css("height", sz + "px").
         css("top", (jQuery(window).innerHeight() / 2 - jQuery("#c").height() / 2) + "px").

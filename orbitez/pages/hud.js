@@ -42,13 +42,13 @@ export default function Hud() {
         }, 100);
 
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://api.ithacanet.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
+            .withUrl("https://api.ghostnet.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
             .build();
 
         const serverName = localStorage.getItem('ORBITEZ_SERVER_NAME')
         const sanitized = serverName.replaceAll('"', '')
 
-        axios.get(`https://api.ithacanet.tzkt.io/v1/contracts/${CONTRACT_ADDRESS}/storage`).then(res => {
+        axios.get(`https://api.ghostnet.tzkt.io/v1/contracts/${CONTRACT_ADDRESS}/storage`).then(res => {
             console.log(res.data)
             setEndBlock(res.data.room[sanitized].finish_block)
         })

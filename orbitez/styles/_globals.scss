@@ -173,6 +173,7 @@ select {
 	&--center {
 		margin-left: auto;
 		margin-right: auto;
+		z-index: 50;
 	}
 
 	&__iconPlus {
