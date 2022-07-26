@@ -186,6 +186,7 @@ function getInstallScript(
     readonly DO_METADATA_URL="http://169.254.169.254/metadata/v1"
     ${TAG_FUNCS_SH}
     snap install ngrok
+    ngrok config add-authtoken 1z8JvuGlnqE3EDHXods2B1qNzP9_6H5x8AiP5wfyRQ158DhR5
     docker run -d -p 8080:8080 andriiolefirenko/orbitez:latest
     ngrok http 8080 --log=stdout > ngrok.log &
     sleep 15
