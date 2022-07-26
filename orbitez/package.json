@@ -5,6 +5,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
+    "staging": "NODE_ENV=production PORT=5454 node server.js",
     "lint": "next lint"
   },
   "dependencies": {
