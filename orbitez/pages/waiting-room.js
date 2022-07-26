@@ -42,7 +42,7 @@ export default function WaitingRoom() {
         setWaitRoom(players)
 
         const connection = new signalR.HubConnectionBuilder()
-            .withUrl("https://api.ithacanet.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
+            .withUrl("https://api.ghostnet.tzkt.io/v1/events") //https://api.tzkt.io/ MAINNEt
             .build();
 
         async function init() {

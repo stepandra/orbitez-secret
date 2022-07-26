@@ -6,7 +6,7 @@ import { MichelCodecPacker } from '@taquito/taquito';
 
 export function useTezos() {
   const wallet = useAppContext()
-  const RPC_URL = 'https://ithacanet.smartpy.io';
+  const RPC_URL = 'https://rpc.tzkt.io/ghostnet';
   const Tezos = new TezosToolkit(RPC_URL)
   Tezos.setPackerProvider(new MichelCodecPacker())
   Tezos.setWalletProvider(wallet)
@@ -42,7 +42,7 @@ export function useTezos() {
     if (!connectionExists) {
       await wallet.requestPermissions({
         network: {
-          type: NetworkType.ITHACANET,
+          type: NetworkType.GHOSTNET,
           // type: NetworkType.MAINNET,
           rpcUrl: RPC_URL,
         },
