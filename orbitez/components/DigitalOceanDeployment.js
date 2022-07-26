@@ -7,12 +7,12 @@ import { CONTRACT_ADDRESS } from '../constants'
 const regionsList = [
   { name: 'New York City', value: 'NYC3' },
   { name: 'San Francisco', value: 'SFO3' },
-  // { name: 'Toronto, Canada', value: 'TOR1' },
-  // { name: 'London, United Kingdom', value: 'LON1' },
-  // { name: 'Frankfurt, Germany', value: 'FRA1' },
-  // { name: 'Amsterdam, the Netherlands', value: 'AMS3' },
-  // { name: 'Singapore', value: 'SGP1' },
-  // { name: 'Bangalore, India', value: 'BLR1' },
+  { name: 'Toronto, Canada', value: 'TOR1' },
+  { name: 'London, United Kingdom', value: 'LON1' },
+  { name: 'Frankfurt, Germany', value: 'FRA1' },
+  { name: 'Amsterdam, the Netherlands', value: 'AMS3' },
+  { name: 'Singapore', value: 'SGP1' },
+  { name: 'Bangalore, India', value: 'BLR1' },
 ]
 
 export default function DigitalOceanDeployment() {
